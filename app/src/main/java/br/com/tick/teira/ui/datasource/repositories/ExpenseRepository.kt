@@ -1,10 +1,13 @@
 package br.com.tick.teira.ui.datasource.repositories
 
 import br.com.tick.teira.ui.datasource.databases.entities.Expense
+import kotlinx.coroutines.flow.SharedFlow
 
 interface ExpenseRepository {
 
-    fun addExpense(name: String, value: String, category: String)
+    val expenses: SharedFlow<List<Expense>>
 
-    fun getExpenses(): List<Expense>
+    suspend fun addExpense(name: String, value: String, category: String)
+
+    suspend fun getExpenses(): List<Expense>
 }

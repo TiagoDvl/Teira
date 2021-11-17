@@ -1,19 +1,29 @@
 package br.com.tick.teira.ui.datasource.repositories
 
-import android.util.Log
 import br.com.tick.teira.ui.datasource.databases.ExpenseDao
 import br.com.tick.teira.ui.datasource.databases.entities.Expense
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import javax.inject.Inject
 
 class ExpensesRepositoryImpl @Inject constructor(private val expenseDao: ExpenseDao): ExpenseRepository {
 
-    private val expenses: MutableList<String> = mutableListOf()
+    override val expenses = MutableSharedFlow<List<Expense>>(
+        replay = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
 
-    override fun addExpense(name: String, value: String, category: String) {
-        expenseDao.addExpense(Expense(name, value, category))
-        expenses.add(name)
-        Log.d("Tiago", expenses.toString())
+    override suspend fun addExpense(name: String, value: String, category: String) {
+        expenseDao.addExpense(
+            Expense(
+                name = name,
+                value = value,
+                category = category
+            )
+        )
+
+        expenses.tryEmit(expenseDao.getExpenses())
     }
 
-    override fun getExpenses(): List<Expense> = expenseDao.getExpenses()
+    override suspend fun getExpenses(): List<Expense> = expenseDao.getExpenses()
 }

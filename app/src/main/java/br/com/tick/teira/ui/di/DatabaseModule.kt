@@ -1,18 +1,26 @@
 package br.com.tick.teira.ui.di
 
-import br.com.tick.teira.ui.datasource.databases.ExpenseDao
-import br.com.tick.teira.ui.datasource.databases.ExpenseDaoImpl
-import dagger.Binds
+import android.content.Context
+import androidx.room.Room
+import br.com.tick.teira.ui.datasource.databases.TeiraDatabase
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class DatabaseModule {
+object DatabaseModule {
 
     @Singleton
-    @Binds
-    abstract fun bindExpenseDao(expenseDaoImpl: ExpenseDaoImpl): ExpenseDao
+    @Provides
+    fun provideTeiraDatabase(
+        @ApplicationContext app: Context
+    ) = Room.databaseBuilder(app, TeiraDatabase::class.java, "TeiraDb.db").build()
+
+    @Singleton
+    @Provides
+    fun provideExpenseDao(teiraDatabase: TeiraDatabase) = teiraDatabase.expenseDao()
 }
