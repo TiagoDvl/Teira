@@ -38,7 +38,9 @@ import androidx.navigation.compose.rememberNavController
 import br.com.tick.teira.ui.NavigationItem
 import br.com.tick.teira.ui.screens.WalletScreen
 import br.com.tick.teira.ui.theme.TeiraTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
