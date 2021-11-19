@@ -4,9 +4,11 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -32,7 +34,7 @@ fun QuickExpense(
     modifier: Modifier = Modifier
 ) {
     var isExpanded by remember { mutableStateOf(false) }
-    var quickExpenseComposableHeight by remember { mutableStateOf(50.dp) }
+    var quickExpenseComposableHeight by remember { mutableStateOf(80.dp) }
     val animatedSize by animateDpAsState(
         targetValue = quickExpenseComposableHeight,
         tween(
@@ -48,12 +50,12 @@ fun QuickExpense(
     ) {
         if (isExpanded) {
             quickExpenseComposableHeight = 200.dp
-            ExpandedQuickExpense(modifier) {
+            ExpandedQuickExpense {
                 isExpanded = isExpanded.not()
             }
 
         } else {
-            quickExpenseComposableHeight = 50.dp
+            quickExpenseComposableHeight = 80.dp
             Row(
                 modifier = modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceAround
@@ -76,56 +78,81 @@ fun ExpandedQuickExpense(
     var expenseValue by remember { mutableStateOf("") }
     var expenseCategory by remember { mutableStateOf("") }
 
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceEvenly,
-    ) {
-        QuickExpenseTextField(
-            modifier = Modifier.width(200.dp),
-            color = Pink40,
-            value = expenseName,
-            label = "Expense Name"
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(12.dp)
+    ){
+        Column(
+            modifier.fillMaxSize()
         ) {
-            expenseName = it
-        }
-        Spacer(modifier = Modifier.width(2.dp))
-        QuickExpenseTextField(
-            modifier = Modifier.width(200.dp),
-            color = Pink40,
-            value = expenseValue,
-            label = "Expense Value"
-        ) {
-            expenseValue = it
-        }
-    }
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Start,
-    ) {
-        QuickExpenseTextField(
-            modifier = Modifier.width(200.dp),
-            color = Pink40,
-            value = expenseCategory,
-            label = "Expense Category"
-        ) {
-            expenseCategory = it
-        }
-    }
-    Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-        TeiraOutlinedButton(
-            modifier = Modifier.align(Alignment.Bottom),
-            text = "Save",
-            onClick = {
-                onClick() // This will cause a recomposition
-                quickExpenseBarViewModel.saveQuickExpense(expenseName, expenseValue, expenseCategory)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+            ) {
+                QuickExpenseTextField(
+                    modifier = Modifier.width(200.dp),
+                    color = Pink40,
+                    value = expenseName,
+                    label = "Expense Name"
+                ) {
+                    expenseName = it
+                }
+                Spacer(modifier = Modifier.width(4.dp))
+                QuickExpenseTextField(
+                    modifier = Modifier.width(200.dp),
+                    color = Pink40,
+                    value = expenseValue,
+                    label = "Expense Value"
+                ) {
+                    expenseValue = it
+                }
             }
-        )
+            Spacer(modifier = Modifier.height(4.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Start,
+            ) {
+                QuickExpenseTextField(
+                    modifier = Modifier.width(200.dp),
+                    color = Pink40,
+                    value = expenseCategory,
+                    label = "Expense Category"
+                ) {
+                    expenseCategory = it
+                }
+            }
+        }
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            TeiraOutlinedButton(
+                modifier = Modifier.align(Alignment.BottomEnd),
+                text = "Save",
+                onClick = {
+                    onClick() // This will cause a recomposition
+                    quickExpenseBarViewModel.saveQuickExpense(expenseName, expenseValue, expenseCategory)
+                }
+            )
+        }
     }
 }
 
 @Composable
 fun ClosedQuickExpense(onClick: () -> Unit) {
-    Text(text = "Add a quick expense")
-    TeiraOutlinedButton(text = "Add", onClick = onClick)
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(12.dp)
+    ) {
+        Text(modifier = Modifier.align(Alignment.CenterStart),
+            text = "Add a quick expense"
+        )
+        TeiraOutlinedButton(
+            modifier = Modifier.align(Alignment.CenterEnd),
+            text = "Add",
+            onClick = onClick
+        )
+    }
 }
 
