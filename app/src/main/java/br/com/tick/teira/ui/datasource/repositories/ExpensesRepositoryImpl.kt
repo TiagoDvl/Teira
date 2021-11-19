@@ -17,5 +17,7 @@ class ExpensesRepositoryImpl @Inject constructor(private val expenseDao: Expense
         )
     }
 
-    override suspend fun getExpenses(): Flow<List<Expense>> = expenseDao.getExpenses()
+    override suspend fun getExpenses(numberOfExpenses: Int): Flow<List<Expense>> {
+        return expenseDao.getExpenses(numberOfExpenses)
+    }
 }
