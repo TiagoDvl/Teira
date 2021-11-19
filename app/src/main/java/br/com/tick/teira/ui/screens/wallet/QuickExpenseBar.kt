@@ -1,4 +1,4 @@
-package br.com.tick.teira.ui.screens
+package br.com.tick.teira.ui.screens.wallet
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
@@ -21,10 +21,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import br.com.tick.teira.ui.screens.elements.QuickExpenseTextField
 import br.com.tick.teira.ui.screens.elements.TeiraOutlinedButton
-import br.com.tick.teira.ui.viewmodels.QuickExpenseBarViewModel
+import br.com.tick.teira.ui.screens.wallet.viewmodels.QuickExpenseBarViewModel
 import br.com.tick.teira.ui.theme.Pink40
 import br.com.tick.teira.ui.theme.Purple80
 

@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import br.com.tick.teira.ui.datasource.databases.entities.Expense
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ExpenseDao {
@@ -12,5 +13,5 @@ interface ExpenseDao {
     suspend fun addExpense(expense: Expense)
 
     @Query("SELECT * FROM expense")
-    suspend fun getExpenses(): List<Expense>
+    fun getExpenses(): Flow<List<Expense>>
 }

@@ -2,16 +2,10 @@ package br.com.tick.teira.ui.datasource.repositories
 
 import br.com.tick.teira.ui.datasource.databases.ExpenseDao
 import br.com.tick.teira.ui.datasource.databases.entities.Expense
-import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class ExpensesRepositoryImpl @Inject constructor(private val expenseDao: ExpenseDao): ExpenseRepository {
-
-    override val expenses = MutableSharedFlow<List<Expense>>(
-        replay = 1,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST
-    )
 
     override suspend fun addExpense(name: String, value: String, category: String) {
         expenseDao.addExpense(
@@ -21,9 +15,7 @@ class ExpensesRepositoryImpl @Inject constructor(private val expenseDao: Expense
                 category = category
             )
         )
-
-        expenses.tryEmit(expenseDao.getExpenses())
     }
 
-    override suspend fun getExpenses(): List<Expense> = expenseDao.getExpenses()
+    override suspend fun getExpenses(): Flow<List<Expense>> = expenseDao.getExpenses()
 }

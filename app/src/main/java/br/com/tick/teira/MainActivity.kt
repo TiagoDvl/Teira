@@ -36,7 +36,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import br.com.tick.teira.ui.NavigationItem
-import br.com.tick.teira.ui.screens.WalletScreen
+import br.com.tick.teira.ui.screens.wallet.WalletScreen
 import br.com.tick.teira.ui.theme.TeiraTheme
 import dagger.hilt.android.AndroidEntryPoint
 
