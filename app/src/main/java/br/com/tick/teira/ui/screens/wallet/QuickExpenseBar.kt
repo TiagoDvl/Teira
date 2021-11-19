@@ -31,8 +31,8 @@ import br.com.tick.teira.ui.theme.Purple80
 fun QuickExpense(
     modifier: Modifier = Modifier
 ) {
-    var isExpanded by remember { mutableStateOf(true) }
-    var quickExpenseComposableHeight by remember { mutableStateOf(200.dp) }
+    var isExpanded by remember { mutableStateOf(false) }
+    var quickExpenseComposableHeight by remember { mutableStateOf(50.dp) }
     val animatedSize by animateDpAsState(
         targetValue = quickExpenseComposableHeight,
         tween(

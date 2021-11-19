@@ -11,12 +11,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ExpensesGridViewModel @Inject constructor(
-    expenseRepository: ExpenseRepository
+    private val expenseRepository: ExpenseRepository
 ) : ViewModel() {
 
     // https://proandroiddev.com/better-handling-states-between-viewmodel-and-composable-7ca14af379cb
-    val expensesGridState: Flow<ExpensesGridStates> = flow {
-        expenseRepository.getExpenses().collect {
+    fun getExpensesGridState(numberOfExpenses: Int) : Flow<ExpensesGridStates> = flow {
+        expenseRepository.getExpenses(numberOfExpenses).collect {
             emit(ExpensesGridStates.of(it))
         }
     }

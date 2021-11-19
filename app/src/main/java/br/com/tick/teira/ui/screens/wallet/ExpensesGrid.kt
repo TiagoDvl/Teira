@@ -3,9 +3,12 @@ package br.com.tick.teira.ui.screens.wallet
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Card
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -21,10 +24,11 @@ import br.com.tick.teira.ui.screens.wallet.viewmodels.ExpensesGridViewModel
 @Composable
 fun ExpensesGrid(
     modifier: Modifier = Modifier,
+    numberOfExpensesShown: Int,
     expensesGridViewModel: ExpensesGridViewModel = hiltViewModel()
 ) {
     val expensesListState by remember(expensesGridViewModel) {
-        expensesGridViewModel.expensesGridState
+        expensesGridViewModel.getExpensesGridState(numberOfExpensesShown)
     }.collectAsState(ExpensesGridStates.Loading)
 
     when (val pleaseFixMe = expensesListState) {
@@ -42,15 +46,25 @@ fun BodyGrid(
     expensesList: List<Expense>
 ) {
     LazyVerticalGrid(
+        modifier = modifier.padding(4.dp),
         cells = GridCells.Adaptive(minSize = 128.dp)
     ) {
         items(expensesList) { expense ->
-            Column(
-                modifier = Modifier.fillMaxWidth()
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(2.dp),
+                backgroundColor = MaterialTheme.colorScheme.onSecondary,
+                elevation = 2.dp
             ) {
-                Text(text = expense.name)
-                Text(text = expense.value)
-                Text(text = expense.category)
+                Column(
+                    modifier = Modifier.padding(12.dp)
+                ) {
+                    Text(text = expense.name)
+                    Text(text = expense.value)
+                    Text(text = expense.category)
+                }
+
             }
         }
     }
