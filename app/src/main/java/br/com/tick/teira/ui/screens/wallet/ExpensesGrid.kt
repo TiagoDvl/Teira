@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -22,7 +23,10 @@ fun ExpensesGrid(
     modifier: Modifier = Modifier,
     expensesGridViewModel: ExpensesGridViewModel = hiltViewModel()
 ) {
-    val expensesListState by expensesGridViewModel.expensesList.collectAsState()
+    val expensesListState by remember(expensesGridViewModel) {
+        expensesGridViewModel.expensesGridState
+    }.collectAsState(ExpensesGridStates.Loading)
+
     when (val pleaseFixMe = expensesListState) {
         ExpensesGridStates.Empty,
         ExpensesGridStates.Error,
