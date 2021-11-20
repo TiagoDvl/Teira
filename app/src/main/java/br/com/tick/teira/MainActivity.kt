@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -18,9 +17,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -36,6 +33,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import br.com.tick.teira.ui.NavigationItem
+import br.com.tick.teira.ui.screens.wallet.ConfigurationScreen
 import br.com.tick.teira.ui.screens.wallet.WalletScreen
 import br.com.tick.teira.ui.theme.TeiraTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -119,9 +117,9 @@ fun TeiraScaffold() {
         }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
-            NavHost(navController = navHostController, startDestination = NavigationItem.Wallet.route) {
+            NavHost(navController = navHostController, startDestination = NavigationItem.Configuration.route) {
                 composable(NavigationItem.Configuration.route) {
-                    SimpleScreen(NavigationItem.Configuration.route)
+                    ConfigurationScreen()
                 }
                 composable(NavigationItem.Wallet.route) {
                     WalletScreen()
