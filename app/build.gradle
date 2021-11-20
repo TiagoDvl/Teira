@@ -78,4 +78,7 @@ dependencies {
     // optional - Test helpers
     testImplementation "androidx.room:room-testing:$room_version"
 
+    def dataStoreVersion = "1.0.0"
+    implementation "androidx.datastore:datastore-preferences:$dataStoreVersion"
+
 }
