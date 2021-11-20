@@ -155,4 +155,3 @@ fun ClosedQuickExpense(onClick: () -> Unit) {
         )
     }
 }
-
