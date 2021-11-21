@@ -5,7 +5,7 @@ import br.com.tick.teira.ui.datasource.databases.entities.Expense
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class ExpensesRepositoryImpl @Inject constructor(private val expenseDao: ExpenseDao): ExpenseRepository {
+class ExpensesRepositoryImpl @Inject constructor(private val expenseDao: ExpenseDao) : ExpenseRepository {
 
     override suspend fun addExpense(name: String, value: String, category: String) {
         expenseDao.addExpense(
