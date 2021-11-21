@@ -1,14 +1,14 @@
 package br.com.tick.teira.ui.screens.wallet.states
 
-import br.com.tick.teira.ui.datasource.databases.entities.Expense
+import br.com.tick.teira.ui.screens.wallet.models.ExpenseCard
 
 sealed class ExpensesGridStates {
 
     companion object {
 
-        fun of(expensesList: List<Expense>): ExpensesGridStates {
-            if (expensesList.isNotEmpty()) {
-                return Success(expensesList)
+        fun of(expensesCards: List<ExpenseCard>): ExpensesGridStates {
+            if (expensesCards.isNotEmpty()) {
+                return Success(expensesCards)
             }
 
             return Empty
@@ -18,6 +18,6 @@ sealed class ExpensesGridStates {
     object Loading : ExpensesGridStates()
     object Empty : ExpensesGridStates()
     object Error : ExpensesGridStates()
-    data class Success(val expensesList: List<Expense>) : ExpensesGridStates()
+    data class Success(val expensesList: List<ExpenseCard>) : ExpensesGridStates()
 
 }

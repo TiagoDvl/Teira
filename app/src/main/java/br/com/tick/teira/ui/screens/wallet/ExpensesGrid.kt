@@ -17,7 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import br.com.tick.teira.ui.datasource.databases.entities.Expense
+import br.com.tick.teira.ui.screens.wallet.models.ExpenseCard
 import br.com.tick.teira.ui.screens.wallet.states.ExpensesGridStates
 import br.com.tick.teira.ui.screens.wallet.viewmodels.ExpensesGridViewModel
 
@@ -43,7 +43,7 @@ fun ExpensesGrid(
 @Composable
 fun BodyGrid(
     modifier: Modifier = Modifier,
-    expensesList: List<Expense>
+    expensesList: List<ExpenseCard>
 ) {
     LazyVerticalGrid(
         modifier = modifier.padding(4.dp),
@@ -61,8 +61,9 @@ fun BodyGrid(
                     modifier = Modifier.padding(12.dp)
                 ) {
                     Text(text = expense.name)
-                    Text(text = expense.value)
-                    Text(text = expense.category)
+                    Text(text = expense.value.toString())
+                    Text(text = expense.category.name)
+                    Text(text = expense.risk.name)
                 }
 
             }

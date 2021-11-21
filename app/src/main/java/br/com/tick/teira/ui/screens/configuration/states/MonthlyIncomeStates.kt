@@ -1,4 +1,4 @@
-package br.com.tick.teira.ui.screens.wallet.states
+package br.com.tick.teira.ui.screens.configuration.states
 
 sealed class MonthlyIncomeStates(val value: Double) {
 

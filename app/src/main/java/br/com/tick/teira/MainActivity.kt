@@ -117,7 +117,7 @@ fun TeiraScaffold() {
         }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
-            NavHost(navController = navHostController, startDestination = NavigationItem.Configuration.route) {
+            NavHost(navController = navHostController, startDestination = NavigationItem.Wallet.route) {
                 composable(NavigationItem.Configuration.route) {
                     ConfigurationScreen()
                 }
