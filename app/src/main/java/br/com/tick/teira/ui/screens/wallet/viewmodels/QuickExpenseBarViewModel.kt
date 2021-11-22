@@ -10,11 +10,11 @@ import javax.inject.Inject
 @HiltViewModel
 class QuickExpenseBarViewModel @Inject constructor(
     private val expenseRepository: ExpenseRepository
-): ViewModel() {
+) : ViewModel() {
 
-    fun saveQuickExpense(name: String, value: String, category: String) {
+    fun saveQuickExpense(name: String, value: String, category: String, expenseDate: Long) {
         viewModelScope.launch {
-            expenseRepository.addExpense(name, value, category)
+            expenseRepository.addExpense(name, value, category, expenseDate)
         }
     }
 }

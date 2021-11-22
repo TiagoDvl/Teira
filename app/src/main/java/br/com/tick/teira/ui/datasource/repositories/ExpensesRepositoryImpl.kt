@@ -7,12 +7,13 @@ import javax.inject.Inject
 
 class ExpensesRepositoryImpl @Inject constructor(private val expenseDao: ExpenseDao) : ExpenseRepository {
 
-    override suspend fun addExpense(name: String, value: String, category: String) {
+    override suspend fun addExpense(name: String, value: String, category: String, expenseDate: Long) {
         expenseDao.addExpense(
             Expense(
                 name = name,
                 value = value,
-                category = category
+                category = category,
+                date = expenseDate
             )
         )
     }
