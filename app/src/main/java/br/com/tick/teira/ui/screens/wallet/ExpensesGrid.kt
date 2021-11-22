@@ -1,19 +1,26 @@
 package br.com.tick.teira.ui.screens.wallet
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -34,7 +41,7 @@ fun ExpensesGrid(
     when (val pleaseFixMe = expensesListState) {
         ExpensesGridStates.Empty,
         ExpensesGridStates.Error,
-        ExpensesGridStates.Loading -> Text(text = "Loading")
+        ExpensesGridStates.Loading -> LoadingGrid(modifier = modifier.fillMaxSize())
         is ExpensesGridStates.Success -> BodyGrid(modifier, pleaseFixMe.expensesList)
     }
 }
@@ -68,5 +75,23 @@ fun BodyGrid(
 
             }
         }
+    }
+}
+
+@Composable
+fun LoadingGrid(
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier.padding(4.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            CircularProgressIndicator()
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(text = "Loading...")
+        }
+
     }
 }
