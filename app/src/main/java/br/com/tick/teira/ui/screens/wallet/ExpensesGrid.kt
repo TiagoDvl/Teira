@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.GridCells
@@ -24,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import br.com.tick.teira.ui.screens.elements.FlipCard
 import br.com.tick.teira.ui.screens.wallet.models.ExpenseCard
 import br.com.tick.teira.ui.screens.wallet.states.ExpensesGridStates
 import br.com.tick.teira.ui.screens.wallet.viewmodels.ExpensesGridViewModel
@@ -57,23 +59,35 @@ fun BodyGrid(
         cells = GridCells.Adaptive(minSize = 128.dp)
     ) {
         items(expensesList) { expense ->
-            Card(
+            FlipCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(2.dp),
-                backgroundColor = MaterialTheme.colorScheme.onSecondary,
-                elevation = 2.dp
-            ) {
-                Column(
-                    modifier = Modifier.padding(12.dp)
-                ) {
-                    Text(text = expense.name)
-                    Text(text = expense.value.toString())
-                    Text(text = expense.category.name)
-                    Text(text = expense.risk.name)
+                back = {
+                    Column(
+                        modifier = Modifier.height(120.dp).padding(12.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text(text = expense.name)
+                        Text(text = expense.value.toString())
+                        Text(text = expense.category.name)
+                        Text(text = expense.risk.name)
+                    }
+                },
+                front = {
+                    Column(
+                        modifier = Modifier.height(120.dp).padding(12.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text(text = expense.name)
+                        Text(text = expense.value.toString())
+                        Text(text = expense.category.name)
+                        Text(text = expense.risk.name)
+                    }
                 }
-
-            }
+            )
         }
     }
 }

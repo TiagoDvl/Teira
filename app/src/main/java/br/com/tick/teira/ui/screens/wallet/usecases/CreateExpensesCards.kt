@@ -19,6 +19,16 @@ class CreateExpensesCards @Inject constructor(
         val monthlyIncome = dataStoreRepository.getMonthlyIncome()
 
         return expensesList.combine(monthlyIncome) { _expensesList, _monthlyIncome ->
+            // Remove this after I properly do a fucking migration
+            if (_expensesList.isEmpty()) {
+                expenseRepository.addExpense("Almoço", "23.5", "Alimentação")
+                expenseRepository.addExpense("Saidinha", "23.5", "Lazer")
+                expenseRepository.addExpense("Drogas", "23.5", "Lazer")
+                expenseRepository.addExpense("Motel", "23.5", "Lazer")
+                expenseRepository.addExpense("Luz", "23.5", "Casa")
+                expenseRepository.addExpense("Água", "23.5", "Casa")
+            }
+
             _expensesList.map {
                 ExpenseCard(
                     name = it.name,
