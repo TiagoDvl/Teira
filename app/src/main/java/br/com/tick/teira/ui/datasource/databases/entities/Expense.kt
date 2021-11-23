@@ -17,5 +17,8 @@ data class Expense(
     val value: String,
 
     @ColumnInfo(name = "category")
-    val category: String
+    val category: String,
+
+    @ColumnInfo(name = "date")
+    val date: Long
 )

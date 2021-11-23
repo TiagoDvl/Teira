@@ -4,7 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import br.com.tick.teira.ui.datasource.databases.entities.Expense
 
-@Database(entities = [Expense::class], version = 1)
+@Database(entities = [Expense::class], version = 2)
 abstract class TeiraDatabase : RoomDatabase() {
 
     abstract fun expenseDao(): ExpenseDao

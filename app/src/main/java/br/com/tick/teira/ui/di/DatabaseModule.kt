@@ -18,7 +18,7 @@ object DatabaseModule {
     @Provides
     fun provideTeiraDatabase(
         @ApplicationContext app: Context
-    ) = Room.databaseBuilder(app, TeiraDatabase::class.java, "TeiraDb.db").build()
+    ) = Room.databaseBuilder(app, TeiraDatabase::class.java, "TeiraDb.db").fallbackToDestructiveMigration().build()
 
     @Singleton
     @Provides

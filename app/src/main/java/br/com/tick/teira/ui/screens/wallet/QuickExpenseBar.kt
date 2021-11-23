@@ -21,13 +21,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import br.com.tick.teira.ui.screens.elements.QuickExpenseTextField
 import br.com.tick.teira.ui.screens.elements.TeiraOutlinedButton
 import br.com.tick.teira.ui.screens.wallet.viewmodels.QuickExpenseBarViewModel
 import br.com.tick.teira.ui.theme.Pink40
 import br.com.tick.teira.ui.theme.Purple80
+import java.text.SimpleDateFormat
+import java.util.Date
 
 @Composable
 fun QuickExpense(
@@ -78,11 +83,13 @@ fun ExpandedQuickExpense(
     var expenseValue by remember { mutableStateOf("") }
     var expenseCategory by remember { mutableStateOf("") }
 
+    val expenseDate = Date().time
+
     Box(
         modifier = modifier
             .fillMaxSize()
             .padding(12.dp)
-    ){
+    ) {
         Column(
             modifier.fillMaxSize()
         ) {
@@ -126,12 +133,20 @@ fun ExpandedQuickExpense(
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
+            QuickExpenseDate(Modifier.fillMaxSize().align(Alignment.BottomStart), expenseDate)
             TeiraOutlinedButton(
                 modifier = Modifier.align(Alignment.BottomEnd),
                 text = "Save",
                 onClick = {
                     onClick() // This will cause a recomposition
-                    quickExpenseBarViewModel.saveQuickExpense(expenseName, expenseValue, expenseCategory)
+                    if (expenseName.isNotEmpty()) {
+                        quickExpenseBarViewModel.saveQuickExpense(
+                            expenseName,
+                            expenseValue,
+                            expenseCategory,
+                            expenseDate
+                        )
+                    }
                 }
             )
         }
@@ -145,13 +160,33 @@ fun ClosedQuickExpense(onClick: () -> Unit) {
             .fillMaxWidth()
             .padding(12.dp)
     ) {
-        Text(modifier = Modifier.align(Alignment.CenterStart),
+        Text(
+            modifier = Modifier.align(Alignment.CenterStart),
             text = "Add a quick expense"
         )
         TeiraOutlinedButton(
             modifier = Modifier.align(Alignment.CenterEnd),
             text = "Add",
             onClick = onClick
+        )
+    }
+}
+
+@Composable
+fun QuickExpenseDate(
+    modifier: Modifier = Modifier,
+    date: Long
+) {
+    val formatted = SimpleDateFormat("dd/MM/yyyy").format(Date(date))
+    Box(
+        modifier = modifier
+    ) {
+        Text(
+            modifier = Modifier.align(Alignment.BottomStart),
+            text = "Date: $formatted",
+            textDecoration = TextDecoration.Underline,
+            fontSize = 14.sp,
+            fontStyle = FontStyle.Italic
         )
     }
 }
