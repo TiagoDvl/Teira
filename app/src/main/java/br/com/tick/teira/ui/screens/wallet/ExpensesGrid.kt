@@ -7,15 +7,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -36,15 +33,20 @@ fun ExpensesGrid(
     numberOfExpensesShown: Int,
     expensesGridViewModel: ExpensesGridViewModel = hiltViewModel()
 ) {
-    val expensesListState by remember(expensesGridViewModel) {
+    val expensesListState by remember {
         expensesGridViewModel.getExpensesGridState(numberOfExpensesShown)
     }.collectAsState(ExpensesGridStates.Loading)
 
-    when (val pleaseFixMe = expensesListState) {
+    Body(modifier, expensesListState)
+}
+
+@Composable
+fun Body(modifier: Modifier, expensesListState: ExpensesGridStates) {
+    when (expensesListState) {
         ExpensesGridStates.Empty,
         ExpensesGridStates.Error,
         ExpensesGridStates.Loading -> LoadingGrid(modifier = modifier.fillMaxSize())
-        is ExpensesGridStates.Success -> BodyGrid(modifier, pleaseFixMe.expensesList)
+        is ExpensesGridStates.Success -> BodyGrid(modifier, expensesListState.expensesList)
     }
 }
 
@@ -56,37 +58,12 @@ fun BodyGrid(
 ) {
     LazyVerticalGrid(
         modifier = modifier.padding(4.dp),
-        cells = GridCells.Adaptive(minSize = 128.dp)
+        cells = GridCells.Adaptive(minSize = 120.dp)
     ) {
         items(expensesList) { expense ->
             FlipCard(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(2.dp),
-                back = {
-                    Column(
-                        modifier = Modifier.height(120.dp).padding(12.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Text(text = expense.name)
-                        Text(text = expense.value.toString())
-                        Text(text = expense.category.name)
-                        Text(text = expense.risk.name)
-                    }
-                },
-                front = {
-                    Column(
-                        modifier = Modifier.height(120.dp).padding(12.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Text(text = expense.name)
-                        Text(text = expense.value.toString())
-                        Text(text = expense.category.name)
-                        Text(text = expense.risk.name)
-                    }
-                }
+                expenseCard = expense,
+                modifier = Modifier.fillMaxWidth().padding(2.dp)
             )
         }
     }

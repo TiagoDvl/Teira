@@ -18,6 +18,10 @@ class ExpensesRepositoryImpl @Inject constructor(private val expenseDao: Expense
         )
     }
 
+    override suspend fun removeExpense(expenseId: Int) {
+        expenseDao.removeExpenseById(expenseId)
+    }
+
     override suspend fun getExpenses(numberOfExpenses: Int): Flow<List<Expense>> {
         return expenseDao.getExpenses(numberOfExpenses)
     }
