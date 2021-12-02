@@ -12,9 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -24,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import br.com.tick.teira.ui.screens.elements.FlipCard
 import br.com.tick.teira.ui.screens.wallet.models.ExpenseCard
 import br.com.tick.teira.ui.screens.wallet.states.ExpensesGridStates
 import br.com.tick.teira.ui.screens.wallet.viewmodels.ExpensesGridViewModel
@@ -34,15 +33,20 @@ fun ExpensesGrid(
     numberOfExpensesShown: Int,
     expensesGridViewModel: ExpensesGridViewModel = hiltViewModel()
 ) {
-    val expensesListState by remember(expensesGridViewModel) {
+    val expensesListState by remember {
         expensesGridViewModel.getExpensesGridState(numberOfExpensesShown)
     }.collectAsState(ExpensesGridStates.Loading)
 
-    when (val pleaseFixMe = expensesListState) {
+    Body(modifier, expensesListState)
+}
+
+@Composable
+fun Body(modifier: Modifier, expensesListState: ExpensesGridStates) {
+    when (expensesListState) {
         ExpensesGridStates.Empty,
         ExpensesGridStates.Error,
         ExpensesGridStates.Loading -> LoadingGrid(modifier = modifier.fillMaxSize())
-        is ExpensesGridStates.Success -> BodyGrid(modifier, pleaseFixMe.expensesList)
+        is ExpensesGridStates.Success -> BodyGrid(modifier, expensesListState.expensesList)
     }
 }
 
@@ -54,26 +58,13 @@ fun BodyGrid(
 ) {
     LazyVerticalGrid(
         modifier = modifier.padding(4.dp),
-        cells = GridCells.Adaptive(minSize = 128.dp)
+        cells = GridCells.Adaptive(minSize = 120.dp)
     ) {
         items(expensesList) { expense ->
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(2.dp),
-                backgroundColor = MaterialTheme.colorScheme.onSecondary,
-                elevation = 2.dp
-            ) {
-                Column(
-                    modifier = Modifier.padding(12.dp)
-                ) {
-                    Text(text = expense.name)
-                    Text(text = expense.value.toString())
-                    Text(text = expense.category.name)
-                    Text(text = expense.risk.name)
-                }
-
-            }
+            FlipCard(
+                expenseCard = expense,
+                modifier = Modifier.fillMaxWidth().padding(2.dp)
+            )
         }
     }
 }

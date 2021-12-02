@@ -7,11 +7,7 @@ sealed class ExpensesGridStates {
     companion object {
 
         fun of(expensesCards: List<ExpenseCard>): ExpensesGridStates {
-            if (expensesCards.isNotEmpty()) {
-                return Success(expensesCards)
-            }
-
-            return Empty
+            return if (expensesCards.isNotEmpty()) Success(expensesCards) else Empty
         }
     }
 
