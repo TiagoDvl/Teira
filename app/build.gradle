@@ -81,4 +81,6 @@ dependencies {
     def dataStoreVersion = "1.0.0"
     implementation "androidx.datastore:datastore-preferences:$dataStoreVersion"
 
+    def mpChartVersion = "v3.1.0"
+    implementation "com.github.PhilJay:MPAndroidChart:$mpChartVersion"
 }

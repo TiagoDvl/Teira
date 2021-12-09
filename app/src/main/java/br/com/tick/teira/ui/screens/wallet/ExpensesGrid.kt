@@ -30,11 +30,10 @@ import br.com.tick.teira.ui.screens.wallet.viewmodels.ExpensesGridViewModel
 @Composable
 fun ExpensesGrid(
     modifier: Modifier = Modifier,
-    numberOfExpensesShown: Int,
     expensesGridViewModel: ExpensesGridViewModel = hiltViewModel()
 ) {
     val expensesListState by remember {
-        expensesGridViewModel.getExpensesGridState(numberOfExpensesShown)
+        expensesGridViewModel.getExpensesGridState()
     }.collectAsState(ExpensesGridStates.Loading)
 
     Body(modifier, expensesListState)

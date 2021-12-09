@@ -33,6 +33,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import br.com.tick.teira.ui.NavigationItem
+import br.com.tick.teira.ui.screens.analysis.AnalysisScreen
 import br.com.tick.teira.ui.screens.wallet.ConfigurationScreen
 import br.com.tick.teira.ui.screens.wallet.WalletScreen
 import br.com.tick.teira.ui.theme.TeiraTheme
@@ -117,7 +118,7 @@ fun TeiraScaffold() {
         }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
-            NavHost(navController = navHostController, startDestination = NavigationItem.Wallet.route) {
+            NavHost(navController = navHostController, startDestination = NavigationItem.Analysis.route) {
                 composable(NavigationItem.Configuration.route) {
                     ConfigurationScreen()
                 }
@@ -125,7 +126,7 @@ fun TeiraScaffold() {
                     WalletScreen()
                 }
                 composable(NavigationItem.Analysis.route) {
-                    SimpleScreen(NavigationItem.Analysis.route)
+                    AnalysisScreen()
                 }
             }
         }

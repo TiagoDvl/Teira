@@ -22,7 +22,17 @@ class ExpensesRepositoryImpl @Inject constructor(private val expenseDao: Expense
         expenseDao.removeExpenseById(expenseId)
     }
 
+    override suspend fun getAllExpenses(): Flow<List<Expense>> {
+        return expenseDao.getAllExpenses()
+    }
+
     override suspend fun getExpenses(numberOfExpenses: Int): Flow<List<Expense>> {
-        return expenseDao.getExpenses(numberOfExpenses)
+        with(expenseDao) {
+            return if (numberOfExpenses < 0) {
+                getAllExpenses()
+            } else {
+                getExpenses(numberOfExpenses)
+            }
+        }
     }
 }
