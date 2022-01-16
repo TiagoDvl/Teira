@@ -12,7 +12,7 @@ class QuickExpenseBarViewModel @Inject constructor(
     private val expenseRepository: ExpenseRepository
 ) : ViewModel() {
 
-    fun saveQuickExpense(name: String, value: String, category: String, expenseDate: Long) {
+    fun saveQuickExpense(name: String, value: Double, category: String, expenseDate: Long) {
         viewModelScope.launch {
             expenseRepository.addExpense(name, value, category, expenseDate)
         }

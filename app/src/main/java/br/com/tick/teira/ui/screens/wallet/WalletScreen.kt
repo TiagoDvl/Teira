@@ -32,8 +32,7 @@ fun WalletScreen() {
                     .height(8.dp)
             )
             ExpensesGrid(
-                modifier = Modifier.fillMaxWidth(),
-                numberOfExpensesShown = 12
+                modifier = Modifier.fillMaxWidth()
             )
         }
     }

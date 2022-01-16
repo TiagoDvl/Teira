@@ -1,4 +1,4 @@
-package br.com.tick.teira.ui.screens.elements
+package br.com.tick.teira.ui.elements
 
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledTonalButton

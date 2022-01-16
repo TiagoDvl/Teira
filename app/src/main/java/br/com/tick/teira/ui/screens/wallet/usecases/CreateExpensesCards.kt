@@ -7,27 +7,43 @@ import br.com.tick.teira.ui.screens.wallet.models.ExpenseCategory
 import br.com.tick.teira.ui.screens.wallet.models.ExpenseRisk
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import java.util.Date
 import javax.inject.Inject
+import kotlin.random.Random
 
 class CreateExpensesCards @Inject constructor(
     private val expenseRepository: ExpenseRepository,
     private val dataStoreRepository: LocalDataRepository
 ) {
 
-    suspend operator fun invoke(numberOfExpenses: Int): Flow<List<ExpenseCard>> {
-        val expensesList = expenseRepository.getExpenses(numberOfExpenses)
+    companion object {
+        private const val CENTER_GRID_EXPENSES = 30
+    }
+
+    suspend operator fun invoke(): Flow<List<ExpenseCard>> {
+        val expensesList = expenseRepository.getExpenses(CENTER_GRID_EXPENSES)
         val monthlyIncome = dataStoreRepository.getMonthlyIncome()
 
         return expensesList.combine(monthlyIncome) { _expensesList, _monthlyIncome ->
             // Remove this after I properly do a fucking migration
             if (_expensesList.isEmpty()) {
-                expenseRepository.addExpense("Almoço", "23.5", "Alimentação", Date().time)
-                expenseRepository.addExpense("Saidinha", "23.5", "Lazer", Date().time)
-                expenseRepository.addExpense("Drogas", "23.5", "Lazer", Date().time)
-                expenseRepository.addExpense("Motel", "23.5", "Lazer", Date().time)
-                expenseRepository.addExpense("Luz", "23.5", "Casa", Date().time)
-                expenseRepository.addExpense("Água", "23.5", "Casa", Date().time)
+                val categoryFactory = listOf(
+                    "Alimentação",
+                    "Lazer",
+                    "Casa",
+                    "Supermercado",
+                    "Saúde",
+                    "Presentes",
+                    "Roupas",
+                    "Outros"
+                )
+
+                for (i in 0..50) {
+                    val category = categoryFactory[Random.nextInt(0, categoryFactory.size - 1)]
+                    val value = Random.nextDouble(0.1, 100.0)
+                    val aDay = 100000000
+                    val date = 1638563028893 - (aDay * i) // Update with epoch of today
+                    expenseRepository.addExpense("$i", value, category, date)
+                }
             }
 
             _expensesList.map {

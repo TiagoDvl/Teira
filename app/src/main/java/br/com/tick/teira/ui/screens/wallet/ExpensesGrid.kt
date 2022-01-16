@@ -22,7 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import br.com.tick.teira.ui.screens.elements.FlipCard
+import br.com.tick.teira.ui.elements.FlipCard
 import br.com.tick.teira.ui.screens.wallet.models.ExpenseCard
 import br.com.tick.teira.ui.screens.wallet.states.ExpensesGridStates
 import br.com.tick.teira.ui.screens.wallet.viewmodels.ExpensesGridViewModel
@@ -30,11 +30,10 @@ import br.com.tick.teira.ui.screens.wallet.viewmodels.ExpensesGridViewModel
 @Composable
 fun ExpensesGrid(
     modifier: Modifier = Modifier,
-    numberOfExpensesShown: Int,
     expensesGridViewModel: ExpensesGridViewModel = hiltViewModel()
 ) {
     val expensesListState by remember {
-        expensesGridViewModel.getExpensesGridState(numberOfExpensesShown)
+        expensesGridViewModel.getExpensesGridState()
     }.collectAsState(ExpensesGridStates.Loading)
 
     Body(modifier, expensesListState)

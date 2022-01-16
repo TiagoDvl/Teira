@@ -21,8 +21,8 @@ class ExpensesGridViewModel @Inject constructor(
 ) : ViewModel() {
 
     // https://proandroiddev.com/better-handling-states-between-viewmodel-and-composable-7ca14af379cb
-    fun getExpensesGridState(numberOfExpenses: Int): Flow<ExpensesGridStates> = flow {
-        createExpensesCards(numberOfExpenses).collect {
+    fun getExpensesGridState(): Flow<ExpensesGridStates> = flow {
+        createExpensesCards().collect {
             emit(ExpensesGridStates.of(it))
         }
     }
