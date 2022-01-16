@@ -1,4 +1,4 @@
-package br.com.tick.teira.ui.screens.elements
+package br.com.tick.teira.ui.elements
 
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults

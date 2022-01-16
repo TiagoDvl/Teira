@@ -26,8 +26,8 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import br.com.tick.teira.ui.screens.elements.QuickExpenseTextField
-import br.com.tick.teira.ui.screens.elements.TeiraOutlinedButton
+import br.com.tick.teira.ui.elements.QuickExpenseTextField
+import br.com.tick.teira.ui.elements.TeiraOutlinedButton
 import br.com.tick.teira.ui.screens.wallet.viewmodels.QuickExpenseBarViewModel
 import br.com.tick.teira.ui.theme.Pink40
 import br.com.tick.teira.ui.theme.Purple80
@@ -142,7 +142,7 @@ fun ExpandedQuickExpense(
                     if (expenseName.isNotEmpty()) {
                         quickExpenseBarViewModel.saveQuickExpense(
                             expenseName,
-                            expenseValue,
+                            expenseValue.toDouble(),
                             expenseCategory,
                             expenseDate
                         )

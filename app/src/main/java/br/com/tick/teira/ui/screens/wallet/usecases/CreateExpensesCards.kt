@@ -42,7 +42,7 @@ class CreateExpensesCards @Inject constructor(
                     val value = Random.nextDouble(0.1, 100.0)
                     val aDay = 100000000
                     val date = 1638563028893 - (aDay * i) // Update with epoch of today
-                    expenseRepository.addExpense("$i", String.format("%.2f", value), category, date)
+                    expenseRepository.addExpense("$i", value, category, date)
                 }
             }
 
