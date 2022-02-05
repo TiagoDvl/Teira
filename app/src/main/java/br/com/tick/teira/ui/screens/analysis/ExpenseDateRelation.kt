@@ -1,17 +1,18 @@
 package br.com.tick.teira.ui.screens.analysis
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import br.com.tick.teira.ui.screens.analysis.states.AnalysisGraphStates
 import br.com.tick.teira.ui.screens.analysis.viewmodels.AnalysisScreenViewModel
+import br.com.tick.teira.ui.theme.spacing
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -21,11 +22,17 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 @Composable
-fun ExpenseDateRelation(modifier: Modifier = Modifier, viewModel: AnalysisScreenViewModel = hiltViewModel()) {
+fun ExpenseDateRelation(
+    modifier: Modifier = Modifier,
+    viewModel: AnalysisScreenViewModel = hiltViewModel()
+) {
     val analysisGraph by remember { viewModel.graphStates }.collectAsState(AnalysisGraphStates.Loading)
 
     when (val pleaseFixMe = analysisGraph) {
-        is AnalysisGraphStates.AnalysisGraph -> ExpenseGraph(modifier = modifier, analysisGraph = pleaseFixMe)
+        is AnalysisGraphStates.AnalysisGraph -> ExpenseGraph(
+            modifier = modifier,
+            analysisGraph = pleaseFixMe
+        )
         AnalysisGraphStates.Loading -> GraphLoading()
     }
 }
@@ -36,7 +43,7 @@ fun ExpenseGraph(
     analysisGraph: AnalysisGraphStates.AnalysisGraph
 ) {
     AndroidView(
-        modifier = modifier.padding(16.dp),
+        modifier = modifier.padding(MaterialTheme.spacing.large),
         factory = { context ->
             val entries = analysisGraph.expenses.map {
                 Entry(

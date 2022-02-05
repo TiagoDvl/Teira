@@ -32,6 +32,7 @@ import br.com.tick.teira.ui.screens.wallet.models.ExpenseCard
 import br.com.tick.teira.ui.screens.wallet.viewmodels.ExpensesGridViewModel
 import br.com.tick.teira.ui.theme.Pink40
 import br.com.tick.teira.ui.theme.PurpleGrey80
+import br.com.tick.teira.ui.theme.spacing
 
 enum class CardFace(val angle: Float) {
     Front(0f) {
@@ -91,7 +92,7 @@ fun FlipCardFront(expenseCard: ExpenseCard) {
             .fillMaxSize()
             .background(PurpleGrey80)
             .height(120.dp)
-            .padding(12.dp)
+            .padding(MaterialTheme.spacing.medium)
     ) {
         Column {
             Text(text = expenseCard.name, style = MaterialTheme.typography.bodyLarge)
@@ -100,7 +101,7 @@ fun FlipCardFront(expenseCard: ExpenseCard) {
         Image(
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .size(18.dp),
+                .size(MaterialTheme.spacing.extraLarge),
             painter = painterResource(id = R.drawable.ic_flip),
             contentDescription = "Flip a card"
         )
@@ -130,7 +131,7 @@ fun FlipCardBack(
                 .fillMaxSize()
                 .background(Pink40)
                 .height(120.dp)
-                .padding(12.dp),
+                .padding(MaterialTheme.spacing.medium),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {

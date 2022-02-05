@@ -10,7 +10,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import br.com.tick.teira.ui.theme.spacing
 
 @Composable
 fun WalletScreen() {
@@ -21,7 +21,7 @@ fun WalletScreen() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(4.dp)
+                .padding(MaterialTheme.spacing.extraSmall)
         ) {
             QuickExpense(
                 modifier = Modifier.fillMaxWidth()
@@ -29,12 +29,11 @@ fun WalletScreen() {
             Spacer(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(8.dp)
+                    .height(MaterialTheme.spacing.small)
             )
             ExpensesGrid(
                 modifier = Modifier.fillMaxWidth()
             )
         }
     }
-
 }
