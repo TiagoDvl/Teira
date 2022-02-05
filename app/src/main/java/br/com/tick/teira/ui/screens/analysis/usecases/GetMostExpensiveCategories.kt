@@ -20,14 +20,15 @@ class GetMostExpensiveCategories @Inject constructor(private val expenseReposito
                 val mostExpensiveCategories = mutableListOf<MostExpensiveCategory>()
 
                 expenses.forEach { expense ->
-                    val mostExpensiveCategory = mostExpensiveCategories.find { it.name == expense.category }
+                    val expenseCategory = expenseRepository.getExpenseCategoryById(expense.categoryId)
+                    val mostExpensiveCategory = mostExpensiveCategories.find { it.categoryName == expenseCategory.name }
 
                     if (mostExpensiveCategory == null) {
                         mostExpensiveCategories.add(
-                            MostExpensiveCategory(expense.category, Color.Red, expense.value.toDouble())
+                            MostExpensiveCategory(expenseCategory.name, Color.Red, expense.value)
                         )
                     } else {
-                        mostExpensiveCategory.amount = mostExpensiveCategory.amount + expense.value.toDouble()
+                        mostExpensiveCategory.amount = mostExpensiveCategory.amount + expense.value
                     }
 
                     emit(mostExpensiveCategories)

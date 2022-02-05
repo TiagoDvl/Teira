@@ -3,11 +3,8 @@ package br.com.tick.teira
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -15,13 +12,11 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SmallTopAppBar
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -36,7 +31,6 @@ import br.com.tick.teira.ui.screens.analysis.AnalysisScreen
 import br.com.tick.teira.ui.screens.configuration.ConfigurationScreen
 import br.com.tick.teira.ui.screens.wallet.WalletScreen
 import br.com.tick.teira.ui.theme.TeiraTheme
-import br.com.tick.teira.ui.theme.spacing
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -120,7 +114,7 @@ fun TeiraScaffold() {
         Box(modifier = Modifier.padding(innerPadding)) {
             NavHost(
                 navController = navHostController,
-                startDestination = NavigationItem.Analysis.route
+                startDestination = NavigationItem.Wallet.route
             ) {
                 composable(NavigationItem.Configuration.route) {
                     ConfigurationScreen()
@@ -131,31 +125,6 @@ fun TeiraScaffold() {
                 composable(NavigationItem.Analysis.route) {
                     AnalysisScreen()
                 }
-            }
-        }
-    }
-}
-
-@Composable
-fun SimpleScreen(routeName: String) {
-    // A surface container using the 'background' color from the theme
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(MaterialTheme.spacing.extraSmall)
-                .background(Color.Gray)
-        ) {
-            Text(
-                text = "Hello, I'm $routeName",
-                modifier = Modifier.align(Alignment.Center)
-            )
-
-            Button(onClick = {}, modifier = Modifier.align(Alignment.BottomCenter)) {
-                Text(text = "Aloka")
             }
         }
     }

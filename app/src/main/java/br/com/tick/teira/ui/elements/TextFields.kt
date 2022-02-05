@@ -10,7 +10,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun QuickExpenseTextField(
+fun TeiraBaseTextField(
     modifier: Modifier = Modifier,
     color: Color,
     value: String,
