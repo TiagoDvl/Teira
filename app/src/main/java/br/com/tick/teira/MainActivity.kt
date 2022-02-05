@@ -27,16 +27,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import br.com.tick.teira.ui.NavigationItem
 import br.com.tick.teira.ui.screens.analysis.AnalysisScreen
-import br.com.tick.teira.ui.screens.wallet.ConfigurationScreen
+import br.com.tick.teira.ui.screens.configuration.ConfigurationScreen
 import br.com.tick.teira.ui.screens.wallet.WalletScreen
 import br.com.tick.teira.ui.theme.TeiraTheme
+import br.com.tick.teira.ui.theme.spacing
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -118,7 +118,10 @@ fun TeiraScaffold() {
         }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
-            NavHost(navController = navHostController, startDestination = NavigationItem.Analysis.route) {
+            NavHost(
+                navController = navHostController,
+                startDestination = NavigationItem.Analysis.route
+            ) {
                 composable(NavigationItem.Configuration.route) {
                     ConfigurationScreen()
                 }
@@ -143,7 +146,7 @@ fun SimpleScreen(routeName: String) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(4.dp)
+                .padding(MaterialTheme.spacing.extraSmall)
                 .background(Color.Gray)
         ) {
             Text(

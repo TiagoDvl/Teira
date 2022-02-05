@@ -1,4 +1,4 @@
-package br.com.tick.teira.ui.screens.wallet
+package br.com.tick.teira.ui.screens.configuration
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import br.com.tick.teira.ui.screens.configuration.states.MonthlyIncomeStates
 import br.com.tick.teira.ui.screens.configuration.viewmodels.ConfigurationScreenViewModel
+import br.com.tick.teira.ui.theme.spacing
 
 @Composable
 fun ConfigurationScreen(
@@ -42,7 +43,7 @@ fun ConfigurationScreen(
         color = MaterialTheme.colorScheme.background
     ) {
         Column(
-            modifier = modifier.padding(4.dp)
+            modifier = modifier.padding(MaterialTheme.spacing.extraSmall)
         ) {
             Row(
                 modifier = modifier.fillMaxHeight()
@@ -67,9 +68,11 @@ fun SettingField(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(4.dp)
+                .padding(MaterialTheme.spacing.extraSmall)
         ) {
-            val incomeValue by remember(viewModel) { viewModel.monthlyIncomeFlow }.collectAsState(MonthlyIncomeStates.Loading)
+            val incomeValue by remember(viewModel) { viewModel.monthlyIncomeFlow }.collectAsState(
+                MonthlyIncomeStates.Loading
+            )
             var monthlyIncomeTextFieldValue by remember(incomeValue) { mutableStateOf(incomeValue.value.toString()) }
 
             Text(
@@ -78,7 +81,7 @@ fun SettingField(
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold
             )
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
             TextField(
                 modifier = Modifier.align(CenterHorizontally),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -88,9 +91,11 @@ fun SettingField(
                     viewModel.saveMonthlyIncome(it.toDouble())
                 }
             )
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
             Text(
-                modifier = Modifier.width(200.dp).align(CenterHorizontally),
+                modifier = Modifier
+                    .width(200.dp)
+                    .align(CenterHorizontally),
                 text = "O valor será salvo ao digitar. Avisaremos se algo der errado :)",
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Thin,

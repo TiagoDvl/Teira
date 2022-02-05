@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -26,6 +27,7 @@ import br.com.tick.teira.ui.elements.FlipCard
 import br.com.tick.teira.ui.screens.wallet.models.ExpenseCard
 import br.com.tick.teira.ui.screens.wallet.states.ExpensesGridStates
 import br.com.tick.teira.ui.screens.wallet.viewmodels.ExpensesGridViewModel
+import br.com.tick.teira.ui.theme.spacing
 
 @Composable
 fun ExpensesGrid(
@@ -56,13 +58,15 @@ fun BodyGrid(
     expensesList: List<ExpenseCard>
 ) {
     LazyVerticalGrid(
-        modifier = modifier.padding(4.dp),
+        modifier = modifier.padding(MaterialTheme.spacing.extraSmall),
         cells = GridCells.Adaptive(minSize = 120.dp)
     ) {
         items(expensesList) { expense ->
             FlipCard(
                 expenseCard = expense,
-                modifier = Modifier.fillMaxWidth().padding(2.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(MaterialTheme.spacing.extraSmall)
             )
         }
     }
@@ -73,13 +77,13 @@ fun LoadingGrid(
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier.padding(4.dp),
+        modifier = modifier.padding(MaterialTheme.spacing.extraSmall),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             CircularProgressIndicator()
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(MaterialTheme.spacing.small))
             Text(text = "Loading...")
         }
 

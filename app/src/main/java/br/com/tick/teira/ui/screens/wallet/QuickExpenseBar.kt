@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,6 +32,7 @@ import br.com.tick.teira.ui.elements.TeiraOutlinedButton
 import br.com.tick.teira.ui.screens.wallet.viewmodels.QuickExpenseBarViewModel
 import br.com.tick.teira.ui.theme.Pink40
 import br.com.tick.teira.ui.theme.Purple80
+import br.com.tick.teira.ui.theme.spacing
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -49,7 +51,7 @@ fun QuickExpense(
 
     Column(
         modifier = modifier
-            .padding(4.dp)
+            .padding(MaterialTheme.spacing.extraSmall)
             .background(Purple80)
             .height(animatedSize)
     ) {
@@ -58,7 +60,6 @@ fun QuickExpense(
             ExpandedQuickExpense {
                 isExpanded = isExpanded.not()
             }
-
         } else {
             quickExpenseComposableHeight = 80.dp
             Row(
@@ -88,7 +89,7 @@ fun ExpandedQuickExpense(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .padding(12.dp)
+            .padding(MaterialTheme.spacing.medium)
     ) {
         Column(
             modifier.fillMaxSize()
@@ -105,7 +106,7 @@ fun ExpandedQuickExpense(
                 ) {
                     expenseName = it
                 }
-                Spacer(modifier = Modifier.width(4.dp))
+                Spacer(modifier = Modifier.width(MaterialTheme.spacing.extraSmall))
                 QuickExpenseTextField(
                     modifier = Modifier.width(200.dp),
                     color = Pink40,
@@ -115,7 +116,7 @@ fun ExpandedQuickExpense(
                     expenseValue = it
                 }
             }
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(MaterialTheme.spacing.extraSmall))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Start,
@@ -133,7 +134,10 @@ fun ExpandedQuickExpense(
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
-            QuickExpenseDate(Modifier.fillMaxSize().align(Alignment.BottomStart), expenseDate)
+            QuickExpenseDate(
+                Modifier
+                    .fillMaxSize()
+                    .align(Alignment.BottomStart), expenseDate)
             TeiraOutlinedButton(
                 modifier = Modifier.align(Alignment.BottomEnd),
                 text = "Save",
@@ -158,7 +162,7 @@ fun ClosedQuickExpense(onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(12.dp)
+            .padding(MaterialTheme.spacing.medium)
     ) {
         Text(
             modifier = Modifier.align(Alignment.CenterStart),
