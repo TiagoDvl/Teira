@@ -45,7 +45,7 @@ fun MostExpensiveCategoryBody(
         mostExpensiveCategoriesState.mostExpensiveCategories.forEach {
             Column {
                 CategoryCircle(
-                    it.name.substring(0, 3),
+                    it.categoryName.substring(0, 3),
                     it.color
                 )
                 Text(text = String.format("%.2f", it.amount))
