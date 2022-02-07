@@ -20,7 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import br.com.tick.teira.ui.theme.spacing
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -28,6 +27,7 @@ import br.com.tick.teira.ui.elements.TeiraBaseTextField
 import br.com.tick.teira.ui.elements.TeiraOutlinedButton
 import br.com.tick.teira.ui.screens.wallet.viewmodels.QuickExpenseBarViewModel
 import br.com.tick.teira.ui.theme.Pink40
+import br.com.tick.teira.ui.theme.spacing
 
 @Composable
 fun WalletScreen() {
