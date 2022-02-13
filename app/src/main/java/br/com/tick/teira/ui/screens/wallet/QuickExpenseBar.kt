@@ -64,6 +64,7 @@ fun QuickExpense(
 
     Column(
         modifier = modifier
+            .fillMaxWidth()
             .padding(MaterialTheme.spacing.extraSmall)
             .background(Purple80)
             .height(animatedSize)
@@ -77,13 +78,8 @@ fun QuickExpense(
             }
         } else {
             quickExpenseComposableHeight = 80.dp
-            Row(
-                modifier = modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceAround
-            ) {
-                ClosedQuickExpense {
-                    isExpanded = isExpanded.not()
-                }
+            ClosedQuickExpense {
+                isExpanded = isExpanded.not()
             }
         }
     }
@@ -98,106 +94,70 @@ fun ExpandedQuickExpense(
 ) {
     var expenseName by remember { mutableStateOf("") }
     var expenseValue by remember { mutableStateOf("") }
+    var selectedCategoryId = remember { mutableStateOf(0) }
 
-    var expenseCategoryExpanded by remember { mutableStateOf(false) }
-    var selectedCategoryName by remember { mutableStateOf("Select the Category") }
-    var selectedCategoryId by remember { mutableStateOf(0) }
-    val categoriesList by remember { quickExpenseBarViewModel.categories }.collectAsState(initial = listOf())
-
-    val expenseDate = Date().time
-
-    Box(
+    Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(MaterialTheme.spacing.medium)
+            .padding(MaterialTheme.spacing.medium),
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
     ) {
-        Column(
-            modifier.fillMaxSize()
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.extraSmall)
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly,
+            TeiraBaseTextField(
+                modifier = Modifier.width(200.dp),
+                color = Pink40,
+                value = expenseName,
+                label = "Expense Name"
             ) {
-                TeiraBaseTextField(
-                    modifier = Modifier.width(200.dp),
-                    color = Pink40,
-                    value = expenseName,
-                    label = "Expense Name"
-                ) {
-                    expenseName = it
-                }
-                Spacer(modifier = Modifier.width(MaterialTheme.spacing.extraSmall))
-                TeiraBaseTextField(
-                    modifier = Modifier.width(200.dp),
-                    color = Pink40,
-                    value = expenseValue,
-                    label = "Expense Value"
-                ) {
-                    expenseValue = it
-                }
+                expenseName = it
             }
-            Spacer(modifier = Modifier.height(MaterialTheme.spacing.extraSmall))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Start,
+            TeiraBaseTextField(
+                modifier = Modifier.width(200.dp),
+                color = Pink40,
+                value = expenseValue,
+                label = "Expense Value"
             ) {
-                Box(
-                    modifier = Modifier
-                        .width(200.dp)
-                        .height(50.dp)
-                        .clickable(onClick = { expenseCategoryExpanded = true })
-                        .background(Purple40)
-                ) {
-                    Text(selectedCategoryName, modifier = Modifier.align(Alignment.Center), color = Color.White)
-                }
-                DropdownMenu(
-                    modifier = Modifier.width(200.dp),
-                    expanded = expenseCategoryExpanded,
-                    onDismissRequest = { expenseCategoryExpanded = false })
-                {
-                    categoriesList.forEach { category ->
-                        DropdownMenuItem(
-                            onClick = {
-                                selectedCategoryName = category.name
-                                selectedCategoryId = category.categoryId
-                                expenseCategoryExpanded = false
-                            }
-                        ) {
-                            Text(text = category.name)
-                        }
-                    }
-                }
-                Spacer(modifier = Modifier.width(4.dp))
-                FilledTonalButton(
-                    modifier = Modifier.align(Alignment.CenterVertically),
-                    colors = ButtonDefaults.textButtonColors(
-                        containerColor = Purple40
-                    ),
-                    onClick = {
-                        showAddCategoryDialogState.value = true
-                    }
-                ) {
-                    Image(painter = painterResource(id = R.drawable.ic_add), contentDescription = "Add Category")
-                }
+                expenseValue = it
             }
         }
-        Box(
-            modifier = Modifier.fillMaxSize()
+        Row {
+            CategoryDropdown(
+                showAddCategoryDialogState = showAddCategoryDialogState,
+                selectedCategoryId = selectedCategoryId
+            )
+            Spacer(modifier = Modifier.width(MaterialTheme.spacing.extraSmall))
+            FilledTonalButton(
+                modifier = Modifier.align(Alignment.CenterVertically),
+                colors = ButtonDefaults.textButtonColors(
+                    containerColor = Purple40
+                ),
+                onClick = {
+                    showAddCategoryDialogState.value = true
+                }
+            ) {
+                Image(painter = painterResource(id = R.drawable.ic_add), contentDescription = "Add Category")
+            }
+        }
+        Row(
+            modifier = Modifier.fillMaxWidth()
         ) {
+            val expenseDate = Date().time
+
             QuickExpenseDate(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .align(Alignment.BottomStart),
+                modifier = Modifier.weight(0.5f),
                 date = expenseDate
             )
             TeiraOutlinedButton(
-                modifier = Modifier.align(Alignment.BottomEnd),
+                modifier = Modifier.weight(0.5f),
                 text = "Save",
                 onClick = {
                     onClick() // This will cause a recomposition
-                    if (expenseName.isNotEmpty() && expenseValue.isNotEmpty() && selectedCategoryId > 0) {
+                    if (expenseName.isNotEmpty() && expenseValue.isNotEmpty() && selectedCategoryId.value > 0) {
                         quickExpenseBarViewModel.saveQuickExpense(
-                            selectedCategoryId,
+                            selectedCategoryId.value,
                             expenseName,
                             expenseValue.toDouble(),
                             expenseDate
@@ -211,20 +171,59 @@ fun ExpandedQuickExpense(
 
 @Composable
 fun ClosedQuickExpense(onClick: () -> Unit) {
-    Box(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(MaterialTheme.spacing.medium)
+            .padding(MaterialTheme.spacing.large),
+        horizontalArrangement = Arrangement.SpaceAround,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            modifier = Modifier.align(Alignment.CenterStart),
             text = "Add a quick expense"
         )
         TeiraOutlinedButton(
-            modifier = Modifier.align(Alignment.CenterEnd),
             text = "Add",
             onClick = onClick
         )
+    }
+}
+
+@Composable
+fun CategoryDropdown(
+    modifier: Modifier = Modifier,
+    selectedCategoryId: MutableState<Int>,
+    showAddCategoryDialogState: MutableState<Boolean>,
+    quickExpenseBarViewModel: QuickExpenseBarViewModel = hiltViewModel()
+) {
+    var expenseCategoryExpanded by remember { mutableStateOf(false) }
+    var selectedCategoryName by remember { mutableStateOf("Select the Category") }
+    val categoriesList by remember { quickExpenseBarViewModel.categories }.collectAsState(initial = listOf())
+
+    Box(
+        modifier = modifier
+            .width(200.dp)
+            .height(50.dp)
+            .clickable(onClick = { expenseCategoryExpanded = true })
+            .background(Purple40)
+    ) {
+        Text(selectedCategoryName, modifier = Modifier.align(Alignment.Center), color = Color.White)
+    }
+    DropdownMenu(
+        modifier = Modifier.width(200.dp),
+        expanded = expenseCategoryExpanded,
+        onDismissRequest = { expenseCategoryExpanded = false })
+    {
+        categoriesList.forEach { category ->
+            DropdownMenuItem(
+                onClick = {
+                    selectedCategoryName = category.name
+                    selectedCategoryId.value = category.categoryId
+                    expenseCategoryExpanded = false
+                }
+            ) {
+                Text(text = category.name)
+            }
+        }
     }
 }
 

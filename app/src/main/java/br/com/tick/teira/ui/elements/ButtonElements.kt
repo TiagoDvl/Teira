@@ -9,7 +9,11 @@ import androidx.compose.ui.graphics.Color
 import br.com.tick.teira.ui.theme.Purple40
 
 @Composable
-fun TeiraOutlinedButton(modifier: Modifier = Modifier, text: String, onClick: () -> Unit) {
+fun TeiraOutlinedButton(
+    modifier: Modifier = Modifier,
+    text: String,
+    onClick: () -> Unit
+) {
     FilledTonalButton(
         modifier = modifier,
         colors = ButtonDefaults.textButtonColors(
