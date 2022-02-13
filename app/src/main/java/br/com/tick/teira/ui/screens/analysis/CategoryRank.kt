@@ -3,8 +3,8 @@ package br.com.tick.teira.ui.screens.analysis
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
@@ -41,14 +41,20 @@ fun MostExpensiveCategoryBody(
     mostExpensiveCategoriesState: MostExpensiveCategoriesStates.Full,
     modifier: Modifier = Modifier
 ) {
-    Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
         mostExpensiveCategoriesState.mostExpensiveCategories.forEach {
-            Column {
+            Box {
                 CategoryCircle(
                     it.categoryName.substring(0, 3),
                     it.color
                 )
-                Text(text = String.format("%.2f", it.amount))
+                Text(
+                    modifier = modifier.fillMaxSize().align(Alignment.Center),
+                    text = String.format("%.2f", it.amount)
+                )
             }
 
         }

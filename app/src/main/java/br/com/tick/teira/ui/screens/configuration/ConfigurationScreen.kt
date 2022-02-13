@@ -1,15 +1,10 @@
 package br.com.tick.teira.ui.screens.configuration
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.TextField
 import androidx.compose.material3.MaterialTheme
@@ -22,12 +17,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import br.com.tick.teira.ui.screens.configuration.states.MonthlyIncomeStates
@@ -43,15 +36,12 @@ fun ConfigurationScreen(
         color = MaterialTheme.colorScheme.background
     ) {
         Column(
-            modifier = modifier.padding(MaterialTheme.spacing.extraSmall)
+            modifier = modifier
+                .fillMaxSize()
+                .padding(MaterialTheme.spacing.extraSmall),
+            verticalArrangement = Arrangement.Center
         ) {
-            Row(
-                modifier = modifier.fillMaxHeight()
-            ) {
-                SettingField(
-                    modifier = modifier.align(Alignment.CenterVertically)
-                )
-            }
+            SettingField()
         }
     }
 }
@@ -61,47 +51,35 @@ fun SettingField(
     modifier: Modifier = Modifier,
     viewModel: ConfigurationScreenViewModel = hiltViewModel()
 ) {
-    Box(
+    Column(
         modifier = modifier
             .fillMaxWidth()
+            .padding(MaterialTheme.spacing.extraSmall),
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(MaterialTheme.spacing.extraSmall)
-        ) {
-            val incomeValue by remember(viewModel) { viewModel.monthlyIncomeFlow }.collectAsState(
-                MonthlyIncomeStates.Loading
-            )
-            var monthlyIncomeTextFieldValue by remember(incomeValue) { mutableStateOf(incomeValue.value.toString()) }
+        val incomeValue by remember(viewModel) { viewModel.monthlyIncomeFlow }.collectAsState(MonthlyIncomeStates.Loading)
+        var monthlyIncomeTextFieldValue by remember(incomeValue) { mutableStateOf(incomeValue.value.toString()) }
 
-            Text(
-                modifier = Modifier.align(CenterHorizontally),
-                text = "Valor do ordenado mensal",
-                color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
-            TextField(
-                modifier = Modifier.align(CenterHorizontally),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                value = monthlyIncomeTextFieldValue,
-                onValueChange = {
-                    monthlyIncomeTextFieldValue = it
-                    viewModel.saveMonthlyIncome(it.toDouble())
-                }
-            )
-            Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
-            Text(
-                modifier = Modifier
-                    .width(200.dp)
-                    .align(CenterHorizontally),
-                text = "O valor será salvo ao digitar. Avisaremos se algo der errado :)",
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Thin,
-                maxLines = 2,
-                textAlign = TextAlign.Center
-            )
-        }
+        Text(
+            text = "Valor do ordenado mensal",
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.Bold
+        )
+        TextField(
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            value = monthlyIncomeTextFieldValue,
+            onValueChange = {
+                monthlyIncomeTextFieldValue = it
+                viewModel.saveMonthlyIncome(it.toDouble())
+            }
+        )
+        Text(
+            text = "O valor será salvo ao digitar. Avisaremos se algo der errado :)",
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Thin,
+            maxLines = 2,
+            textAlign = TextAlign.Center
+        )
     }
 }

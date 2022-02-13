@@ -8,7 +8,6 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun AnalysisScreen() {
-
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
