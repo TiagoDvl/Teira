@@ -1,9 +1,6 @@
 package br.com.tick.teira.ui.screens.analysis.viewmodels
 
 import androidx.lifecycle.ViewModel
-import br.com.tick.teira.ui.screens.analysis.states.AnalysisGraphStates
-import br.com.tick.teira.ui.screens.analysis.states.FinancialHealth
-import br.com.tick.teira.ui.screens.analysis.states.MostExpensiveCategoriesStates
 import br.com.tick.teira.ui.screens.analysis.usecases.CalculateFinancialHealthSituation
 import br.com.tick.teira.ui.screens.analysis.usecases.FetchLastMonthExpenses
 import br.com.tick.teira.ui.screens.analysis.usecases.GetMostExpensiveCategories
@@ -21,19 +18,19 @@ class AnalysisScreenViewModel @Inject constructor(
 
     val graphStates = flow {
         fetchExpenses().collect {
-            emit(AnalysisGraphStates.of(it))
+            emit(it)
         }
     }
 
     val mostExpenseCategoryList = flow {
         getMostExpensiveCategories().collect {
-            emit(MostExpensiveCategoriesStates.of(it))
+            emit(it)
         }
     }
 
     val financialHealthSituation = flow {
         calculateFinancialHealthSituation().collect {
-            emit(FinancialHealth.of(it.first, it.second))
+            emit(it)
         }
     }
 }

@@ -23,7 +23,9 @@ fun WalletScreen() {
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
     ) {
         if (showAddCategoryDialogState.value) {
-            AddNewCategoryDialog(showAddCategoryDialogState)
+            AddNewCategoryDialog {
+                showAddCategoryDialogState.value = false
+            }
         }
         QuickExpense(showAddCategoryDialogState = showAddCategoryDialogState)
         ExpensesGrid()

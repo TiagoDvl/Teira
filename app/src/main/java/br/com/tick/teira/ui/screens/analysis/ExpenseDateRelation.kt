@@ -28,10 +28,10 @@ fun ExpenseDateRelation(
 ) {
     val analysisGraph by remember { viewModel.graphStates }.collectAsState(AnalysisGraphStates.Loading)
 
-    when (val pleaseFixMe = analysisGraph) {
+    when (analysisGraph) {
         is AnalysisGraphStates.AnalysisGraph -> ExpenseGraph(
             modifier = modifier,
-            analysisGraph = pleaseFixMe
+            analysisGraph = analysisGraph as AnalysisGraphStates.AnalysisGraph
         )
         AnalysisGraphStates.Loading -> GraphLoading()
     }
