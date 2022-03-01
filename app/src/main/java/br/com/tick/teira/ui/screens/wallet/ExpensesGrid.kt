@@ -35,7 +35,7 @@ fun ExpensesGrid(
     expensesGridViewModel: ExpensesGridViewModel = hiltViewModel()
 ) {
     val expensesListState by remember {
-        expensesGridViewModel.getExpensesGridState()
+        expensesGridViewModel.getExpensesGridState
     }.collectAsState(ExpensesGridStates.Loading)
 
     Body(modifier, expensesListState)

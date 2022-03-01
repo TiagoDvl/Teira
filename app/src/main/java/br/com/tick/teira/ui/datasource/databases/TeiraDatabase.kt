@@ -10,4 +10,6 @@ abstract class TeiraDatabase : RoomDatabase() {
 
     abstract fun expenseDao(): ExpenseDao
 
+    abstract fun categoryDao(): CategoryDao
+
 }

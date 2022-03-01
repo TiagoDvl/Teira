@@ -13,9 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -58,8 +56,7 @@ fun SettingField(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val incomeValue by remember(viewModel) { viewModel.monthlyIncomeFlow }.collectAsState(MonthlyIncomeStates.Loading)
-        var monthlyIncomeTextFieldValue by remember(incomeValue) { mutableStateOf(incomeValue.value.toString()) }
+        val incomeValue by remember { viewModel.monthlyIncomeFlow }.collectAsState(MonthlyIncomeStates.Loading)
 
         Text(
             text = "Valor do ordenado mensal",
@@ -68,9 +65,8 @@ fun SettingField(
         )
         TextField(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            value = monthlyIncomeTextFieldValue,
+            value = incomeValue.value.toString(),
             onValueChange = {
-                monthlyIncomeTextFieldValue = it
                 viewModel.saveMonthlyIncome(it.toDouble())
             }
         )

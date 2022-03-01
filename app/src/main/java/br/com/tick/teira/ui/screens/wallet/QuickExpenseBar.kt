@@ -27,7 +27,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -53,10 +52,10 @@ fun QuickExpense(
     modifier: Modifier = Modifier,
     showAddCategoryDialogState: MutableState<Boolean>
 ) {
-    var isExpanded by remember { mutableStateOf(false) }
-    var quickExpenseComposableHeight by remember { mutableStateOf(80.dp) }
+    val isExpanded = remember { mutableStateOf(false) }
+    val quickExpenseComposableHeight = remember { mutableStateOf(80.dp) }
     val animatedSize by animateDpAsState(
-        targetValue = quickExpenseComposableHeight,
+        targetValue = quickExpenseComposableHeight.value,
         tween(
             durationMillis = 500
         )
@@ -69,17 +68,17 @@ fun QuickExpense(
             .background(Purple80)
             .height(animatedSize)
     ) {
-        if (isExpanded) {
-            quickExpenseComposableHeight = 200.dp
+        if (isExpanded.value) {
+            quickExpenseComposableHeight.value = 200.dp
             ExpandedQuickExpense(
                 showAddCategoryDialogState = showAddCategoryDialogState
             ) {
-                isExpanded = isExpanded.not()
+                isExpanded.value = isExpanded.value.not()
             }
         } else {
-            quickExpenseComposableHeight = 80.dp
+            quickExpenseComposableHeight.value = 80.dp
             ClosedQuickExpense {
-                isExpanded = isExpanded.not()
+                isExpanded.value = isExpanded.value.not()
             }
         }
     }
@@ -92,9 +91,9 @@ fun ExpandedQuickExpense(
     quickExpenseBarViewModel: QuickExpenseBarViewModel = hiltViewModel(),
     onClick: () -> Unit
 ) {
-    var expenseName by remember { mutableStateOf("") }
-    var expenseValue by remember { mutableStateOf("") }
-    var selectedCategoryId = remember { mutableStateOf(0) }
+    val expenseName = remember { mutableStateOf("") }
+    val expenseValue = remember { mutableStateOf("") }
+    val selectedCategoryId = remember { mutableStateOf(0) }
 
     Column(
         modifier = modifier
@@ -109,25 +108,24 @@ fun ExpandedQuickExpense(
             TeiraBaseTextField(
                 modifier = Modifier.width(200.dp),
                 color = Pink40,
-                value = expenseName,
+                value = expenseName.value,
                 label = "Expense Name"
             ) {
-                expenseName = it
+                expenseName.value = it
             }
             TeiraBaseTextField(
                 modifier = Modifier.width(200.dp),
                 color = Pink40,
-                value = expenseValue,
+                value = expenseValue.value,
                 label = "Expense Value"
             ) {
-                expenseValue = it
+                expenseValue.value = it
             }
         }
         Row {
-            CategoryDropdown(
-                showAddCategoryDialogState = showAddCategoryDialogState,
-                selectedCategoryId = selectedCategoryId
-            )
+            CategoryDropdown {
+                selectedCategoryId.value = it
+            }
             Spacer(modifier = Modifier.width(MaterialTheme.spacing.extraSmall))
             FilledTonalButton(
                 modifier = Modifier.align(Alignment.CenterVertically),
@@ -155,11 +153,14 @@ fun ExpandedQuickExpense(
                 text = "Save",
                 onClick = {
                     onClick() // This will cause a recomposition
-                    if (expenseName.isNotEmpty() && expenseValue.isNotEmpty() && selectedCategoryId.value > 0) {
+                    if (expenseName.value.isNotEmpty() &&
+                        expenseValue.value.isNotEmpty() &&
+                        selectedCategoryId.value > 0
+                    ) {
                         quickExpenseBarViewModel.saveQuickExpense(
                             selectedCategoryId.value,
-                            expenseName,
-                            expenseValue.toDouble(),
+                            expenseName.value,
+                            expenseValue.value.toDouble(),
                             expenseDate
                         )
                     }
@@ -191,34 +192,33 @@ fun ClosedQuickExpense(onClick: () -> Unit) {
 @Composable
 fun CategoryDropdown(
     modifier: Modifier = Modifier,
-    selectedCategoryId: MutableState<Int>,
-    showAddCategoryDialogState: MutableState<Boolean>,
-    quickExpenseBarViewModel: QuickExpenseBarViewModel = hiltViewModel()
+    quickExpenseBarViewModel: QuickExpenseBarViewModel = hiltViewModel(),
+    onClick: (Int) -> Unit
 ) {
-    var expenseCategoryExpanded by remember { mutableStateOf(false) }
-    var selectedCategoryName by remember { mutableStateOf("Select the Category") }
+    val expenseCategoryExpanded = remember { mutableStateOf(false) }
+    val selectedCategoryName = remember { mutableStateOf("Select the Category") }
     val categoriesList by remember { quickExpenseBarViewModel.categories }.collectAsState(initial = listOf())
 
     Box(
         modifier = modifier
             .width(200.dp)
             .height(50.dp)
-            .clickable(onClick = { expenseCategoryExpanded = true })
+            .clickable(onClick = { expenseCategoryExpanded.value = true })
             .background(Purple40)
     ) {
-        Text(selectedCategoryName, modifier = Modifier.align(Alignment.Center), color = Color.White)
+        Text(selectedCategoryName.value, modifier = Modifier.align(Alignment.Center), color = Color.White)
     }
     DropdownMenu(
         modifier = Modifier.width(200.dp),
-        expanded = expenseCategoryExpanded,
-        onDismissRequest = { expenseCategoryExpanded = false })
+        expanded = expenseCategoryExpanded.value,
+        onDismissRequest = { expenseCategoryExpanded.value = false })
     {
         categoriesList.forEach { category ->
             DropdownMenuItem(
                 onClick = {
-                    selectedCategoryName = category.name
-                    selectedCategoryId.value = category.categoryId
-                    expenseCategoryExpanded = false
+                    selectedCategoryName.value = category.name
+                    expenseCategoryExpanded.value = false
+                    onClick(category.categoryId)
                 }
             ) {
                 Text(text = category.name)

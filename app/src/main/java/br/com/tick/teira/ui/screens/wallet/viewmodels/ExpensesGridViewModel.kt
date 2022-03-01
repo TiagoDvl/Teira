@@ -3,11 +3,9 @@ package br.com.tick.teira.ui.screens.wallet.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.tick.teira.shared.dispatchers.DispatcherProvider
-import br.com.tick.teira.ui.screens.wallet.states.ExpensesGridStates
 import br.com.tick.teira.ui.screens.wallet.usecases.CreateExpensesCards
 import br.com.tick.teira.ui.screens.wallet.usecases.RemoveExpenseCard
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
@@ -20,10 +18,9 @@ class ExpensesGridViewModel @Inject constructor(
     private val dispatcherProvider: DispatcherProvider
 ) : ViewModel() {
 
-    // https://proandroiddev.com/better-handling-states-between-viewmodel-and-composable-7ca14af379cb
-    fun getExpensesGridState(): Flow<ExpensesGridStates> = flow {
+    val getExpensesGridState = flow {
         createExpensesCards().collect {
-            emit(ExpensesGridStates.of(it))
+            emit(it)
         }
     }
 

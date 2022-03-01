@@ -15,7 +15,7 @@ class ConfigurationScreenViewModel @Inject constructor(
 ) : ViewModel() {
 
     val monthlyIncomeFlow = dataStoreRepository.getMonthlyIncome().map {
-        MonthlyIncomeStates.Value(it)
+        MonthlyIncomeStates.of(it)
     }
 
     fun saveMonthlyIncome(value: Double) {

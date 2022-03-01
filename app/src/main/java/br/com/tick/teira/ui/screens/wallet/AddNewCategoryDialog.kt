@@ -10,7 +10,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,10 +27,10 @@ import br.com.tick.teira.ui.theme.spacing
 
 @Composable
 fun AddNewCategoryDialog(
-    showAddCategoryDialogState: MutableState<Boolean>,
-    viewModel: QuickExpenseBarViewModel = hiltViewModel()
+    viewModel: QuickExpenseBarViewModel = hiltViewModel(),
+    onClick: () -> Unit
 ) {
-    Dialog(onDismissRequest = { showAddCategoryDialogState.value = false }) {
+    Dialog(onDismissRequest = { onClick() }) {
         Card(
             modifier = Modifier
                 .height(200.dp)
@@ -59,7 +58,7 @@ fun AddNewCategoryDialog(
                     if (categoryName.isNotBlank()) {
                         viewModel.addCategory(categoryName)
                     }
-                    showAddCategoryDialogState.value = false
+                    onClick()
                 }
             }
         }
