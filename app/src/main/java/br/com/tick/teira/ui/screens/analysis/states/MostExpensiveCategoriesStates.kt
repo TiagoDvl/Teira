@@ -7,7 +7,7 @@ sealed class MostExpensiveCategoriesStates {
     companion object {
         fun of(mostExpensiveCategories: List<MostExpensiveCategory>): MostExpensiveCategoriesStates {
 
-            return if (mostExpensiveCategories.isEmpty()) Loading else Full(mostExpensiveCategories)
+            return if (mostExpensiveCategories.isEmpty()) Loading else Full(mostExpensiveCategories.take(5))
         }
     }
 

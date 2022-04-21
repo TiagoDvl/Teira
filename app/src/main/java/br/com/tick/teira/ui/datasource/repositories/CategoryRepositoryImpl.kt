@@ -9,8 +9,8 @@ import javax.inject.Inject
 
 class CategoryRepositoryImpl @Inject constructor(private val categoryDao: CategoryDao) : CategoryRepository {
 
-    override suspend fun addCategory(categoryName: String): Boolean {
-        return categoryDao.addCategory(Category(name = categoryName)) > 0
+    override suspend fun addCategory(categoryName: String) {
+        categoryDao.addCategory(Category(name = categoryName))
     }
 
     override suspend fun getCategories(): Flow<List<ExpenseCategory>> = categoryDao.getCategories().map {

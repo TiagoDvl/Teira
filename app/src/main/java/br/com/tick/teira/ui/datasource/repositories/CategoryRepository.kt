@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface CategoryRepository {
 
-    suspend fun addCategory(categoryName: String): Boolean
+    suspend fun addCategory(categoryName: String)
 
     suspend fun getCategories(): Flow<List<ExpenseCategory>>
 
