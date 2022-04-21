@@ -34,6 +34,6 @@ class GetMostExpensiveCategories @Inject constructor(
             }
         }
 
-        MostExpensiveCategoriesStates.of(mostExpensiveCategories)
+        MostExpensiveCategoriesStates.of(mostExpensiveCategories.sortedByDescending { it.amount })
     }
 }
