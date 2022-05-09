@@ -1,6 +1,7 @@
 package br.com.tick.teira.ui.screens.configuration.viewmodels
 
 import app.cash.turbine.test
+import br.com.tick.teira.shared.dispatchers.FakeDispatcher
 import br.com.tick.teira.ui.datasource.repositories.CategoryRepository
 import br.com.tick.teira.ui.datasource.repositories.ExpenseRepository
 import br.com.tick.teira.ui.datasource.repositories.FakeCategoryRepository
@@ -11,7 +12,6 @@ import br.com.tick.teira.ui.screens.wallet.states.ExpensesGridStates
 import br.com.tick.teira.ui.screens.wallet.usecases.CreateExpensesCards
 import br.com.tick.teira.ui.screens.wallet.usecases.RemoveExpenseCard
 import br.com.tick.teira.ui.screens.wallet.viewmodels.ExpensesGridViewModel
-import br.com.tick.teira.ui.shared.dispatchers.FakeDispatcher
 import br.com.tick.teira.utils.CoroutineTestRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
