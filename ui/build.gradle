@@ -1,5 +1,5 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
@@ -9,16 +9,11 @@ android {
     compileSdk 32
 
     defaultConfig {
-        applicationId "br.com.tick.teira"
         minSdk 25
-        targetSdk 31
-        versionCode 1
-        versionName "1.0"
+        targetSdk 32
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary true
-        }
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
@@ -53,26 +48,35 @@ android {
         kotlinOptions.freeCompilerArgs += [
                 "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
                 "-Xopt-in=androidx.compose.material.ExperimentalMaterialApi",
-                "-Xopt-in=androidx.compose.foundation.ExperimentalFoundationApi"
+                "-Xopt-in=androidx.compose.foundation.ExperimentalFoundationApi",
+                "-Xopt-in=kotlin.RequiresOptIn"
         ]
-    }
-    hilt {
-        enableAggregatingTask = true
     }
 }
 
 dependencies {
 
     implementation project(path: ':sdk')
-    implementation project(path: ':ui')
 
     implementation "androidx.core:core-ktx:$coreKtxVersion"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleRuntimeKtx"
+
+    implementation "androidx.compose.ui:ui:$composeVersion"
+    implementation "androidx.compose.material:material:$composeMaterialVersion"
+    implementation "androidx.compose.foundation:foundation:$composeMaterialVersion"
+    implementation "androidx.compose.material3:material3:$composeMaterial3Version"
+
+    implementation "androidx.activity:activity-compose:$activityComposeVersion"
+    implementation "androidx.compose.ui:ui-tooling-preview:$composeVersion"
+    implementation "androidx.navigation:navigation-compose:$navigationVersion"
     debugImplementation "androidx.compose.ui:ui-tooling:$composeVersion"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$composeVersion"
 
     implementation "com.google.dagger:hilt-android:$hiltVersion"
     implementation "androidx.hilt:hilt-navigation-compose:$hiltNavigationComposeVersion"
     kapt "com.google.dagger:hilt-compiler:$hiltVersion"
+
+    implementation "com.github.PhilJay:MPAndroidChart:$mpChartVersion"
 
     // Unit Tests dependencies
     testImplementation "junit:junit:$jUnitVersion"

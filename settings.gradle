@@ -15,3 +15,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Teira"
 include ':app'
+include ':ui'
+include ':sdk'
