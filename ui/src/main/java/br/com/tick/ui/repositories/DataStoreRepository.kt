@@ -1,9 +1,10 @@
-package br.com.tick.sdk.repositories
+package br.com.tick.ui.repositories
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.doublePreferencesKey
 import androidx.datastore.preferences.core.edit
+import br.com.tick.sdk.repositories.LocalDataRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

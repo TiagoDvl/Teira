@@ -39,8 +39,6 @@ dependencies {
     implementation "androidx.core:core-ktx:$coreKtxVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
 
-    implementation "androidx.datastore:datastore-preferences:$dataStoreVersion"
-
     implementation "androidx.room:room-runtime:$roomVersion"
     implementation "androidx.room:room-ktx:$roomVersion"
     kapt "androidx.room:room-compiler:$roomVersion"

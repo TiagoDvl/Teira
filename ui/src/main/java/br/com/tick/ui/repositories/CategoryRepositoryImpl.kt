@@ -1,8 +1,9 @@
-package br.com.tick.sdk.repositories
+package br.com.tick.ui.repositories
 
 import br.com.tick.sdk.database.CategoryDao
 import br.com.tick.sdk.database.entities.Category
 import br.com.tick.sdk.domain.ExpenseCategory
+import br.com.tick.sdk.repositories.CategoryRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

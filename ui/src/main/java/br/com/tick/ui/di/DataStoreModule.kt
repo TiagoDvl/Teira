@@ -1,4 +1,4 @@
-package br.com.tick.sdk.di
+package br.com.tick.ui.di
 
 import android.content.Context
 import androidx.datastore.core.DataStore
