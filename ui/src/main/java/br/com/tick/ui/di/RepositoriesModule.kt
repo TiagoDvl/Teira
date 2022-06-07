@@ -1,11 +1,11 @@
-package br.com.tick.sdk.di
+package br.com.tick.ui.di
 
 import br.com.tick.sdk.repositories.CategoryRepository
-import br.com.tick.sdk.repositories.CategoryRepositoryImpl
-import br.com.tick.sdk.repositories.DataStoreRepository
 import br.com.tick.sdk.repositories.ExpenseRepository
-import br.com.tick.sdk.repositories.ExpensesRepositoryImpl
 import br.com.tick.sdk.repositories.LocalDataRepository
+import br.com.tick.ui.repositories.CategoryRepositoryImpl
+import br.com.tick.ui.repositories.DataStoreRepository
+import br.com.tick.ui.repositories.ExpensesRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
