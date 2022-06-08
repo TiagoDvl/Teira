@@ -81,9 +81,4 @@ dependencies {
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$ktxCoroutinesTestVersion"
     testImplementation "app.cash.turbine:turbine:$turbineVersion"
     testImplementation "com.google.truth:truth:$truthVersion"
-
-    // Android tests
-    androidTestImplementation "androidx.test.ext:junit:$androidXJUnitVersion"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoCoreVersion"
-    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$composeVersion"
 }
