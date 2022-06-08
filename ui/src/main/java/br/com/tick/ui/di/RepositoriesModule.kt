@@ -1,11 +1,11 @@
 package br.com.tick.ui.di
 
-import br.com.tick.sdk.repositories.CategoryRepository
-import br.com.tick.sdk.repositories.ExpenseRepository
+import br.com.tick.sdk.repositories.CategorizedExpenseRepository
+import br.com.tick.sdk.repositories.ExpenseCategoryRepository
 import br.com.tick.sdk.repositories.LocalDataRepository
-import br.com.tick.ui.repositories.CategoryRepositoryImpl
+import br.com.tick.ui.repositories.CategorizedExpensesRepositoryImpl
 import br.com.tick.ui.repositories.DataStoreRepository
-import br.com.tick.ui.repositories.ExpensesRepositoryImpl
+import br.com.tick.ui.repositories.ExpenseCategoryRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -16,10 +16,14 @@ import dagger.hilt.components.SingletonComponent
 abstract class RepositoriesModule {
 
     @Binds
-    abstract fun bindExpensesRepository(expensesRepositoryImpl: ExpensesRepositoryImpl): ExpenseRepository
+    abstract fun bindCategorizedExpensesRepository(
+        categorizedExpensesRepositoryImpl: CategorizedExpensesRepositoryImpl
+    ): CategorizedExpenseRepository
 
     @Binds
-    abstract fun bindCategoryRepository(categoryRepositoryImpl: CategoryRepositoryImpl): CategoryRepository
+    abstract fun bindExpenseCategoryRepository(
+        expenseCategoryRepositoryImpl: ExpenseCategoryRepositoryImpl
+    ): ExpenseCategoryRepository
 
     @Binds
     abstract fun bindLocalDataRepository(dataStoreRepository: DataStoreRepository): LocalDataRepository
