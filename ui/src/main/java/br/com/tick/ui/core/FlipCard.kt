@@ -28,11 +28,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import br.com.tick.R
+import br.com.tick.ui.screens.wallet.models.ExpenseCard
+import br.com.tick.ui.screens.wallet.viewmodels.ExpensesGridViewModel
 import br.com.tick.ui.theme.Pink40
 import br.com.tick.ui.theme.PurpleGrey80
 import br.com.tick.ui.theme.spacing
-import br.com.tick.ui.wallet.models.ExpenseCard
-import br.com.tick.ui.wallet.viewmodels.ExpensesGridViewModel
 
 enum class CardFace(val angle: Float) {
     Front(0f) {

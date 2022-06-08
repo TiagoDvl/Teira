@@ -1,18 +1,17 @@
 package br.com.tick.ui.viewmodels
 
 import app.cash.turbine.test
-import br.com.tick.sdk.repositories.CategoryRepository
-import br.com.tick.sdk.repositories.ExpenseRepository
+import br.com.tick.sdk.repositories.CategorizedExpenseRepository
 import br.com.tick.sdk.repositories.LocalDataRepository
-import br.com.tick.ui.analysis.states.AnalysisGraphStates
-import br.com.tick.ui.analysis.states.MostExpensiveCategoriesStates
-import br.com.tick.ui.analysis.usecases.CalculateFinancialHealthSituation
-import br.com.tick.ui.analysis.usecases.FetchLastMonthExpenses
-import br.com.tick.ui.analysis.usecases.GetMostExpensiveCategories
-import br.com.tick.ui.analysis.viewmodels.AnalysisScreenViewModel
-import br.com.tick.ui.repositories.FakeCategoryRepository
-import br.com.tick.ui.repositories.FakeExpenseRepository
-import br.com.tick.ui.repositories.FakeLocalDataRepository
+import br.com.tick.ui.repositories.FakeCategorizedExpenseRepository
+import br.com.tick.ui.repositories.FakeDataStoreRepository
+import br.com.tick.ui.repositories.FakeExpenseCategoryRepository
+import br.com.tick.ui.screens.analysis.states.AnalysisGraphStates
+import br.com.tick.ui.screens.analysis.states.MostExpensiveCategoriesStates
+import br.com.tick.ui.screens.analysis.usecases.CalculateFinancialHealthSituation
+import br.com.tick.ui.screens.analysis.usecases.FetchLastMonthExpenses
+import br.com.tick.ui.screens.analysis.usecases.GetMostExpensiveCategories
+import br.com.tick.ui.screens.analysis.viewmodels.AnalysisScreenViewModel
 import br.com.tick.utils.CoroutineTestRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -26,17 +25,18 @@ class AnalysisScreenViewModelTest {
     val testRule = CoroutineTestRule()
 
     private fun getViewModel(
-        expenseRepository: ExpenseRepository = FakeExpenseRepository(),
-        categoryRepository: CategoryRepository = FakeCategoryRepository(),
-        localDataRepository: LocalDataRepository = FakeLocalDataRepository(),
+        categorizedExpenseRepository: CategorizedExpenseRepository = FakeCategorizedExpenseRepository(),
+        localDataRepository: LocalDataRepository = FakeDataStoreRepository()
     ): AnalysisScreenViewModel {
-        val fetchExpenses = FetchLastMonthExpenses(expenseRepository)
-        val getMostExpensiveCategories = GetMostExpensiveCategories(expenseRepository, categoryRepository)
-        val calculateFinancialHealthSituation =
-            CalculateFinancialHealthSituation(expenseRepository, localDataRepository)
+        val fetchLastMonthExpenses = FetchLastMonthExpenses(categorizedExpenseRepository)
+        val getMostExpensiveCategories = GetMostExpensiveCategories(categorizedExpenseRepository)
+        val calculateFinancialHealthSituation = CalculateFinancialHealthSituation(
+            categorizedExpenseRepository,
+            localDataRepository
+        )
 
         return AnalysisScreenViewModel(
-            fetchExpenses,
+            fetchLastMonthExpenses,
             getMostExpensiveCategories,
             calculateFinancialHealthSituation
         )
@@ -44,15 +44,12 @@ class AnalysisScreenViewModelTest {
 
     @Test
     fun `When adding a single expense, that one must be the most expensive one`() = runTest {
-        val expenseRepository = FakeExpenseRepository()
-        val categoryRepository = FakeCategoryRepository()
+        val expenseRepository = FakeCategorizedExpenseRepository()
         val analysisScreenViewModel = getViewModel(
-            expenseRepository = expenseRepository,
-            categoryRepository = categoryRepository
+            categorizedExpenseRepository = expenseRepository
         )
 
         val categoryName = "Name_1"
-        categoryRepository.addCategory(categoryName)
         expenseRepository.addExpense(0, categoryName, 15.0, 1234)
 
         analysisScreenViewModel.mostExpenseCategoryList.test {
@@ -69,11 +66,10 @@ class AnalysisScreenViewModelTest {
     @Test
     fun `When adding two expenses in different categories, the most expensive must be the highest expense category`() =
         runTest {
-            val expenseRepository = FakeExpenseRepository()
-            val categoryRepository = FakeCategoryRepository()
+            val expenseRepository = FakeCategorizedExpenseRepository()
+            val categoryRepository = FakeExpenseCategoryRepository()
             val analysisScreenViewModel = getViewModel(
-                expenseRepository = expenseRepository,
-                categoryRepository = categoryRepository
+                categorizedExpenseRepository = expenseRepository
             )
 
             val categoryName = "Name_1"
@@ -97,14 +93,11 @@ class AnalysisScreenViewModelTest {
 
     @Test
     fun `When adding multiple expenses in multiple categories, expense list should only have the top five`() = runTest {
-        val expenseRepository = FakeExpenseRepository()
-        val categoryRepository = FakeCategoryRepository()
+        val expenseRepository = FakeCategorizedExpenseRepository()
         val analysisScreenViewModel = getViewModel(
-            expenseRepository = expenseRepository,
-            categoryRepository = categoryRepository
+            categorizedExpenseRepository = expenseRepository
         )
 
-        for (i in 0..5) categoryRepository.addCategory("Name_$i")
         for (i in 0..5) expenseRepository.addExpense(i, "Name_$i", 10.0 + i, 1234)
 
         analysisScreenViewModel.mostExpenseCategoryList.test {
@@ -118,10 +111,10 @@ class AnalysisScreenViewModelTest {
 
     @Test
     fun `When user made an expense, financial health should reflect this change`() = runTest {
-        val expenseRepository = FakeExpenseRepository()
-        val localDataRepository = FakeLocalDataRepository()
+        val expenseRepository = FakeCategorizedExpenseRepository()
+        val localDataRepository = FakeDataStoreRepository()
         val analysisScreenViewModel = getViewModel(
-            expenseRepository = expenseRepository,
+            categorizedExpenseRepository = expenseRepository,
             localDataRepository = localDataRepository
         )
 
@@ -135,10 +128,10 @@ class AnalysisScreenViewModelTest {
 
     @Test
     fun `When user has no expenses, financial health should be 0`() = runTest {
-        val expenseRepository = FakeExpenseRepository()
-        val localDataRepository = FakeLocalDataRepository()
+        val expenseRepository = FakeCategorizedExpenseRepository()
+        val localDataRepository = FakeDataStoreRepository()
         val analysisScreenViewModel = getViewModel(
-            expenseRepository = expenseRepository,
+            categorizedExpenseRepository = expenseRepository,
             localDataRepository = localDataRepository
         )
 
@@ -151,9 +144,9 @@ class AnalysisScreenViewModelTest {
 
     @Test
     fun `When user has an expense, it should show up on the graph`() = runTest {
-        val expenseRepository = FakeExpenseRepository()
+        val expenseRepository = FakeCategorizedExpenseRepository()
         val analysisScreenViewModel = getViewModel(
-            expenseRepository = expenseRepository
+            categorizedExpenseRepository = expenseRepository
         )
 
         expenseRepository.addExpense(0, "Name_1", 10.0, 1234)

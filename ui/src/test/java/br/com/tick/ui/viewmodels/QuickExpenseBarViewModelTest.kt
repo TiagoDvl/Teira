@@ -1,11 +1,11 @@
 package br.com.tick.ui.viewmodels
 
 import app.cash.turbine.test
-import br.com.tick.sdk.repositories.CategoryRepository
-import br.com.tick.sdk.repositories.ExpenseRepository
-import br.com.tick.ui.repositories.FakeCategoryRepository
-import br.com.tick.ui.repositories.FakeExpenseRepository
-import br.com.tick.ui.wallet.viewmodels.QuickExpenseBarViewModel
+import br.com.tick.sdk.repositories.CategorizedExpenseRepository
+import br.com.tick.sdk.repositories.ExpenseCategoryRepository
+import br.com.tick.ui.repositories.FakeCategorizedExpenseRepository
+import br.com.tick.ui.repositories.FakeExpenseCategoryRepository
+import br.com.tick.ui.screens.wallet.viewmodels.QuickExpenseBarViewModel
 import br.com.tick.utils.CoroutineTestRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -19,8 +19,8 @@ class QuickExpenseBarViewModelTest {
     val testRule = CoroutineTestRule()
 
     private fun getViewModel(
-        expenseRepository: ExpenseRepository = FakeExpenseRepository(),
-        categoryRepository: CategoryRepository = FakeCategoryRepository()
+        expenseRepository: CategorizedExpenseRepository = FakeCategorizedExpenseRepository(),
+        categoryRepository: ExpenseCategoryRepository = FakeExpenseCategoryRepository()
     ): QuickExpenseBarViewModel {
         return QuickExpenseBarViewModel(expenseRepository, categoryRepository)
     }
@@ -36,7 +36,7 @@ class QuickExpenseBarViewModelTest {
 
     @Test
     fun `When user has a category created, it should have at least one to choose from`() = runTest {
-        val categoryRepository = FakeCategoryRepository()
+        val categoryRepository = FakeExpenseCategoryRepository()
         val quickExpenseBarViewModel = getViewModel(categoryRepository = categoryRepository)
 
         val categoryName = "Name_1"

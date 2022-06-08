@@ -23,9 +23,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import br.com.tick.R
-import br.com.tick.ui.analysis.AnalysisScreen
-import br.com.tick.ui.configuration.ConfigurationScreen
-import br.com.tick.ui.wallet.WalletScreen
+import br.com.tick.ui.screens.analysis.AnalysisScreen
+import br.com.tick.ui.screens.configuration.ConfigurationScreen
+import br.com.tick.ui.screens.wallet.WalletScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
