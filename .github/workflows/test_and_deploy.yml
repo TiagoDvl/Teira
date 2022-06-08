@@ -6,8 +6,10 @@ jobs:
     runs-on: [macos-latest]
     steps:
       - uses: actions/checkout@v2
-
       - name: Unit tests
+        uses: actions/setup-java@v1
+        with:
+          java-version: '11'
         run: ./gradlew test
   android_tests:
     runs-on: [macos-latest]
