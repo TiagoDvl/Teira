@@ -14,3 +14,13 @@ jobs:
 
       - name: Unit tests
         run: ./gradlew testQa
+  android_tests:
+    runs-on: [macos-latest]
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Instrumentation Tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          script: ./gradlew connectedAndroidTest
