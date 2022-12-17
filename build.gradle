@@ -1,37 +1,39 @@
 buildscript {
     ext {
-        composeVersion = '1.1.1'
-        activityComposeVersion = '1.4.0'
+        composeVersion = '1.3.2'
+        activityComposeVersion = '1.6.1'
         composeMaterialVersion = '1.2.0-beta03'
-        composeMaterial3Version = '1.0.0-alpha13'
-        coroutinesVersion = '1.6.2'
-        coreKtxVersion = '1.8.0'
+        composeFoundation = '1.4.0-alpha03'
+        composeUi = '1.4.0-alpha03'
+        composeMaterial3Version = '1.1.0-alpha03'
+        coroutinesVersion = '1.6.4'
+        coreKtxVersion = '1.9.0'
         jUnitVersion = '4.13.2'
-        androidXJUnitVersion = '1.1.3'
-        espressoCoreVersion = '3.4.0'
+        androidXJUnitVersion = '1.1.4'
+        espressoCoreVersion = '3.5.0'
         mockitoVersion = '4.3.1'
         mockitoKotlinVersion = '4.0.0'
         ktxCoroutinesTestVersion = '1.6.0'
         lifecycleRuntimeKtx = '2.4.1'
         turbineVersion = '0.7.0'
         truthVersion = '1.1.3'
-        hiltVersion = '2.39.1'
+        hiltVersion = '2.44'
         hiltNavigationComposeVersion = '1.0.0'
-        roomVersion = '2.4.2'
+        roomVersion = '2.4.3'
         dataStoreVersion = '1.0.0'
-        navigationVersion = '2.4.2'
+        navigationVersion = '2.5.3'
         mpChartVersion = 'v3.1.0'
 
         dependencies {
-            classpath("com.google.dagger:hilt-android-gradle-plugin:2.39.1")
+            classpath("com.google.dagger:hilt-android-gradle-plugin:$hiltVersion")
         }
     }
 }
 
 plugins {
-    id 'com.android.application' version '7.2.1' apply false
-    id 'com.android.library' version '7.2.1' apply false
-    id 'org.jetbrains.kotlin.android' version '1.6.10' apply false
+    id 'com.android.application' version '7.3.1' apply false
+    id 'com.android.library' version '7.3.1' apply false
+    id 'org.jetbrains.kotlin.android' version '1.7.20' apply false
 }
 
 task clean(type: Delete) {
