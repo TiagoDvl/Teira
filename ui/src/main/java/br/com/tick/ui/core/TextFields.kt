@@ -1,8 +1,9 @@
 package br.com.tick.ui.core
 
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.foundation.background
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,11 +28,8 @@ fun TeiraBaseTextField(
                 )
             )
         },
-        colors = TextFieldDefaults.textFieldColors(
-            textColor = Color.White,
-            backgroundColor = color
-        ),
-        modifier = modifier,
+        colors = TextFieldDefaults.textFieldColors(textColor = Color.White),
+        modifier = modifier.background(color),
         value = value,
         singleLine = true,
         maxLines = 1,
