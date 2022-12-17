@@ -6,12 +6,12 @@ plugins {
 }
 
 android {
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "br.com.tick.teira"
-        minSdk 25
-        targetSdk 31
+        minSdk 29
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
