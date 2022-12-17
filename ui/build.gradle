@@ -61,8 +61,8 @@ dependencies {
     implementation "androidx.core:core-ktx:$coreKtxVersion"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleRuntimeKtx"
 
-    implementation "androidx.compose.ui:ui:$composeVersion"
-    implementation "androidx.compose.foundation:foundation:$composeMaterialVersion"
+    implementation "androidx.compose.ui:ui:$composeUi"
+    implementation "androidx.compose.foundation:foundation:$composeFoundation"
     implementation "androidx.compose.material3:material3:$composeMaterial3Version"
 
     implementation "androidx.activity:activity-compose:$activityComposeVersion"
