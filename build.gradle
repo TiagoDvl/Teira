@@ -1,13 +1,13 @@
 buildscript {
     ext {
-        composeVersion = '1.1.1'
+        composeVersion = '1.3.2'
         activityComposeVersion = '1.6.1'
         composeMaterialVersion = '1.2.0-beta03'
         composeFoundation = '1.4.0-alpha03'
         composeUi = '1.4.0-alpha03'
         composeMaterial3Version = '1.1.0-alpha03'
         coroutinesVersion = '1.6.4'
-        coreKtxVersion = '1.8.0'
+        coreKtxVersion = '1.9.0'
         jUnitVersion = '4.13.2'
         androidXJUnitVersion = '1.1.4'
         espressoCoreVersion = '3.5.0'
@@ -33,7 +33,7 @@ buildscript {
 plugins {
     id 'com.android.application' version '7.3.1' apply false
     id 'com.android.library' version '7.3.1' apply false
-    id 'org.jetbrains.kotlin.android' version '1.6.10' apply false
+    id 'org.jetbrains.kotlin.android' version '1.7.20' apply false
 }
 
 task clean(type: Delete) {
