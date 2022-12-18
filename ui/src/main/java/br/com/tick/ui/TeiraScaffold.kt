@@ -23,7 +23,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import br.com.tick.R
 import br.com.tick.ui.screens.analysis.AnalysisScreen
-import br.com.tick.ui.screens.configuration.ConfigurationScreen
+import br.com.tick.ui.screens.configuration.SettingsScreen
 import br.com.tick.ui.screens.wallet.WalletScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,7 +41,7 @@ fun TeiraScaffold() {
         },
         bottomBar = {
             val items = listOf(
-                NavigationItem.Configuration,
+                NavigationItem.Settings,
                 NavigationItem.Wallet,
                 NavigationItem.Analysis
             )
@@ -91,8 +91,8 @@ fun TeiraScaffold() {
                 navController = navHostController,
                 startDestination = NavigationItem.Wallet.route
             ) {
-                composable(NavigationItem.Configuration.route) {
-                    ConfigurationScreen()
+                composable(NavigationItem.Settings.route) {
+                    SettingsScreen()
                 }
                 composable(NavigationItem.Wallet.route) {
                     WalletScreen()
