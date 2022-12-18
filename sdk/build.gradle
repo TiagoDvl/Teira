@@ -1,8 +1,8 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
-    id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -44,7 +44,6 @@ dependencies {
     kapt "androidx.room:room-compiler:$roomVersion"
 
     implementation "com.google.dagger:hilt-android:$hiltVersion"
-    implementation "androidx.hilt:hilt-navigation-compose:$hiltNavigationComposeVersion"
     kapt "com.google.dagger:hilt-compiler:$hiltVersion"
 
     implementation "androidx.datastore:datastore-preferences:$dataStoreVersion"
