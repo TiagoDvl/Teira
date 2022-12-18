@@ -1,5 +1,5 @@
 name: Test and deploy to ${{ inputs.deploy_target }} by @${{ github.actor }}
-on: pull_request
+on: push
 
 jobs:
   unit_tests:
