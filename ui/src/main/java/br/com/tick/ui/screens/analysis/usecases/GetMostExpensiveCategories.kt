@@ -1,7 +1,7 @@
 package br.com.tick.ui.screens.analysis.usecases
 
 import androidx.compose.ui.graphics.Color
-import br.com.tick.sdk.repositories.CategorizedExpenseRepository
+import br.com.tick.sdk.repositories.categorizedexpense.CategorizedExpenseRepository
 import br.com.tick.ui.screens.analysis.models.MostExpensiveCategory
 import br.com.tick.ui.screens.analysis.states.MostExpensiveCategoriesStates
 import kotlinx.coroutines.flow.Flow

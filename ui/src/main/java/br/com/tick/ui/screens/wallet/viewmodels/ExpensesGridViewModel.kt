@@ -2,7 +2,7 @@ package br.com.tick.ui.screens.wallet.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import br.com.tick.ui.di.DispatcherProvider
+import br.com.tick.sdk.dispatchers.DispatcherProvider
 import br.com.tick.ui.screens.wallet.states.ExpensesGridStates
 import br.com.tick.ui.screens.wallet.usecases.CreateExpensesCards
 import br.com.tick.ui.screens.wallet.usecases.RemoveExpenseCard

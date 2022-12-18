@@ -1,10 +1,9 @@
 package br.com.tick.ui.viewmodels
 
 import app.cash.turbine.test
-import br.com.tick.ui.di.DispatcherProvider
-import br.com.tick.ui.dispatchers.FakeDispatcher
-import br.com.tick.ui.repositories.FakeDataStoreRepository
-import br.com.tick.ui.screens.configuration.viewmodels.SettingsScreenViewModel
+import br.com.tick.sdk.dispatchers.FakeDispatcher
+import br.com.tick.sdk.repositories.FakeDataStoreRepository
+import br.com.tick.ui.screens.settings.viewmodels.SettingsScreenViewModel
 import br.com.tick.utils.CoroutineTestRule
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi

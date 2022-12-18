@@ -1,7 +1,7 @@
 package br.com.tick.ui.screens.analysis.usecases
 
-import br.com.tick.sdk.repositories.CategorizedExpenseRepository
-import br.com.tick.sdk.repositories.LocalDataRepository
+import br.com.tick.sdk.repositories.categorizedexpense.CategorizedExpenseRepository
+import br.com.tick.sdk.repositories.localdata.LocalDataRepository
 import br.com.tick.ui.screens.analysis.states.FinancialHealth
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine

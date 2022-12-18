@@ -1,10 +1,10 @@
 package br.com.tick.ui.viewmodels
 
 import app.cash.turbine.test
-import br.com.tick.sdk.repositories.CategorizedExpenseRepository
-import br.com.tick.sdk.repositories.ExpenseCategoryRepository
-import br.com.tick.ui.repositories.FakeCategorizedExpenseRepository
-import br.com.tick.ui.repositories.FakeExpenseCategoryRepository
+import br.com.tick.sdk.repositories.categorizedexpense.CategorizedExpenseRepository
+import br.com.tick.sdk.repositories.expensecategory.ExpenseCategoryRepository
+import br.com.tick.sdk.repositories.FakeCategorizedExpenseRepository
+import br.com.tick.sdk.repositories.FakeExpenseCategoryRepository
 import br.com.tick.ui.screens.wallet.viewmodels.QuickExpenseBarViewModel
 import br.com.tick.utils.CoroutineTestRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi

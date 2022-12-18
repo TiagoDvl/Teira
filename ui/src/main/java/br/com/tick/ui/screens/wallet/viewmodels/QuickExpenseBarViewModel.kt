@@ -3,8 +3,8 @@ package br.com.tick.ui.screens.wallet.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.tick.sdk.domain.ExpenseCategory
-import br.com.tick.sdk.repositories.CategorizedExpenseRepository
-import br.com.tick.sdk.repositories.ExpenseCategoryRepository
+import br.com.tick.sdk.repositories.categorizedexpense.CategorizedExpenseRepository
+import br.com.tick.sdk.repositories.expensecategory.ExpenseCategoryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
