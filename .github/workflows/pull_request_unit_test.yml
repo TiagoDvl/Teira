@@ -1,4 +1,4 @@
-name: Test and deploy
+name: Test and deploy to ${{ inputs.deploy_target }} by @${{ github.actor }}
 on: push
 
 jobs:
