@@ -1,4 +1,4 @@
-name: Test and deploy to ${{ inputs.deploy_target }} by @${{ github.actor }}
+name: UI tests check
 
 on:
   pull_request:
