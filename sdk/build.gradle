@@ -44,7 +44,6 @@ dependencies {
     kapt "androidx.room:room-compiler:$roomVersion"
 
     implementation "com.google.dagger:hilt-android:$hiltVersion"
-    implementation "androidx.hilt:hilt-navigation-compose:$hiltNavigationComposeVersion"
     kapt "com.google.dagger:hilt-compiler:$hiltVersion"
 
     // Unit Tests dependencies
