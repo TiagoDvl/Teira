@@ -1,6 +1,6 @@
 package br.com.tick.ui.screens.analysis.usecases
 
-import br.com.tick.sdk.repositories.CategorizedExpenseRepository
+import br.com.tick.sdk.repositories.categorizedexpense.CategorizedExpenseRepository
 import br.com.tick.ui.screens.analysis.states.AnalysisGraphStates
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

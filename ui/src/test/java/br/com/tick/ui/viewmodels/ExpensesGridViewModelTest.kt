@@ -1,11 +1,11 @@
 package br.com.tick.ui.viewmodels
 
 import app.cash.turbine.test
-import br.com.tick.sdk.repositories.CategorizedExpenseRepository
-import br.com.tick.sdk.repositories.LocalDataRepository
-import br.com.tick.ui.dispatchers.FakeDispatcher
-import br.com.tick.ui.repositories.FakeCategorizedExpenseRepository
-import br.com.tick.ui.repositories.FakeDataStoreRepository
+import br.com.tick.sdk.repositories.categorizedexpense.CategorizedExpenseRepository
+import br.com.tick.sdk.repositories.localdata.LocalDataRepository
+import br.com.tick.sdk.dispatchers.FakeDispatcher
+import br.com.tick.sdk.repositories.FakeCategorizedExpenseRepository
+import br.com.tick.sdk.repositories.FakeDataStoreRepository
 import br.com.tick.ui.screens.wallet.states.ExpensesGridStates
 import br.com.tick.ui.screens.wallet.usecases.CreateExpensesCards
 import br.com.tick.ui.screens.wallet.usecases.RemoveExpenseCard

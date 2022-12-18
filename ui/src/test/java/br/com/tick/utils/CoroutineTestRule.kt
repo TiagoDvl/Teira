@@ -11,12 +11,12 @@ import org.junit.runner.Description
 @ExperimentalCoroutinesApi
 class CoroutineTestRule : TestWatcher() {
 
-    override fun starting(description: Description?) {
+    override fun starting(description: Description) {
         Dispatchers.setMain(UnconfinedTestDispatcher())
         super.starting(description)
     }
 
-    override fun finished(description: Description?) {
+    override fun finished(description: Description) {
         Dispatchers.resetMain()
         super.finished(description)
     }

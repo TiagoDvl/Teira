@@ -1,8 +1,8 @@
 package br.com.tick.ui.screens.wallet.usecases
 
 import br.com.tick.sdk.domain.ExpenseRisk
-import br.com.tick.sdk.repositories.CategorizedExpenseRepository
-import br.com.tick.sdk.repositories.LocalDataRepository
+import br.com.tick.sdk.repositories.categorizedexpense.CategorizedExpenseRepository
+import br.com.tick.sdk.repositories.localdata.LocalDataRepository
 import br.com.tick.ui.screens.wallet.models.ExpenseCard
 import br.com.tick.ui.screens.wallet.states.ExpensesGridStates
 import kotlinx.coroutines.flow.Flow

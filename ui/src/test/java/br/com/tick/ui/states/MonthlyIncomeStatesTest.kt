@@ -1,6 +1,6 @@
 package br.com.tick.ui.states
 
-import br.com.tick.ui.screens.configuration.states.MonthlyIncomeStates
+import br.com.tick.ui.screens.settings.states.MonthlyIncomeStates
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 
