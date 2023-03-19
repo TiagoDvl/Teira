@@ -9,6 +9,7 @@ import br.com.tick.ui.screens.wallet.usecases.RemoveExpenseCard
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,7 +25,7 @@ class ExpensesGridViewModel @Inject constructor(
             createExpensesCards().collect {
                 emit(it)
             }
-        }
+        }.flowOn(dispatcherProvider.io())
 
     fun removeCard(expenseId: Int) {
         viewModelScope.launch(dispatcherProvider.io()) {

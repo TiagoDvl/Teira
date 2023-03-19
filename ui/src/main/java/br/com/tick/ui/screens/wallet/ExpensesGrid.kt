@@ -1,14 +1,7 @@
 package br.com.tick.ui.screens.wallet
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -21,9 +14,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import br.com.tick.ui.core.FlipCard
+import br.com.tick.ui.core.QuickExpenseCard
 import br.com.tick.ui.screens.wallet.models.ExpenseCard
 import br.com.tick.ui.screens.wallet.states.ExpensesGridStates
 import br.com.tick.ui.screens.wallet.viewmodels.ExpensesGridViewModel
@@ -38,16 +30,20 @@ fun ExpensesGrid(
         expensesGridViewModel.getExpensesGridState
     }.collectAsState(ExpensesGridStates.Loading)
 
-    Body(modifier, expensesListState)
+    Body(modifier, expensesListState, expensesGridViewModel)
 }
 
 @Composable
-fun Body(modifier: Modifier, expensesListState: ExpensesGridStates) {
+fun Body(
+    modifier: Modifier,
+    expensesListState: ExpensesGridStates,
+    expensesGridViewModel: ExpensesGridViewModel
+) {
     when (expensesListState) {
         ExpensesGridStates.Empty,
         ExpensesGridStates.Error,
         ExpensesGridStates.Loading -> LoadingGrid(modifier = modifier.fillMaxSize())
-        is ExpensesGridStates.Success -> BodyGrid(modifier, expensesListState.expensesList)
+        is ExpensesGridStates.Success -> BodyGrid(modifier, expensesListState.expensesList, expensesGridViewModel)
     }
 }
 
@@ -55,19 +51,22 @@ fun Body(modifier: Modifier, expensesListState: ExpensesGridStates) {
 @Composable
 fun BodyGrid(
     modifier: Modifier = Modifier,
-    expensesList: List<ExpenseCard>
+    expensesList: List<ExpenseCard>,
+    expensesGridViewModel: ExpensesGridViewModel
 ) {
     LazyVerticalGrid(
         modifier = modifier.padding(MaterialTheme.spacing.extraSmall),
-        columns = GridCells.Adaptive(minSize = 120.dp)
+        columns = GridCells.Fixed(2)
     ) {
         items(expensesList) { expense ->
-            FlipCard(
+            QuickExpenseCard(
                 expenseCard = expense,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(MaterialTheme.spacing.extraSmall)
-            )
+            ) { expenseId ->
+                expensesGridViewModel.removeCard(expenseId)
+            }
         }
     }
 }
