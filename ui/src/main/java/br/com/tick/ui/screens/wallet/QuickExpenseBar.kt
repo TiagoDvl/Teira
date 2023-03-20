@@ -44,8 +44,8 @@ import br.com.tick.ui.theme.Pink40
 import br.com.tick.ui.theme.Purple40
 import br.com.tick.ui.theme.Purple80
 import br.com.tick.ui.theme.spacing
-import java.text.SimpleDateFormat
-import java.util.Date
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun QuickExpense(
@@ -142,11 +142,11 @@ fun ExpandedQuickExpense(
         Row(
             modifier = Modifier.fillMaxWidth()
         ) {
-            val expenseDate = Date().time
+            val localDateTime = LocalDate.now()
 
             QuickExpenseDate(
                 modifier = Modifier.weight(0.5f),
-                date = expenseDate
+                date = localDateTime
             )
             TeiraOutlinedButton(
                 modifier = Modifier.weight(0.5f),
@@ -161,7 +161,7 @@ fun ExpandedQuickExpense(
                             selectedCategoryId.value,
                             expenseName.value,
                             expenseValue.value.toDouble(),
-                            expenseDate
+                            localDateTime
                         )
                     }
                 }
@@ -231,15 +231,14 @@ fun CategoryDropdown(
 @Composable
 fun QuickExpenseDate(
     modifier: Modifier = Modifier,
-    date: Long
+    date: LocalDate
 ) {
-    val formatted = SimpleDateFormat("dd/MM/yyyy").format(Date(date))
     Box(
         modifier = modifier
     ) {
         Text(
             modifier = Modifier.align(Alignment.BottomStart),
-            text = "Date: $formatted",
+            text = date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
             textDecoration = TextDecoration.Underline,
             fontSize = 14.sp,
             fontStyle = FontStyle.Italic

@@ -1,25 +1,22 @@
 package br.com.tick.ui.screens.analysis
 
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
+import android.util.Log
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import br.com.tick.ui.screens.analysis.states.AnalysisGraphStates
 import br.com.tick.ui.screens.analysis.viewmodels.AnalysisScreenViewModel
-import br.com.tick.ui.theme.spacing
-import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.formatter.ValueFormatter
-import java.text.SimpleDateFormat
-import java.util.Locale
+import com.patrykandpatrick.vico.compose.axis.horizontal.bottomAxis
+import com.patrykandpatrick.vico.compose.axis.horizontal.topAxis
+import com.patrykandpatrick.vico.compose.axis.vertical.startAxis
+import com.patrykandpatrick.vico.compose.chart.Chart
+import com.patrykandpatrick.vico.compose.chart.line.lineChart
+import com.patrykandpatrick.vico.core.entry.entryModelOf
+import com.patrykandpatrick.vico.core.entry.entryOf
 
 @Composable
 fun ExpenseDateRelation(
@@ -42,33 +39,17 @@ fun ExpenseGraph(
     modifier: Modifier = Modifier,
     analysisGraph: AnalysisGraphStates.AnalysisGraph
 ) {
-    AndroidView(
-        modifier = modifier.padding(MaterialTheme.spacing.large),
-        factory = { context ->
-            val entries = analysisGraph.expenses.map {
-                Entry(
-                    it.date.toFloat(),
-                    it.expenseValue.toFloat()
-                )
-            }
-            val dataSet = LineDataSet(entries, "Test Label")
-            val lineData = LineData(dataSet)
+    val maxNumber = analysisGraph.expenses.maxOf { it.value.toInt() }
+    val entries = analysisGraph.expenses.map {
+        entryOf(it.key.dayOfMonth.toFloat(), it.value)
+    }
 
-            LineChart(context).apply {
-                xAxis.valueFormatter = object : ValueFormatter() {
-                    override fun getFormattedValue(value: Float): String {
-                        return try {
-                            SimpleDateFormat("dd/MM", Locale.US).format(value)
-                        } catch (exception: Exception) {
-                            ""
-                        }
-                    }
-                }
-                data = lineData
-                invalidate()
-            }
-        },
-        update = {}
+    Chart(
+        modifier = modifier,
+        chart = lineChart(),
+        model = entryModelOf(entries),
+        startAxis = startAxis(maxLabelCount = maxNumber),
+        bottomAxis = bottomAxis(),
     )
 }
 

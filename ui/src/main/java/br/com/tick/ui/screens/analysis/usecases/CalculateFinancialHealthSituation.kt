@@ -12,12 +12,8 @@ class CalculateFinancialHealthSituation @Inject constructor(
     private val dataStoreRepository: LocalDataRepository
 ) {
 
-    companion object {
-        private const val A_MONTH = 30
-    }
-
     suspend operator fun invoke(): Flow<FinancialHealth> {
-        val expenses = expenseRepository.getCategorizedExpenses(A_MONTH)
+        val expenses = expenseRepository.getThirtyDaysCategorizedExpenses()
         val monthlyIncome = dataStoreRepository.getMonthlyIncome()
 
         return expenses.combine(monthlyIncome) { _expensesList, _monthlyIncome ->

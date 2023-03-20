@@ -75,7 +75,7 @@ dependencies {
     implementation "androidx.hilt:hilt-navigation-compose:$hiltNavigationComposeVersion"
     kapt "com.google.dagger:hilt-compiler:$hiltVersion"
 
-    implementation "com.github.PhilJay:MPAndroidChart:$mpChartVersion"
+    implementation "com.patrykandpatrick.vico:compose-m3:$vicoVersion"
 
     // Unit Tests dependencies
     testImplementation "junit:junit:$jUnitVersion"

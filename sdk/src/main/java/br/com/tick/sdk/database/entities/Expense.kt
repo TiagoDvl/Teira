@@ -21,5 +21,5 @@ data class Expense(
     val value: Double,
 
     @ColumnInfo(name = "date")
-    val date: Long
+    val date: String
 )
