@@ -9,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,7 +25,7 @@ class QuickExpenseBarViewModel @Inject constructor(
             }
         }
 
-    fun saveQuickExpense(categoryId: Int, name: String, value: Double, expenseDate: Long) {
+    fun saveQuickExpense(categoryId: Int, name: String, value: Double, expenseDate: LocalDate) {
         viewModelScope.launch {
             expenseRepository.addExpense(categoryId, name, value, expenseDate)
         }

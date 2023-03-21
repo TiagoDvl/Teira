@@ -17,4 +17,7 @@ interface ExpenseDao {
 
     @Query("SELECT * FROM expense ORDER BY expense_id DESC LIMIT :numberOfExpenses")
     fun getExpenses(numberOfExpenses: Int): Flow<List<Expense>>
+
+    @Query("SELECT * FROM expense WHERE date BETWEEN DATE('now', '-30 day') AND DATE('now')")
+    fun getThirtyDaysOfExpenses(): Flow<List<Expense>>
 }

@@ -17,6 +17,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 import org.junit.Test
+import java.time.LocalDate
 
 @ExperimentalCoroutinesApi
 class AnalysisScreenViewModelTest {
@@ -50,7 +51,7 @@ class AnalysisScreenViewModelTest {
         )
 
         val categoryName = "Name_1"
-        expenseRepository.addExpense(0, categoryName, 15.0, 1234)
+        expenseRepository.addExpense(0, categoryName, 15.0, LocalDate.now())
 
         analysisScreenViewModel.mostExpenseCategoryList.test {
             val expensiveCategories = awaitItem()
@@ -75,12 +76,12 @@ class AnalysisScreenViewModelTest {
             val categoryName = "Name_1"
             val highestCategoryExpense = 15.0
             categoryRepository.addCategory(categoryName)
-            expenseRepository.addExpense(0, categoryName, highestCategoryExpense, 1234)
+            expenseRepository.addExpense(0, categoryName, highestCategoryExpense, LocalDate.now())
 
             val secondCategoryName = "Name_2"
             val lowestCategoryExpense = 14.0
             categoryRepository.addCategory(secondCategoryName)
-            expenseRepository.addExpense(1, secondCategoryName, lowestCategoryExpense, 1234)
+            expenseRepository.addExpense(1, secondCategoryName, lowestCategoryExpense, LocalDate.now())
 
             assert(highestCategoryExpense > lowestCategoryExpense)
             assert(categoryName != secondCategoryName)
@@ -98,7 +99,7 @@ class AnalysisScreenViewModelTest {
             categorizedExpenseRepository = expenseRepository
         )
 
-        for (i in 0..5) expenseRepository.addExpense(i, "Name_$i", 10.0 + i, 1234)
+        for (i in 0..5) expenseRepository.addExpense(i, "Name_$i", 10.0 + i, LocalDate.now())
 
         analysisScreenViewModel.mostExpenseCategoryList.test {
             val expensiveCategoriesFull = awaitItem() as MostExpensiveCategoriesStates.Full
@@ -119,7 +120,7 @@ class AnalysisScreenViewModelTest {
         )
 
         localDataRepository.saveMonthlyIncome(1500.0)
-        expenseRepository.addExpense(0, "Name_1", 10.0, 1234)
+        expenseRepository.addExpense(0, "Name_1", 10.0, LocalDate.now())
 
         analysisScreenViewModel.financialHealthSituation.test {
             assert(awaitItem().percentageOfCompromisedIncome > 0)
@@ -149,7 +150,7 @@ class AnalysisScreenViewModelTest {
             categorizedExpenseRepository = expenseRepository
         )
 
-        expenseRepository.addExpense(0, "Name_1", 10.0, 1234)
+        expenseRepository.addExpense(0, "Name_1", 10.0, LocalDate.now())
 
         analysisScreenViewModel.graphStates.test {
             assert(awaitItem() is AnalysisGraphStates.AnalysisGraph)

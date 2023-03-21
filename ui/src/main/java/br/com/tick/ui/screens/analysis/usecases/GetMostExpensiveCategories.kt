@@ -10,12 +10,8 @@ import javax.inject.Inject
 
 class GetMostExpensiveCategories @Inject constructor(private val expenseRepository: CategorizedExpenseRepository) {
 
-    companion object {
-        private const val A_MONTH = 30
-    }
-
     suspend operator fun invoke(): Flow<MostExpensiveCategoriesStates> =
-        expenseRepository.getCategorizedExpenses(A_MONTH).map { categorizedExpenses ->
+        expenseRepository.getThirtyDaysCategorizedExpenses().map { categorizedExpenses ->
             val mostExpensiveCategories = mutableListOf<MostExpensiveCategory>()
 
             categorizedExpenses.forEach { categorizedExpense ->

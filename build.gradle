@@ -22,7 +22,7 @@ buildscript {
         roomVersion = '2.4.3'
         dataStoreVersion = '1.0.0'
         navigationVersion = '2.5.3'
-        mpChartVersion = 'v3.1.0'
+        vicoVersion = '1.6.4'
 
         dependencies {
             classpath("com.google.dagger:hilt-android-gradle-plugin:$hiltVersion")

@@ -15,6 +15,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 import org.junit.Test
+import java.time.LocalDate
 
 
 @ExperimentalCoroutinesApi
@@ -53,7 +54,7 @@ class ExpensesGridViewModelTest {
         )
 
         localDataRepository.saveMonthlyIncome(1500.0)
-        categorizedExpenseRepository.addExpense(0, "Name_1", 15.0, 1234)
+        categorizedExpenseRepository.addExpense(0, "Name_1", 15.0, LocalDate.now())
 
         expensesGridViewModel.getExpensesGridState.test {
             assert((awaitItem() as ExpensesGridStates.Success).expensesList.size == 1)
@@ -71,7 +72,7 @@ class ExpensesGridViewModelTest {
         )
 
         localDataRepository.saveMonthlyIncome(1500.0)
-        for (i in 0..50) categorizedExpenseRepository.addExpense(0, "Name_1", 15.0, 1234)
+        for (i in 0..50) categorizedExpenseRepository.addExpense(0, "Name_1", 15.0, LocalDate.now())
 
         expensesGridViewModel.getExpensesGridState.test {
             val expensesGridState = awaitItem()
