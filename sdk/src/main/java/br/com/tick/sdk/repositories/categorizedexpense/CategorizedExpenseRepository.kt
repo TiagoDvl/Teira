@@ -11,5 +11,6 @@ interface CategorizedExpenseRepository {
     suspend fun removeExpense(expenseId: Int)
 
     suspend fun getCategorizedExpenses(numberOfExpenses: Int = -1): Flow<List<CategorizedExpense>>
+
     suspend fun getThirtyDaysCategorizedExpenses(): Flow<List<CategorizedExpense>>
 }
