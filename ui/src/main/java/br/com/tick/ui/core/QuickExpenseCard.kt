@@ -8,11 +8,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.tick.R
+import br.com.tick.sdk.domain.ExpenseCategory
+import br.com.tick.sdk.domain.ExpenseRisk
 import br.com.tick.ui.screens.wallet.models.ExpenseCard
 import br.com.tick.ui.theme.PurpleGrey80
 import br.com.tick.ui.theme.spacing
+import br.com.tick.ui.theme.textStyle
 
 @ExperimentalFoundationApi
 @Composable
@@ -30,14 +34,14 @@ fun QuickExpenseCard(
                 .padding(MaterialTheme.spacing.medium)
         ) {
             Column {
-                Text(text = expenseCard.name, style = MaterialTheme.typography.bodyLarge)
-                Text(text = expenseCard.risk.name, style = MaterialTheme.typography.bodySmall)
+                Text(text = expenseCard.name, style = MaterialTheme.textStyle.h2bold)
+                Text(text = expenseCard.risk.name, style = MaterialTheme.textStyle.h3)
             }
 
             Text(
                 modifier = Modifier.align(Alignment.BottomStart),
                 text = "€${expenseCard.value}",
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.textStyle.h3small
             )
 
             Row(
@@ -70,5 +74,21 @@ fun QuickExpenseCard(
                 )
             }
         }
+    }
+}
+
+@Preview
+@Composable
+fun QuickExpenseCardPreview() {
+    QuickExpenseCard(
+        expenseCard = ExpenseCard(
+            id = 0,
+            name = "Expense 1",
+            value = 50.0,
+            category = ExpenseCategory(0, "Category 1"),
+            risk = ExpenseRisk.HIGH
+        )
+    ){
+
     }
 }

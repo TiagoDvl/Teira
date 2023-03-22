@@ -25,6 +25,7 @@ import br.com.tick.R
 import br.com.tick.ui.screens.analysis.AnalysisScreen
 import br.com.tick.ui.screens.settings.SettingsScreen
 import br.com.tick.ui.screens.wallet.WalletScreen
+import br.com.tick.ui.theme.textStyle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,7 +36,7 @@ fun TeiraScaffold() {
         topBar = {
             TopAppBar(
                 title = {
-                    Text(stringResource(id = R.string.app_name))
+                    Text(text = stringResource(id = R.string.app_name), style = MaterialTheme.textStyle.h1)
                 },
             )
         },
@@ -61,7 +62,10 @@ fun TeiraScaffold() {
                             )
                         },
                         label = {
-                            Text(text = stringResource(id = navigationItem.titleResource))
+                            Text(
+                                text = stringResource(id = navigationItem.titleResource),
+                                style = MaterialTheme.textStyle.h2small
+                            )
                         },
                         selected = currentRoute == navigationItem.route,
                         onClick = {

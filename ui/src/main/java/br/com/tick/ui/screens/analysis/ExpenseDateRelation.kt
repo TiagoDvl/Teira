@@ -1,22 +1,28 @@
 package br.com.tick.ui.screens.analysis
 
-import android.util.Log
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import br.com.tick.R
 import br.com.tick.ui.screens.analysis.states.AnalysisGraphStates
 import br.com.tick.ui.screens.analysis.viewmodels.AnalysisScreenViewModel
+import br.com.tick.ui.theme.spacing
+import br.com.tick.ui.theme.textStyle
 import com.patrykandpatrick.vico.compose.axis.horizontal.bottomAxis
-import com.patrykandpatrick.vico.compose.axis.horizontal.topAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.startAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
 import com.patrykandpatrick.vico.compose.chart.line.lineChart
 import com.patrykandpatrick.vico.core.entry.entryModelOf
 import com.patrykandpatrick.vico.core.entry.entryOf
+import java.time.LocalDate
 
 @Composable
 fun ExpenseDateRelation(
@@ -44,16 +50,44 @@ fun ExpenseGraph(
         entryOf(it.key.dayOfMonth.toFloat(), it.value)
     }
 
-    Chart(
-        modifier = modifier,
-        chart = lineChart(),
-        model = entryModelOf(entries),
-        startAxis = startAxis(maxLabelCount = maxNumber),
-        bottomAxis = bottomAxis(),
-    )
+    Column(modifier = modifier.fillMaxWidth()) {
+        Text(
+            text = stringResource(id = R.string.analysis_graph_title),
+            color = MaterialTheme.colorScheme.primary,
+            style = MaterialTheme.textStyle.h2
+        )
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(MaterialTheme.spacing.medium)
+        )
+        Chart(
+            modifier = modifier,
+            chart = lineChart(),
+            model = entryModelOf(entries),
+            startAxis = startAxis(maxLabelCount = maxNumber, title = "Expense"),
+            bottomAxis = bottomAxis(title = "Days")
+        )
+    }
 }
 
 @Composable
 fun GraphLoading() {
-    Text(text = "Loading...")
+    Text(
+        modifier = Modifier.fillMaxSize(),
+        text = "Loading...",
+        style = MaterialTheme.textStyle.h4
+    )
+}
+
+@Preview
+@Composable
+fun GraphLoadingPreview() {
+    GraphLoading()
+}
+
+@Preview
+@Composable
+fun ExpenseGraphPreview() {
+    ExpenseGraph(analysisGraph = AnalysisGraphStates.AnalysisGraph(mapOf(LocalDate.now() to 200.0)))
 }
