@@ -1,20 +1,11 @@
 package br.com.tick.ui.screens.wallet
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -26,7 +17,6 @@ import br.com.tick.ui.screens.wallet.viewmodels.QuickExpenseBarViewModel
 import br.com.tick.ui.theme.Pink40
 import br.com.tick.ui.theme.spacing
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddNewCategoryDialog(
     viewModel: QuickExpenseBarViewModel = hiltViewModel(),
@@ -41,6 +31,7 @@ fun AddNewCategoryDialog(
             shape = RoundedCornerShape(CornerSize(5.dp))
         ) {
             Column(
+                modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
@@ -54,9 +45,7 @@ fun AddNewCategoryDialog(
                 ) {
                     categoryName = it
                 }
-                TeiraOutlinedButton(
-                    text = "Add"
-                ) {
+                TeiraOutlinedButton(text = "Add") {
                     if (categoryName.isNotBlank()) {
                         viewModel.addCategory(categoryName)
                     }

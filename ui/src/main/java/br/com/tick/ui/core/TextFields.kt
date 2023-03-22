@@ -1,15 +1,10 @@
 package br.com.tick.ui.core
 
-import androidx.compose.foundation.background
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.sp
+import br.com.tick.ui.theme.textStyle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -21,20 +16,18 @@ fun TeiraBaseTextField(
     onValueChanged: (String) -> Unit
 ) {
     TextField(
+        modifier = modifier,
         label = {
             Text(
                 text = label,
-                style = TextStyle(
-                    color = Color.LightGray,
-                    fontSize = 14.sp
-                )
+                style = MaterialTheme.textStyle.h2small
             )
         },
-        colors = TextFieldDefaults.textFieldColors(textColor = Color.White),
-        modifier = modifier.background(color),
+        colors = TextFieldDefaults.textFieldColors(containerColor = color, textColor = Color.White),
         value = value,
         singleLine = true,
         maxLines = 1,
-        onValueChange = { onValueChanged(it) }
+        onValueChange = { onValueChanged(it) },
+        textStyle = MaterialTheme.textStyle.h2
     )
 }

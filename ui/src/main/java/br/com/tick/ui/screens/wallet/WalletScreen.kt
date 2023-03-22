@@ -19,7 +19,7 @@ fun WalletScreen() {
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .padding(MaterialTheme.spacing.extraSmall),
+            .padding(MaterialTheme.spacing.small),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
     ) {
         if (showAddCategoryDialogState.value) {
