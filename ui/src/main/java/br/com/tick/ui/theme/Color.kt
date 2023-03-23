@@ -2,10 +2,13 @@ package br.com.tick.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+val TeiraPrimaryColor = Color(0xFF6d7c8e)
+val TeiraSecondaryColor = Color(0xFF6a6b68)
+val TeiraTertiaryColor = Color(0xFFa45c3c)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFFD3C8CB)
+val TeiraSurfaceColor = Color(0xFFCFD1CA)
+val TeiraSurfaceVariantColor = Color(0xFFA0AF7B)
+
+val TeiraOnPrimaryColor = Color(0xFFEFF1E9)
+val TeiraOnSecondaryColor = Color(0xFFDCDDD9)
+val TeiraOnTertiaryColor = Color(0xFF0c0c0c)

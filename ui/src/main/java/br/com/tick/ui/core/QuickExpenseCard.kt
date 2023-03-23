@@ -14,7 +14,6 @@ import br.com.tick.R
 import br.com.tick.sdk.domain.ExpenseCategory
 import br.com.tick.sdk.domain.ExpenseRisk
 import br.com.tick.ui.screens.wallet.models.ExpenseCard
-import br.com.tick.ui.theme.PurpleGrey80
 import br.com.tick.ui.theme.spacing
 import br.com.tick.ui.theme.textStyle
 
@@ -25,23 +24,36 @@ fun QuickExpenseCard(
     modifier: Modifier = Modifier,
     onQuickActionDelete: (expenseId: Int) -> Unit
 ) {
-    Card(modifier = modifier) {
+    Card(
+        modifier = modifier,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        )
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(PurpleGrey80)
                 .height(160.dp)
                 .padding(MaterialTheme.spacing.medium)
         ) {
             Column {
-                Text(text = expenseCard.name, style = MaterialTheme.textStyle.h2bold)
-                Text(text = expenseCard.risk.name, style = MaterialTheme.textStyle.h3)
+                Text(
+                    text = expenseCard.name,
+                    style = MaterialTheme.textStyle.h2bold,
+                    color = MaterialTheme.colorScheme.onTertiary
+                )
+                Text(
+                    text = expenseCard.risk.name,
+                    style = MaterialTheme.textStyle.h3,
+                    color = MaterialTheme.colorScheme.onTertiary
+                )
             }
 
             Text(
                 modifier = Modifier.align(Alignment.BottomStart),
                 text = "€${expenseCard.value}",
-                style = MaterialTheme.textStyle.h3small
+                style = MaterialTheme.textStyle.h3small,
+                color = MaterialTheme.colorScheme.onTertiary
             )
 
             Row(
@@ -52,14 +64,14 @@ fun QuickExpenseCard(
             ) {
                 Icon(
                     modifier = Modifier.size(24.dp),
-                    tint = Color.White,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     painter = painterResource(id = R.drawable.ic_slide_right),
-                    contentDescription = "Open expense quick actions"
+                    contentDescription = "Open expense quick actions",
                 )
 
                 Icon(
                     modifier = Modifier.size(24.dp),
-                    tint = Color.White,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     painter = painterResource(id = R.drawable.ic_edit),
                     contentDescription = "Edit expense"
                 )
@@ -68,7 +80,7 @@ fun QuickExpenseCard(
                     modifier = Modifier
                         .size(24.dp)
                         .clickable { onQuickActionDelete(expenseCard.id) },
-                    tint = Color.White,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     painter = painterResource(id = R.drawable.ic_delete),
                     contentDescription = "Delete expense"
                 )
@@ -88,7 +100,7 @@ fun QuickExpenseCardPreview() {
             category = ExpenseCategory(0, "Category 1"),
             risk = ExpenseRisk.HIGH
         )
-    ){
+    ) {
 
     }
 }

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Teira</string>
+
+    <string name="generic_loading">Loading…</string>
 </resources>

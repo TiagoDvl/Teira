@@ -16,7 +16,7 @@ sealed class FinancialHealth(val percentageOfCompromisedIncome: Float) {
             monthlyIncome: Double
         ): Float {
             var compromisedIncomeInAMonth = 0
-            expenses.forEach { compromisedIncomeInAMonth = +it.expenseValue.toInt() }
+            expenses.forEach { compromisedIncomeInAMonth =+ it.expenseValue.toInt() }
             return (compromisedIncomeInAMonth * 100 / monthlyIncome).toFloat()
         }
     }

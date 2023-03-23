@@ -23,10 +23,17 @@ buildscript {
         dataStoreVersion = '1.0.0'
         navigationVersion = '2.5.3'
         vicoVersion = '1.6.4'
+        firebaseCrashlytics = '18.3.5'
+        firebaseAnalytics = '21.2.0'
 
         dependencies {
             classpath("com.google.dagger:hilt-android-gradle-plugin:$hiltVersion")
         }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.4.0'
+        classpath 'com.google.gms:google-services:4.3.15'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.4'
     }
 }
 

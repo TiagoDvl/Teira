@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "139398866518",
+    "project_id": "teira-ceb0d",
+    "storage_bucket": "teira-ceb0d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:139398866518:android:99f6017e7d8dc1df70bdf7",
+        "android_client_info": {
+          "package_name": "br.com.tick.teira"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "139398866518-ep5g5mqcu1srjs8bnn3g2aurifuke59u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQHsiegxKuOWXnl_UkdY5yjjzfrI_Zzr0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "139398866518-ep5g5mqcu1srjs8bnn3g2aurifuke59u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.sp
 import br.com.tick.R
 
 data class Spacing(
+    val smallest: Dp = 2.dp,
     val extraSmall: Dp = 4.dp,
     val small: Dp = 8.dp,
     val medium: Dp = 12.dp,
