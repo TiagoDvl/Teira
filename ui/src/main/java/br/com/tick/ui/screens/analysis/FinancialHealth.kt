@@ -1,8 +1,10 @@
 package br.com.tick.ui.screens.analysis
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -26,16 +28,22 @@ fun FinancialHealthComposable(
         val sliderPosition by remember {
             viewModel.financialHealthSituation
         }.collectAsState(initial = FinancialHealth.Empty)
-
+        val sliderColor = when (sliderPosition.percentageOfCompromisedIncome) {
+            in 0f .. 30f -> MaterialTheme.colorScheme.surface
+            in 30f .. 60f -> MaterialTheme.colorScheme.primary
+            else -> MaterialTheme.colorScheme.tertiary
+        }
         Text(
             text = stringResource(id = R.string.analysis_financial_health_title),
             color = MaterialTheme.colorScheme.primary,
             style = MaterialTheme.textStyle.h2
         )
-        Spacer(modifier = Modifier
-            .fillMaxWidth()
-            .height(MaterialTheme.spacing.medium))
         Slider(
+            modifier = Modifier.padding(top = MaterialTheme.spacing.medium),
+            colors = SliderDefaults.colors(
+                thumbColor = MaterialTheme.colorScheme.tertiary,
+                inactiveTrackColor = sliderColor
+            ),
             value = sliderPosition.percentageOfCompromisedIncome / 100,
             onValueChange = { }
         )

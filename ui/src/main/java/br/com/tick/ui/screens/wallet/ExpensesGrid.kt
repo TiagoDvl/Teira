@@ -55,7 +55,7 @@ fun BodyGrid(
     expensesGridViewModel: ExpensesGridViewModel
 ) {
     LazyVerticalGrid(
-        modifier = modifier.padding(MaterialTheme.spacing.extraSmall),
+        modifier = modifier.padding(),
         columns = GridCells.Fixed(2)
     ) {
         items(expensesList) { expense ->

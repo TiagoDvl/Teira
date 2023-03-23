@@ -9,10 +9,29 @@ import br.com.tick.ui.theme.spacing
 @Composable
 fun AnalysisScreen() {
     Column(
-        modifier = Modifier.fillMaxSize().padding(MaterialTheme.spacing.small),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(MaterialTheme.spacing.small),
     ) {
-        ExpenseDateRelation(modifier = Modifier.fillMaxWidth().weight(0.5f))
-        CategoryRank(modifier = Modifier.fillMaxWidth().padding(top = MaterialTheme.spacing.large))
-        FinancialHealthComposable(modifier = Modifier.fillMaxWidth().padding(top = MaterialTheme.spacing.large))
+        ExpenseDateRelation(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(0.5f)
+        )
+        Column(modifier = Modifier
+            .fillMaxWidth()
+            .weight(0.5f)
+        ) {
+            CategoryRank(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = MaterialTheme.spacing.large)
+            )
+            FinancialHealthComposable(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = MaterialTheme.spacing.large)
+            )
+        }
     }
 }

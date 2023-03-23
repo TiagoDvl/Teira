@@ -36,7 +36,7 @@ fun CategoryRank(
         MostExpensiveCategoriesStates.Loading -> {
             Text(
                 modifier = Modifier.fillMaxSize(),
-                text = "Loading...",
+                text = stringResource(id = R.string.generic_loading),
                 style = MaterialTheme.textStyle.h4
             )
         }
@@ -66,7 +66,7 @@ fun MostExpensiveCategoryBody(
                 CategoryCircle(
                     label = it.categoryName.substring(0, formattedCategoryNameLength),
                     subLabel = it.amount.toString(),
-                    color = it.color
+                    color = MaterialTheme.colorScheme.secondary
                 )
             }
         }
@@ -91,11 +91,13 @@ fun CategoryCircle(modifier: Modifier = Modifier, label: String, subLabel: Strin
         ) {
             Text(
                 text = label,
-                style = MaterialTheme.textStyle.h2bold
+                style = MaterialTheme.textStyle.h2bold,
+                color = MaterialTheme.colorScheme.onSecondary
             )
             Text(
                 text = subLabel,
-                style = MaterialTheme.textStyle.h3small
+                style = MaterialTheme.textStyle.h3small,
+                color = MaterialTheme.colorScheme.onSecondary
             )
         }
     }

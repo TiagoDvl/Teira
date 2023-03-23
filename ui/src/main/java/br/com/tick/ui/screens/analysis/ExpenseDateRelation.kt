@@ -3,10 +3,7 @@ package br.com.tick.ui.screens.analysis
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -20,6 +17,9 @@ import com.patrykandpatrick.vico.compose.axis.horizontal.bottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.startAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
 import com.patrykandpatrick.vico.compose.chart.line.lineChart
+import com.patrykandpatrick.vico.compose.m3.style.m3ChartStyle
+import com.patrykandpatrick.vico.compose.style.LocalChartStyle
+import com.patrykandpatrick.vico.core.chart.line.LineChart
 import com.patrykandpatrick.vico.core.entry.entryModelOf
 import com.patrykandpatrick.vico.core.entry.entryOf
 import java.time.LocalDate
@@ -61,13 +61,20 @@ fun ExpenseGraph(
                 .fillMaxWidth()
                 .height(MaterialTheme.spacing.medium)
         )
-        Chart(
-            modifier = modifier,
-            chart = lineChart(),
-            model = entryModelOf(entries),
-            startAxis = startAxis(maxLabelCount = maxNumber, title = "Expense"),
-            bottomAxis = bottomAxis(title = "Days")
+        val chartStyle = m3ChartStyle(
+            axisLabelColor = MaterialTheme.colorScheme.primary,
+            axisLineColor = MaterialTheme.colorScheme.tertiary
+
         )
+        CompositionLocalProvider(LocalChartStyle provides chartStyle) {
+            Chart(
+                modifier = modifier,
+                chart = lineChart(),
+                model = entryModelOf(entries),
+                startAxis = startAxis(maxLabelCount = maxNumber),
+                bottomAxis = bottomAxis()
+            )
+        }
     }
 }
 
@@ -75,7 +82,7 @@ fun ExpenseGraph(
 fun GraphLoading() {
     Text(
         modifier = Modifier.fillMaxSize(),
-        text = "Loading...",
+        text = stringResource(id = R.string.generic_loading),
         style = MaterialTheme.textStyle.h4
     )
 }
