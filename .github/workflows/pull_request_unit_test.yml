@@ -1,5 +1,10 @@
 name: Unit test check
-on: push
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
 
 jobs:
   unit_tests:

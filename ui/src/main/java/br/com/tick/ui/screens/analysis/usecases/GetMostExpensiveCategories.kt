@@ -19,7 +19,11 @@ class GetMostExpensiveCategories @Inject constructor(private val expenseReposito
 
                 if (mostExpensiveCategory == null) {
                     mostExpensiveCategories.add(
-                        MostExpensiveCategory(categorizedExpense.name, Color.Red, categorizedExpense.expenseValue)
+                        MostExpensiveCategory(
+                            categorizedExpense.category.name,
+                            Color.Red,
+                            categorizedExpense.expenseValue
+                        )
                     )
                 } else {
                     mostExpensiveCategory.amount = mostExpensiveCategory.amount + categorizedExpense.expenseValue
