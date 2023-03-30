@@ -25,6 +25,9 @@ buildscript {
         vicoVersion = '1.6.4'
         firebaseCrashlytics = '18.3.5'
         firebaseAnalytics = '21.2.0'
+        workManagerVersion = '2.8.1'
+        hiltWorkVersion = '1.0.0'
+        hiltCompilerVersion = '1.0.0'
 
         dependencies {
             classpath("com.google.dagger:hilt-android-gradle-plugin:$hiltVersion")
