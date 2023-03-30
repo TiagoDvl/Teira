@@ -38,7 +38,7 @@ class MainActivity : ComponentActivity() {
         val descriptionText = getString(R.string.teira_periodic_reminder_channel_description)
         val channelId = getString(R.string.teira_periodic_reminder_channel_id)
         val periodicWorker = OneTimeWorkRequestBuilder<PeriodicWorker>()
-            .setInitialDelay(LocalDateTime.now().getPeriodicityTimeDiff(notificationPeriodicity).also {  Log.d("Tiago", "Diff de tempo foi: $it") }, TimeUnit.SECONDS)
+            .setInitialDelay(LocalDateTime.now().getPeriodicityTimeDiff(notificationPeriodicity), TimeUnit.SECONDS)
             .build()
 
         viewModel.setupPeriodicNotification(name, descriptionText, channelId)
