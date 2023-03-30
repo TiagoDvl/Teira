@@ -28,6 +28,7 @@ buildscript {
         workManagerVersion = '2.8.1'
         hiltWorkVersion = '1.0.0'
         hiltCompilerVersion = '1.0.0'
+        acompanistPermissionVersion = '0.30.0'
 
         dependencies {
             classpath("com.google.dagger:hilt-android-gradle-plugin:$hiltVersion")
