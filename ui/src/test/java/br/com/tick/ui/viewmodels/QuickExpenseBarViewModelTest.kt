@@ -1,6 +1,9 @@
 package br.com.tick.ui.viewmodels
 
 import app.cash.turbine.test
+import br.com.tick.sdk.dispatchers.DefaultDispatcherProvider
+import br.com.tick.sdk.dispatchers.DispatcherProvider
+import br.com.tick.sdk.dispatchers.FakeDispatcher
 import br.com.tick.sdk.repositories.categorizedexpense.CategorizedExpenseRepository
 import br.com.tick.sdk.repositories.expensecategory.ExpenseCategoryRepository
 import br.com.tick.sdk.repositories.FakeCategorizedExpenseRepository
@@ -20,9 +23,10 @@ class QuickExpenseBarViewModelTest {
 
     private fun getViewModel(
         expenseRepository: CategorizedExpenseRepository = FakeCategorizedExpenseRepository(),
-        categoryRepository: ExpenseCategoryRepository = FakeExpenseCategoryRepository()
+        categoryRepository: ExpenseCategoryRepository = FakeExpenseCategoryRepository(),
+        dispatcherProvider: DispatcherProvider = FakeDispatcher()
     ): QuickExpenseBarViewModel {
-        return QuickExpenseBarViewModel(expenseRepository, categoryRepository)
+        return QuickExpenseBarViewModel(expenseRepository, categoryRepository, dispatcherProvider)
     }
 
     @Test
@@ -43,7 +47,7 @@ class QuickExpenseBarViewModelTest {
         categoryRepository.addCategory(categoryName)
 
         quickExpenseBarViewModel.categories.test {
-            assert(awaitItem()[0].name == categoryName)
+            assert(awaitItem()[0] == categoryName)
             awaitComplete()
         }
     }
