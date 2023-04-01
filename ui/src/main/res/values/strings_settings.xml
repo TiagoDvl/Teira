@@ -5,4 +5,9 @@
     <string name="settings_monthly_income_label">Your income</string>
     <string name="settings_monthly_income_hint">The value will be automatically saved after you type.</string>
 
+    <string name="settings_notifications_title">Notifications</string>
+    <string name="settings_notifications_explanation">We send notifications to remind you to log your expenses</string>
+    <string name="settings_notifications_periodicity_daily">Daily</string>
+    <string name="settings_notifications_periodicity_weekly">Weekly</string>
+    <string name="settings_notifications_periodicity_canceled">Canceled</string>
 </resources>

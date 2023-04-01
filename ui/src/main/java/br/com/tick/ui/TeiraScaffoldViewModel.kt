@@ -1,4 +1,4 @@
-package br.com.tick.teira
+package br.com.tick.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class MainActivityViewModel @Inject constructor(
+class TeiraScaffoldViewModel @Inject constructor(
     private val localDataRepository: LocalDataRepository,
     private val notificationRegister: NotificationRegister,
     dispatcherProvider: DispatcherProvider

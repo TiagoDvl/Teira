@@ -1,4 +1,4 @@
-package br.com.tick.teira.worker
+package br.com.tick.ui.worker
 
 import android.content.Context
 import androidx.hilt.work.HiltWorker
@@ -16,7 +16,6 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.first
 import java.time.LocalDateTime
 import java.util.concurrent.TimeUnit
-import br.com.tick.teira.R as AppR
 
 @HiltWorker
 class PeriodicWorker @AssistedInject constructor(
@@ -49,10 +48,10 @@ class PeriodicWorker @AssistedInject constructor(
 
     private suspend fun showPeriodicExpenseReminderNotification() {
         notificationCenter.sendNotification(
-            applicationContext.getString(AppR.string.periodic_reminder_title),
-            applicationContext.getString(AppR.string.periodic_reminder_description),
+            applicationContext.getString(R.string.periodic_reminder_title),
+            applicationContext.getString(R.string.periodic_reminder_description),
             R.drawable.ic_wallet,
-            applicationContext.getString(AppR.string.teira_periodic_reminder_channel_id)
+            applicationContext.getString(R.string.teira_periodic_reminder_channel_id)
         )
     }
 

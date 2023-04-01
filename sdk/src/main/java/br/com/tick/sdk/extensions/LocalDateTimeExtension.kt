@@ -8,7 +8,7 @@ fun LocalDateTime.getPeriodicityTimeDiff(notificationPeriodicity: NotificationPe
     val periodicity = when (notificationPeriodicity) {
         NotificationPeriodicity.DAILY -> 1
         NotificationPeriodicity.WEEKLY -> 7
-        NotificationPeriodicity.NONE -> 0
+        NotificationPeriodicity.CANCELED -> 0
     }
 
     val currentDate = LocalDateTime.now()

@@ -76,6 +76,9 @@ dependencies {
     implementation "androidx.hilt:hilt-navigation-compose:$hiltNavigationComposeVersion"
     kapt "com.google.dagger:hilt-compiler:$hiltVersion"
 
+    implementation "androidx.hilt:hilt-work:$hiltWorkVersion"
+    implementation "androidx.work:work-runtime-ktx:$workManagerVersion"
+
     implementation "com.patrykandpatrick.vico:compose-m3:$vicoVersion"
 
     // Unit Tests dependencies

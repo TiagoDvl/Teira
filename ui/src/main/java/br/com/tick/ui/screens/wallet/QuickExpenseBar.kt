@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import br.com.tick.R
 import br.com.tick.ui.core.TeiraBaseTextField
+import br.com.tick.ui.core.TeiraDropdown
 import br.com.tick.ui.core.TeiraOutlinedButton
 import br.com.tick.ui.screens.wallet.viewmodels.QuickExpenseBarViewModel
 import br.com.tick.ui.theme.*
@@ -67,6 +68,7 @@ fun ExpandedQuickExpense(
     val expenseValue = remember { mutableStateOf(0.0) }
     val selectedCategoryId = remember { mutableStateOf(0) }
     val localDateTime = LocalDate.now()
+    val categoriesList by remember { quickExpenseBarViewModel.categories }.collectAsState(initial = listOf())
 
     Column(
         modifier = modifier
@@ -94,13 +96,19 @@ fun ExpandedQuickExpense(
             ) {
                 expenseValue.value = it.toDouble()
             }
-            Spacer(modifier = Modifier.width(MaterialTheme.spacing.extraSmall))
-            CategoryDropdown(
-                modifier = Modifier.weight(0.5f),
-                onAddNewCategoryClick = { showAddCategoryDialogState.value = true }
-            ) {
-                selectedCategoryId.value = it
-            }
+            TeiraDropdown(
+                modifier = Modifier.weight(0.5f).padding(start = MaterialTheme.spacing.extraSmall),
+                label = stringResource(id = R.string.wallet_quick_expense_select_category),
+                borderColor = MaterialTheme.colorScheme.onSecondary,
+                dropdownItemLabels = categoriesList,
+                onItemSelected = {
+                    selectedCategoryId.value = it
+                },
+                lastItemLabel = stringResource(id = R.string.wallet_quick_expense_add_category),
+                onLastItemSelected = {
+                    showAddCategoryDialogState.value = true
+                }
+            )
         }
 
         Row(
@@ -152,83 +160,6 @@ fun ClosedQuickExpense(onClick: () -> Unit) {
             text = stringResource(id = R.string.wallet_add_new_category_button_text),
             onClick = onClick
         )
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun CategoryDropdown(
-    modifier: Modifier = Modifier,
-    quickExpenseBarViewModel: QuickExpenseBarViewModel = hiltViewModel(),
-    onAddNewCategoryClick: (() -> Unit)? = null,
-    onClick: (Int) -> Unit
-) {
-    val expenseCategoryExpanded = remember { mutableStateOf(false) }
-    val selectedCategoryText = stringResource(id = R.string.wallet_quick_expense_select_category)
-    val selectedCategoryName = remember { mutableStateOf(selectedCategoryText) }
-    val categoriesList by remember { quickExpenseBarViewModel.categories }.collectAsState(initial = listOf())
-
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .border(width = MaterialTheme.spacing.smallest, color = MaterialTheme.colorScheme.onSecondary)
-            .defaultMinSize(
-                minWidth = TextFieldDefaults.MinWidth,
-                minHeight = TextFieldDefaults.MinHeight
-            )
-            .clickable(onClick = { expenseCategoryExpanded.value = true }),
-    ) {
-        Text(
-            text = selectedCategoryName.value,
-            modifier = Modifier.align(Alignment.Center),
-            color = Color.White,
-            style = MaterialTheme.textStyle.h3
-        )
-        DropdownMenu(
-            modifier = Modifier.defaultMinSize(
-                minWidth = TextFieldDefaults.MinWidth,
-                minHeight = TextFieldDefaults.MinHeight
-            ),
-            expanded = expenseCategoryExpanded.value,
-            onDismissRequest = { expenseCategoryExpanded.value = false },
-        ) {
-            categoriesList.forEach { category ->
-                DropdownMenuItem(
-                    onClick = {
-                        selectedCategoryName.value = category.name
-                        expenseCategoryExpanded.value = false
-                        onClick(category.expenseCategoryId)
-                    },
-                    text = {
-                        Text(
-                            text = category.name,
-                            style = MaterialTheme.textStyle.h3extra,
-                            color = MaterialTheme.colorScheme.tertiary
-                        )
-                    }
-                )
-            }
-            DropdownMenuItem(
-                onClick = {
-                    onAddNewCategoryClick?.invoke()
-                    expenseCategoryExpanded.value = false
-                },
-                trailingIcon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_add),
-                        tint = MaterialTheme.colorScheme.tertiary,
-                        contentDescription = stringResource(id = R.string.wallet_quick_expense_add_category)
-                    )
-                },
-                text = {
-                    Text(
-                        text = stringResource(id = R.string.wallet_quick_expense_add_category),
-                        style = MaterialTheme.textStyle.h3extra,
-                        color = MaterialTheme.colorScheme.tertiary
-                    )
-                }
-            )
-        }
     }
 }
 
