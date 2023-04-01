@@ -2,12 +2,12 @@ package br.com.tick.ui.screens.wallet.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import br.com.tick.sdk.domain.ExpenseCategory
+import br.com.tick.sdk.dispatchers.DispatcherProvider
 import br.com.tick.sdk.repositories.categorizedexpense.CategorizedExpenseRepository
 import br.com.tick.sdk.repositories.expensecategory.ExpenseCategoryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
@@ -15,13 +15,15 @@ import javax.inject.Inject
 @HiltViewModel
 class QuickExpenseBarViewModel @Inject constructor(
     private val expenseRepository: CategorizedExpenseRepository,
-    private val categoryRepository: ExpenseCategoryRepository
+    private val categoryRepository: ExpenseCategoryRepository,
+    dispatcherProvider: DispatcherProvider
 ) : ViewModel() {
 
-    val categories: Flow<List<ExpenseCategory>>
-        get() = flow {
-            categoryRepository.getCategories().collect {
-                emit(it)
+    val categories = categoryRepository.getCategories()
+        .flowOn(dispatcherProvider.io())
+        .map {
+            it.map { expenseCategory ->
+                expenseCategory.name
             }
         }
 

@@ -1,6 +1,5 @@
 package br.com.tick.sdk.repositories.localdata
 
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
 import br.com.tick.sdk.domain.NotificationPeriodicity

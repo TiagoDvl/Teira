@@ -13,7 +13,7 @@ class FakeExpenseCategoryRepository : ExpenseCategoryRepository {
         expenseCategories.add(ExpenseCategory(expenseCategories.size, categoryName))
     }
 
-    override suspend fun getCategories(): Flow<List<ExpenseCategory>> {
+    override fun getCategories(): Flow<List<ExpenseCategory>> {
         return flowOf(expenseCategories)
     }
 }
