@@ -4,10 +4,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
@@ -21,11 +20,17 @@ fun TeiraBaseTextField(
     value: String,
     label: String? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
-    onImeDoneAction: (() -> Unit)? = null,
-    onValueChanged: (String) -> Unit
+    onImeDoneAction: ((String) -> Unit)? = null,
+    onValueChanged: ((String) -> Unit)? = null
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
+
+    var valueState by remember { mutableStateOf("") }
+
+    LaunchedEffect(key1 = value) {
+        valueState = value
+    }
 
     TextField(
         modifier = modifier.fillMaxWidth(),
@@ -45,21 +50,23 @@ fun TeiraBaseTextField(
             focusedLabelColor = MaterialTheme.colorScheme.tertiary,
             unfocusedLabelColor = MaterialTheme.colorScheme.primary
         ),
-        value = value,
+        value = valueState,
         singleLine = true,
-        maxLines = 1,
         keyboardOptions = KeyboardOptions(
             keyboardType = keyboardType,
             imeAction = ImeAction.Done
         ),
         keyboardActions = KeyboardActions(
             onDone = {
-                onImeDoneAction?.invoke()
+                onImeDoneAction?.invoke(valueState)
                 keyboardController?.hide()
                 focusManager.clearFocus()
             }
         ),
-        onValueChange = { onValueChanged(it) },
+        onValueChange = {
+            valueState = it
+            onValueChanged?.invoke(it)
+        },
         textStyle = MaterialTheme.textStyle.h2
     )
 }

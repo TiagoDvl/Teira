@@ -16,7 +16,7 @@ import javax.inject.Inject
 class QuickExpenseBarViewModel @Inject constructor(
     private val expenseRepository: CategorizedExpenseRepository,
     private val categoryRepository: ExpenseCategoryRepository,
-    dispatcherProvider: DispatcherProvider
+    private val dispatcherProvider: DispatcherProvider
 ) : ViewModel() {
 
     val categories = categoryRepository.getCategories()
@@ -28,13 +28,13 @@ class QuickExpenseBarViewModel @Inject constructor(
         }
 
     fun saveQuickExpense(categoryId: Int, name: String, value: Double, expenseDate: LocalDate) {
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcherProvider.io()) {
             expenseRepository.addExpense(categoryId, name, value, expenseDate)
         }
     }
 
     fun addCategory(categoryName: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcherProvider.io()) {
             categoryRepository.addCategory(categoryName)
         }
     }
