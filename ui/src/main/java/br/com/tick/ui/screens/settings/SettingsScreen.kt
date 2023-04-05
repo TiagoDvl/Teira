@@ -1,9 +1,13 @@
 package br.com.tick.ui.screens.settings
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -41,7 +45,7 @@ fun SettingsScreen(
         )
 
         SettingField(monthlyIncomeState = monthlyIncome) {
-            viewModel.saveMonthlyIncome(it.toDouble())
+            viewModel.saveMonthlyIncome(it)
         }
         NotificationsSetting(notificationPeriodicity = notificationPeriodicity) {
             onPeriodicNotificationStateChanged(it)
@@ -54,8 +58,9 @@ fun SettingsScreen(
 fun SettingField(
     modifier: Modifier = Modifier,
     monthlyIncomeState: MonthlyIncomeStates,
-    onValueChanged: (String) -> Unit
+    onValueChanged: (Double) -> Unit
 ) {
+    val context = LocalContext.current
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -69,10 +74,15 @@ fun SettingField(
         TeiraBaseTextField(
             modifier = Modifier.padding(top = MaterialTheme.spacing.medium),
             value = monthlyIncomeState.value.toString(),
-            onValueChanged = onValueChanged,
             keyboardType = KeyboardType.Decimal,
             label = stringResource(id = R.string.settings_monthly_income_label)
-        )
+        ){
+            try {
+                onValueChanged(it.toDouble())
+            } catch (exception: NumberFormatException) {
+                Toast.makeText(context, "This value is not a value", Toast.LENGTH_SHORT).show()
+            }
+        }
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = stringResource(id = R.string.settings_monthly_income_hint),

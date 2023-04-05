@@ -1,18 +1,15 @@
 package br.com.tick.ui.screens.wallet
 
-import android.widget.Space
+import android.widget.Toast
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextDecoration
@@ -23,7 +20,8 @@ import br.com.tick.ui.core.TeiraBaseTextField
 import br.com.tick.ui.core.TeiraDropdown
 import br.com.tick.ui.core.TeiraOutlinedButton
 import br.com.tick.ui.screens.wallet.viewmodels.QuickExpenseBarViewModel
-import br.com.tick.ui.theme.*
+import br.com.tick.ui.theme.spacing
+import br.com.tick.ui.theme.textStyle
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -64,11 +62,13 @@ fun ExpandedQuickExpense(
     quickExpenseBarViewModel: QuickExpenseBarViewModel = hiltViewModel(),
     onClick: () -> Unit
 ) {
-    val expenseName = remember { mutableStateOf("") }
-    val expenseValue = remember { mutableStateOf(0.0) }
-    val selectedCategoryId = remember { mutableStateOf(0) }
+    var expenseName by remember { mutableStateOf("") }
+    var expenseValue by remember { mutableStateOf(0.0) }
+    var selectedCategoryId by remember { mutableStateOf(-1) }
     val localDateTime = LocalDate.now()
     val categoriesList by remember { quickExpenseBarViewModel.categories }.collectAsState(initial = listOf())
+
+    val context = LocalContext.current
 
     Column(
         modifier = modifier
@@ -77,10 +77,10 @@ fun ExpandedQuickExpense(
             .padding(MaterialTheme.spacing.medium)
     ) {
         TeiraBaseTextField(
-            value = expenseName.value,
+            value = expenseName,
             label = stringResource(id = R.string.wallet_quick_expense_name)
         ) {
-            expenseName.value = it
+            expenseName = it
         }
         Row(
             modifier = Modifier
@@ -90,19 +90,24 @@ fun ExpandedQuickExpense(
         ) {
             TeiraBaseTextField(
                 modifier = Modifier.weight(0.5f),
-                value = expenseValue.value.toString(),
+                value = expenseValue.toString(),
                 label = stringResource(id = R.string.wallet_quick_expense_value),
-                keyboardType = KeyboardType.Decimal
+                keyboardType = KeyboardType.NumberPassword
             ) {
-                expenseValue.value = it.toDouble()
+                try {
+                    expenseValue = it.toDouble()
+                } catch (exception: NumberFormatException) {
+                    Toast.makeText(context, "This value is not a value", Toast.LENGTH_SHORT).show()
+                }
             }
+            val label = if (selectedCategoryId == -1) stringResource(id = R.string.wallet_quick_expense_select_category) else categoriesList[selectedCategoryId]
             TeiraDropdown(
                 modifier = Modifier.weight(0.5f).padding(start = MaterialTheme.spacing.extraSmall),
-                label = stringResource(id = R.string.wallet_quick_expense_select_category),
+                label = label,
                 borderColor = MaterialTheme.colorScheme.onSecondary,
                 dropdownItemLabels = categoriesList,
                 onItemSelected = {
-                    selectedCategoryId.value = it
+                    selectedCategoryId = it
                 },
                 lastItemLabel = stringResource(id = R.string.wallet_quick_expense_add_category),
                 onLastItemSelected = {
@@ -124,14 +129,14 @@ fun ExpandedQuickExpense(
                 text = stringResource(id = R.string.wallet_quick_expense_save),
                 onClick = {
                     onClick() // This will cause a recomposition
-                    if (expenseName.value.isNotEmpty() &&
-                        expenseValue.value != 0.0 &&
-                        selectedCategoryId.value > 0
+                    if (expenseName.isNotEmpty() &&
+                        expenseValue != 0.0 &&
+                        selectedCategoryId > 0
                     ) {
                         quickExpenseBarViewModel.saveQuickExpense(
-                            selectedCategoryId.value,
-                            expenseName.value,
-                            expenseValue.value,
+                            selectedCategoryId,
+                            expenseName,
+                            expenseValue,
                             localDateTime
                         )
                     }

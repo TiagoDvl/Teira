@@ -37,7 +37,7 @@ fun AddNewCategoryDialog(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                var categoryName by remember { mutableStateOf("") }
+                var categoryName = ""
 
                 TeiraBaseTextField(
                     modifier = Modifier.width(200.dp),
