@@ -1,7 +1,8 @@
 package br.com.tick.ui.screens.wallet
 
 import android.widget.Toast
-import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
@@ -13,7 +14,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import br.com.tick.R
 import br.com.tick.ui.core.TeiraBaseTextField
@@ -25,31 +25,27 @@ import br.com.tick.ui.theme.textStyle
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun QuickExpense(
     modifier: Modifier = Modifier,
     showAddCategoryDialogState: MutableState<Boolean>
 ) {
-    val isExpanded = remember { mutableStateOf(false) }
-    val quickExpenseComposableHeight = remember { mutableStateOf(70.dp) }
-    val animatedSize by animateDpAsState(targetValue = quickExpenseComposableHeight.value)
+    var isExpanded by remember { mutableStateOf(false) }
 
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(animatedSize)
-    ) {
-        if (isExpanded.value) {
-            quickExpenseComposableHeight.value = 200.dp
+    AnimatedContent(
+        modifier = modifier.fillMaxWidth(),
+        targetState = isExpanded
+    ) { targetState ->
+        if (targetState) {
             ExpandedQuickExpense(
                 showAddCategoryDialogState = showAddCategoryDialogState
             ) {
-                isExpanded.value = isExpanded.value.not()
+                isExpanded = isExpanded.not()
             }
         } else {
-            quickExpenseComposableHeight.value = 80.dp
             ClosedQuickExpense {
-                isExpanded.value = isExpanded.value.not()
+                isExpanded = isExpanded.not()
             }
         }
     }
@@ -72,7 +68,7 @@ fun ExpandedQuickExpense(
 
     Column(
         modifier = modifier
-            .fillMaxSize()
+            .fillMaxWidth()
             .background(MaterialTheme.colorScheme.secondary)
             .padding(MaterialTheme.spacing.medium)
     ) {
@@ -117,7 +113,7 @@ fun ExpandedQuickExpense(
         }
 
         Row(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.Bottom
         ) {
             QuickExpenseDate(
