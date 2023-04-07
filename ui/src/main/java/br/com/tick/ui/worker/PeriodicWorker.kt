@@ -1,6 +1,7 @@
 package br.com.tick.ui.worker
 
 import android.content.Context
+import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.OneTimeWorkRequestBuilder
@@ -26,10 +27,6 @@ class PeriodicWorker @AssistedInject constructor(
     private val dataStoreRepository: LocalDataRepository
 ) : CoroutineWorker(context, workerParams) {
 
-    companion object {
-        private const val TAG = "PeriodicWorker"
-    }
-
     override suspend fun doWork(): Result {
         return with(dispatcherProvider.io()) {
             showPeriodicExpenseReminderNotification()
@@ -37,8 +34,8 @@ class PeriodicWorker @AssistedInject constructor(
                 dataStoreRepository.getNotificationPeriodicity().first() ?: return@with Result.failure()
 
             val dailyWorkRequest = OneTimeWorkRequestBuilder<PeriodicWorker>()
-                .setInitialDelay(LocalDateTime.now().getPeriodicityTimeDiff(notificationPeriodicity), TimeUnit.SECONDS)
-                .addTag(TAG)
+                .setInitialDelay(LocalDateTime.now().getPeriodicityTimeDiff(notificationPeriodicity), TimeUnit.MINUTES)
+                .addTag(applicationContext.getString(R.string.teira_periodic_reminder_channel_name))
                 .build()
 
             WorkManager.getInstance(applicationContext).enqueue(dailyWorkRequest)

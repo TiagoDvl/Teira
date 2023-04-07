@@ -3,6 +3,7 @@ package br.com.tick.ui
 import android.Manifest
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
@@ -58,6 +59,7 @@ fun TeiraScaffold(
     }
 
     viewModel.initialPeriodicNotificationRegistration.collectAsEffect {
+        Log.d("Tiago", "Initial Periodic Notification")
         val name = context.getString(R.string.teira_periodic_reminder_channel_name)
         val descriptionText = context.getString(R.string.teira_periodic_reminder_channel_description)
         val channelId = context.getString(R.string.teira_periodic_reminder_channel_id)
@@ -173,7 +175,7 @@ private fun setDelayedPeriodicWorker(
 ) {
     val name = context.getString(R.string.teira_periodic_reminder_channel_name)
     val periodicWorker = OneTimeWorkRequestBuilder<PeriodicWorker>()
-        .setInitialDelay(LocalDateTime.now().getPeriodicityTimeDiff(notificationPeriodicity), TimeUnit.SECONDS)
+        .setInitialDelay(LocalDateTime.now().getPeriodicityTimeDiff(notificationPeriodicity), TimeUnit.MINUTES)
         .addTag(name)
         .build()
     workManager.enqueue(periodicWorker)
