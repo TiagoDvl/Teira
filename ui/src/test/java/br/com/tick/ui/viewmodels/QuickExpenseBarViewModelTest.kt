@@ -47,7 +47,7 @@ class QuickExpenseBarViewModelTest {
         categoryRepository.addCategory(categoryName)
 
         quickExpenseBarViewModel.categories.test {
-            assert(awaitItem()[0] == categoryName)
+            assert(awaitItem()[0].name == categoryName)
             awaitComplete()
         }
     }
