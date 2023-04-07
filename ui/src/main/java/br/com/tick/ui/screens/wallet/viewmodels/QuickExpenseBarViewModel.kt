@@ -7,7 +7,6 @@ import br.com.tick.sdk.repositories.categorizedexpense.CategorizedExpenseReposit
 import br.com.tick.sdk.repositories.expensecategory.ExpenseCategoryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
@@ -19,13 +18,7 @@ class QuickExpenseBarViewModel @Inject constructor(
     private val dispatcherProvider: DispatcherProvider
 ) : ViewModel() {
 
-    val categories = categoryRepository.getCategories()
-        .flowOn(dispatcherProvider.io())
-        .map {
-            it.map { expenseCategory ->
-                expenseCategory.name
-            }
-        }
+    val categories = categoryRepository.getCategories().flowOn(dispatcherProvider.io())
 
     fun saveQuickExpense(categoryId: Int, name: String, value: Double, expenseDate: LocalDate) {
         viewModelScope.launch(dispatcherProvider.io()) {
