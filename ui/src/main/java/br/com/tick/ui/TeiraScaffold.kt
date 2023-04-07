@@ -59,7 +59,6 @@ fun TeiraScaffold(
     }
 
     viewModel.initialPeriodicNotificationRegistration.collectAsEffect {
-        Log.d("Tiago", "Initial Periodic Notification")
         val name = context.getString(R.string.teira_periodic_reminder_channel_name)
         val descriptionText = context.getString(R.string.teira_periodic_reminder_channel_description)
         val channelId = context.getString(R.string.teira_periodic_reminder_channel_id)
