@@ -11,10 +11,10 @@ import javax.inject.Inject
 class GetMostExpensiveCategories @Inject constructor(private val expenseRepository: CategorizedExpenseRepository) {
 
     suspend operator fun invoke(): Flow<MostExpensiveCategoriesStates> =
-        expenseRepository.getThirtyDaysCategorizedExpenses().map { categorizedExpenses ->
+        expenseRepository.getThirtyDaysCategorizedExpenses().map { thirtyDaysOfCategorizedExpenses ->
             val mostExpensiveCategories = mutableListOf<MostExpensiveCategory>()
 
-            categorizedExpenses.forEach { categorizedExpense ->
+            thirtyDaysOfCategorizedExpenses.forEach { categorizedExpense ->
                 val mostExpensiveCategory = mostExpensiveCategories.find { it.categoryName == categorizedExpense.name }
 
                 if (mostExpensiveCategory == null) {

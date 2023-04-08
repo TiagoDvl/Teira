@@ -7,6 +7,7 @@ import br.com.tick.sdk.repositories.categorizedexpense.CategorizedExpenseReposit
 import br.com.tick.sdk.repositories.expensecategory.ExpenseCategoryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
