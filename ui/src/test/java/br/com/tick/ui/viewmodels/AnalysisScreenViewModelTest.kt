@@ -1,6 +1,7 @@
 package br.com.tick.ui.viewmodels
 
 import app.cash.turbine.test
+import br.com.tick.sdk.dispatchers.FakeDispatcher
 import br.com.tick.sdk.repositories.FakeCategorizedExpenseRepository
 import br.com.tick.sdk.repositories.FakeDataStoreRepository
 import br.com.tick.sdk.repositories.categorizedexpense.CategorizedExpenseRepository
@@ -12,6 +13,7 @@ import br.com.tick.ui.screens.analysis.usecases.GetMostExpensiveCategories
 import br.com.tick.ui.screens.analysis.viewmodels.AnalysisScreenViewModel
 import br.com.tick.utils.CoroutineTestRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 import org.junit.Test
@@ -37,7 +39,8 @@ class AnalysisScreenViewModelTest {
         return AnalysisScreenViewModel(
             fetchLastMonthExpenses,
             getMostExpensiveCategories,
-            calculateFinancialHealthSituation
+            calculateFinancialHealthSituation,
+            FakeDispatcher()
         )
     }
 
