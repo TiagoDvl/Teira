@@ -20,11 +20,11 @@ class FetchLastMonthExpenses @Inject constructor(private val expenseRepository: 
         val lastMonthExpenses = mutableMapOf<LocalDate, Double>()
 
         categorizedExpensesList.forEach { categorizedExpense ->
-            if (lastMonthExpenses.containsKey(categorizedExpense.date)) {
-                lastMonthExpenses[categorizedExpense.date] =
-                    lastMonthExpenses[categorizedExpense.date]!!.plus(categorizedExpense.expenseValue)
+            val dateAsKey = categorizedExpense.date
+            lastMonthExpenses[dateAsKey] = if (lastMonthExpenses.containsKey(dateAsKey)) {
+                lastMonthExpenses[dateAsKey]!!.plus(categorizedExpense.expenseValue)
             } else {
-                lastMonthExpenses[categorizedExpense.date] = categorizedExpense.expenseValue
+                 categorizedExpense.expenseValue
             }
         }
 

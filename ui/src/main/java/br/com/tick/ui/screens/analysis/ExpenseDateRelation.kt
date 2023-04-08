@@ -47,7 +47,7 @@ fun ExpenseGraph(
 ) {
     val maxNumber = analysisGraph.expenses.maxOf { it.value.toInt() }
     val entries = analysisGraph.expenses.map {
-        entryOf(it.key.dayOfMonth.toFloat(), it.value)
+        entryOf(it.key.dayOfMonth, it.value)
     }
 
     Column(modifier = modifier.fillMaxWidth()) {
@@ -96,5 +96,12 @@ fun GraphLoadingPreview() {
 @Preview
 @Composable
 fun ExpenseGraphPreview() {
-    ExpenseGraph(analysisGraph = AnalysisGraphStates.AnalysisGraph(mapOf(LocalDate.now() to 200.0)))
+    ExpenseGraph(
+        analysisGraph = AnalysisGraphStates.AnalysisGraph(
+            mapOf(
+                LocalDate.now() to 200.0,
+                LocalDate.now().plusDays(1L) to 350.0
+            )
+        )
+    )
 }
