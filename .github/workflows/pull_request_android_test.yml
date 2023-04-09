@@ -1,7 +1,7 @@
 name: UI tests check
 
 on:
-  pull_request:
+  push:
     branches:
       - main
 
@@ -21,3 +21,12 @@ jobs:
         with:
           api-level: 29
           script: ./gradlew connectedAndroidTest
+      - name: build release
+          run: ./gradlew assembleRelease
+      - name: upload artifact to Firebase App Distribution
+          uses: wzieba/Firebase-Distribution-Github-Action@v1
+          with:
+            appId: ${{secrets.FIREBASE_APP_ID}}
+            serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+            groups: testers
+            file: app/build/outputs/apk/release/app-release-unsigned.apk
