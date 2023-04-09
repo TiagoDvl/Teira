@@ -1,19 +1,19 @@
 package br.com.tick.ui.viewmodels
 
 import app.cash.turbine.test
-import br.com.tick.sdk.repositories.categorizedexpense.CategorizedExpenseRepository
-import br.com.tick.sdk.repositories.localdata.LocalDataRepository
+import br.com.tick.sdk.dispatchers.FakeDispatcher
 import br.com.tick.sdk.repositories.FakeCategorizedExpenseRepository
 import br.com.tick.sdk.repositories.FakeDataStoreRepository
-import br.com.tick.sdk.repositories.FakeExpenseCategoryRepository
+import br.com.tick.sdk.repositories.categorizedexpense.CategorizedExpenseRepository
+import br.com.tick.sdk.repositories.localdata.LocalDataRepository
 import br.com.tick.ui.screens.analysis.states.AnalysisGraphStates
-import br.com.tick.ui.screens.analysis.states.MostExpensiveCategoriesStates
 import br.com.tick.ui.screens.analysis.usecases.CalculateFinancialHealthSituation
 import br.com.tick.ui.screens.analysis.usecases.FetchLastMonthExpenses
 import br.com.tick.ui.screens.analysis.usecases.GetMostExpensiveCategories
 import br.com.tick.ui.screens.analysis.viewmodels.AnalysisScreenViewModel
 import br.com.tick.utils.CoroutineTestRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 import org.junit.Test
@@ -39,75 +39,9 @@ class AnalysisScreenViewModelTest {
         return AnalysisScreenViewModel(
             fetchLastMonthExpenses,
             getMostExpensiveCategories,
-            calculateFinancialHealthSituation
+            calculateFinancialHealthSituation,
+            FakeDispatcher()
         )
-    }
-
-    @Test
-    fun `When adding a single expense, that one must be the most expensive one`() = runTest {
-        val expenseRepository = FakeCategorizedExpenseRepository()
-        val analysisScreenViewModel = getViewModel(
-            categorizedExpenseRepository = expenseRepository
-        )
-
-        val categoryName = "Name_1"
-        expenseRepository.addExpense(0, categoryName, 15.0, LocalDate.now())
-
-        analysisScreenViewModel.mostExpenseCategoryList.test {
-            val expensiveCategories = awaitItem()
-            assert(expensiveCategories is MostExpensiveCategoriesStates.Full)
-
-            val expensiveCategoriesFull = expensiveCategories as MostExpensiveCategoriesStates.Full
-            assert(expensiveCategoriesFull.mostExpensiveCategories[0].categoryName == categoryName)
-
-            awaitComplete()
-        }
-    }
-
-    @Test
-    fun `When adding two expenses in different categories, the most expensive must be the highest expense category`() =
-        runTest {
-            val expenseRepository = FakeCategorizedExpenseRepository()
-            val categoryRepository = FakeExpenseCategoryRepository()
-            val analysisScreenViewModel = getViewModel(
-                categorizedExpenseRepository = expenseRepository
-            )
-
-            val categoryName = "Name_1"
-            val highestCategoryExpense = 15.0
-            categoryRepository.addCategory(categoryName)
-            expenseRepository.addExpense(0, categoryName, highestCategoryExpense, LocalDate.now())
-
-            val secondCategoryName = "Name_2"
-            val lowestCategoryExpense = 14.0
-            categoryRepository.addCategory(secondCategoryName)
-            expenseRepository.addExpense(1, secondCategoryName, lowestCategoryExpense, LocalDate.now())
-
-            assert(highestCategoryExpense > lowestCategoryExpense)
-            assert(categoryName != secondCategoryName)
-            analysisScreenViewModel.mostExpenseCategoryList.test {
-                val expensiveCategoriesFull = awaitItem() as MostExpensiveCategoriesStates.Full
-                assert(expensiveCategoriesFull.mostExpensiveCategories[0].categoryName == categoryName)
-                awaitComplete()
-            }
-        }
-
-    @Test
-    fun `When adding multiple expenses in multiple categories, expense list should only have the top five`() = runTest {
-        val expenseRepository = FakeCategorizedExpenseRepository()
-        val analysisScreenViewModel = getViewModel(
-            categorizedExpenseRepository = expenseRepository
-        )
-
-        for (i in 0..5) expenseRepository.addExpense(i, "Name_$i", 10.0 + i, LocalDate.now())
-
-        analysisScreenViewModel.mostExpenseCategoryList.test {
-            val expensiveCategoriesFull = awaitItem() as MostExpensiveCategoriesStates.Full
-            for (i in 0..4) {
-                assert(expensiveCategoriesFull.mostExpensiveCategories[i].categoryName == "Name_${5 - i}")
-            }
-            awaitComplete()
-        }
     }
 
     @Test

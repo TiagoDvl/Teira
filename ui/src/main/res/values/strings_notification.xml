@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="teira_periodic_reminder_channel_id">TEIRA_PERIODIC_CHANNEL_ID</string>
+    <string name="teira_periodic_reminder_channel_name">Periodic reminder</string>
+    <string name="teira_periodic_reminder_channel_description">Helps you to remember adding your expenses</string>
+
+    <string name="periodic_reminder_title">Remember to add your expenses</string>
+    <string name="periodic_reminder_description">Results work best when updated constantly</string>
+</resources>

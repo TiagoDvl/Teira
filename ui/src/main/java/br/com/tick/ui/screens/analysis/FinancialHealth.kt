@@ -1,6 +1,5 @@
 package br.com.tick.ui.screens.analysis
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
@@ -10,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -25,14 +25,23 @@ fun FinancialHealthComposable(
     viewModel: AnalysisScreenViewModel = hiltViewModel()
 ) {
     Column(modifier = modifier.padding(MaterialTheme.spacing.small)) {
-        val sliderPosition by remember {
+        val financialHealth by remember {
             viewModel.financialHealthSituation
         }.collectAsState(initial = FinancialHealth.Empty)
-        val sliderColor = when (sliderPosition.percentageOfCompromisedIncome) {
-            in 0f .. 30f -> MaterialTheme.colorScheme.surface
-            in 30f .. 60f -> MaterialTheme.colorScheme.primary
-            else -> MaterialTheme.colorScheme.tertiary
+
+        val informationDescription = when (financialHealth) {
+            FinancialHealth.Empty -> ""
+            is FinancialHealth.Situation.Safe -> stringResource(id = R.string.analysis_financial_health_safe)
+            is FinancialHealth.Situation.Caution -> stringResource(id = R.string.analysis_financial_health_caution)
+            is FinancialHealth.Situation.Dangerous -> stringResource(id = R.string.analysis_financial_health_dangerous)
         }
+
+        val informationText = stringResource(
+            id = R.string.analysis_financial_health_information,
+            financialHealth.percentageOfCompromisedIncome,
+            informationDescription
+        )
+
         Text(
             text = stringResource(id = R.string.analysis_financial_health_title),
             color = MaterialTheme.colorScheme.primary,
@@ -42,10 +51,16 @@ fun FinancialHealthComposable(
             modifier = Modifier.padding(top = MaterialTheme.spacing.medium),
             colors = SliderDefaults.colors(
                 thumbColor = MaterialTheme.colorScheme.tertiary,
-                inactiveTrackColor = sliderColor
+                inactiveTrackColor = MaterialTheme.colorScheme.tertiary
             ),
-            value = sliderPosition.percentageOfCompromisedIncome / 100,
+            value = financialHealth.percentageOfCompromisedIncome / 100,
             onValueChange = { }
+        )
+        Text(
+            modifier = Modifier.align(Alignment.End),
+            text = informationText,
+            color = MaterialTheme.colorScheme.tertiary,
+            style = MaterialTheme.textStyle.h4extra
         )
     }
 }

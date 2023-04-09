@@ -15,7 +15,7 @@ class ExpenseCategoryRepositoryImpl @Inject constructor(
         categoryDao.addCategory(Category(name = categoryName))
     }
 
-    override suspend fun getCategories(): Flow<List<ExpenseCategory>> = categoryDao.getCategories().map {
+    override fun getCategories(): Flow<List<ExpenseCategory>> = categoryDao.getCategories().map {
         it.map { category -> ExpenseCategory(category.categoryId, category.name) }
     }
 }

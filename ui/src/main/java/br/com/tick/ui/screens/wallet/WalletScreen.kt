@@ -1,20 +1,19 @@
 package br.com.tick.ui.screens.wallet
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import br.com.tick.ui.theme.spacing
 
 @Composable
 fun WalletScreen() {
-    val showAddCategoryDialogState = remember { mutableStateOf(false) }
+    var showAddCategoryDialogState by remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -22,12 +21,14 @@ fun WalletScreen() {
             .padding(MaterialTheme.spacing.small),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
     ) {
-        if (showAddCategoryDialogState.value) {
+        if (showAddCategoryDialogState) {
             AddNewCategoryDialog {
-                showAddCategoryDialogState.value = false
+                showAddCategoryDialogState = false
             }
         }
-        QuickExpense(showAddCategoryDialogState = showAddCategoryDialogState)
+        QuickExpense {
+            showAddCategoryDialogState = true
+        }
         ExpensesGrid()
     }
 }

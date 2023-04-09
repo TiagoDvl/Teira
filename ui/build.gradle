@@ -70,10 +70,15 @@ dependencies {
     implementation "androidx.navigation:navigation-compose:$navigationVersion"
     debugImplementation "androidx.compose.ui:ui-tooling:$composeVersion"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$composeVersion"
+    implementation "com.google.accompanist:accompanist-permissions:$acompanistPermissionVersion"
 
     implementation "com.google.dagger:hilt-android:$hiltVersion"
     implementation "androidx.hilt:hilt-navigation-compose:$hiltNavigationComposeVersion"
     kapt "com.google.dagger:hilt-compiler:$hiltVersion"
+    kapt "androidx.hilt:hilt-compiler:$hiltCompilerVersion"
+
+    implementation "androidx.hilt:hilt-work:$hiltWorkVersion"
+    implementation "androidx.work:work-runtime-ktx:$workManagerVersion"
 
     implementation "com.patrykandpatrick.vico:compose-m3:$vicoVersion"
 

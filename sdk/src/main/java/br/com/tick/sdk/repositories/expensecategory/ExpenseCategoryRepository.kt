@@ -7,5 +7,5 @@ interface ExpenseCategoryRepository {
 
     suspend fun addCategory(categoryName: String)
 
-    suspend fun getCategories(): Flow<List<ExpenseCategory>>
+    fun getCategories(): Flow<List<ExpenseCategory>>
 }

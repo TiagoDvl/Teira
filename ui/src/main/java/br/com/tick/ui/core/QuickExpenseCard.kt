@@ -1,12 +1,14 @@
 package br.com.tick.ui.core
 
-import androidx.compose.foundation.*
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -17,6 +19,7 @@ import br.com.tick.ui.screens.wallet.models.ExpenseCard
 import br.com.tick.ui.theme.spacing
 import br.com.tick.ui.theme.textStyle
 
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @ExperimentalFoundationApi
 @Composable
 fun QuickExpenseCard(
@@ -24,6 +27,8 @@ fun QuickExpenseCard(
     modifier: Modifier = Modifier,
     onQuickActionDelete: (expenseId: Int) -> Unit
 ) {
+    var expanded by remember { mutableStateOf(false) }
+
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(
@@ -56,36 +61,77 @@ fun QuickExpenseCard(
                 color = MaterialTheme.colorScheme.onTertiary
             )
 
-            Row(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .width(100.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                Icon(
-                    modifier = Modifier.size(24.dp),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    painter = painterResource(id = R.drawable.ic_slide_right),
-                    contentDescription = "Open expense quick actions",
-                )
-
-                Icon(
-                    modifier = Modifier.size(24.dp),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    painter = painterResource(id = R.drawable.ic_edit),
-                    contentDescription = "Edit expense"
-                )
-
-                Icon(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .clickable { onQuickActionDelete(expenseCard.id) },
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    painter = painterResource(id = R.drawable.ic_delete),
-                    contentDescription = "Delete expense"
-                )
+            AnimatedContent(
+                modifier = Modifier.align(Alignment.BottomEnd),
+                targetState = expanded
+            ) { targetExpanded ->
+                if (targetExpanded) {
+                    ExpandedCardIcons(
+                        onQuickActionDelete = { onQuickActionDelete(expenseCard.id) }
+                    ) {
+                        expanded = !expanded
+                    }
+                } else {
+                    CollapsedCardIcons {
+                        expanded = !expanded
+                    }
+                }
             }
         }
+    }
+}
+
+@Composable
+fun CollapsedCardIcons(modifier: Modifier = Modifier, onExpandIcons: () -> Unit) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        Icon(
+            modifier = Modifier
+                .size(24.dp)
+                .clickable { onExpandIcons() },
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            painter = painterResource(id = R.drawable.ic_slide_left),
+            contentDescription = "Open expense quick actions",
+        )
+    }
+}
+
+@Composable
+fun ExpandedCardIcons(
+    modifier: Modifier = Modifier,
+    onQuickActionDelete: () -> Unit,
+    collapse: () -> Unit
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        Icon(
+            modifier = Modifier
+                .size(24.dp)
+                .clickable { collapse() },
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            painter = painterResource(id = R.drawable.ic_slide_right),
+            contentDescription = "Open expense quick actions",
+        )
+
+        Icon(
+            modifier = Modifier.size(24.dp),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            painter = painterResource(id = R.drawable.ic_edit),
+            contentDescription = "Edit expense"
+        )
+
+        Icon(
+            modifier = Modifier
+                .size(24.dp)
+                .clickable { onQuickActionDelete() },
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            painter = painterResource(id = R.drawable.ic_delete),
+            contentDescription = "Delete expense"
+        )
     }
 }
 

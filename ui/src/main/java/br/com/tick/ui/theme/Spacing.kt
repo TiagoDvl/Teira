@@ -78,6 +78,12 @@ data class TeiraTextStyle(
         fontWeight = FontWeight.ExtraLight,
         fontSize = 14.sp,
         letterSpacing = 0.5.sp
+    ),
+    val h4extra: TextStyle = TextStyle(
+        fontFamily = Mulish,
+        fontWeight = FontWeight.ExtraLight,
+        fontSize = 16.sp,
+        letterSpacing = 0.5.sp
     )
 )
 
