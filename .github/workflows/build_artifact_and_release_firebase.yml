@@ -9,16 +9,21 @@ jobs:
   android_tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@main
 
       - name: Build the Release
         run: ./gradlew assembleRelease
 
-      - name: Upload Artifact to Firebase App Distribution
-        uses: wzieba/Firebase-Distribution-Github-Action@v1.5.0
+  single_app_path:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
+
+      - name: Single app at specific path
+        uses: burhankhanzada/firebase_app_distribution_github_action@main
         with:
-          debug: true
-        env:
-          appId: ${{secrets.FIREBASE_APP_ID}}
-          serviceCredentialsFileContent: ${{secrets.CREDENTIAL_FILE_CONTENT}}
-          file: app/build/outputs/apk/release/app-release-unsigned.apk
+          service_account_key_json: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+          app_id: ${{ secrets.FIREBASE_APP_ID }}
+          app: app/build/outputs/apk/release/app-release-unsigned.apk
+          groups: all
