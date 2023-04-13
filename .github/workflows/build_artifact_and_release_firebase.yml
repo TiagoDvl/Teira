@@ -18,6 +18,6 @@ jobs:
         uses: wzieba/Firebase-Distribution-Github-Action@v1.5.0
         with:
           appId: ${{secrets.FIREBASE_APP_ID}}
-          serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+          serviceCredentialsFileContent: ${{secrets.CREDENTIAL_FILE_CONTENT}}
           file: app/build/outputs/apk/release/app-release-unsigned.apk
           debug: true
