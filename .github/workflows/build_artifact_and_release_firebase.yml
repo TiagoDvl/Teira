@@ -13,14 +13,8 @@ jobs:
 
       - name: Build the Release
         run: ./gradlew assembleRelease
-
-  single_app_path:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@main
-
-      - name: Single app at specific path
+      
+      - name: Deploy to firebase
         uses: burhankhanzada/firebase_app_distribution_github_action@main
         with:
           service_account_key_json: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
