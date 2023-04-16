@@ -14,10 +14,10 @@ jobs:
       - name: Build the Release
         run: ./gradlew assembleRelease
       
-      - name: Deploy to firebase
-        uses: burhankhanzada/firebase_app_distribution_github_action@main
+      - name: Firebase Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1.5.0
         with:
-          service_account_key_json: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
-          app_id: ${{ secrets.FIREBASE_APP_ID }}
-          app: app/build/outputs/apk/release/app-release-unsigned.apk
-          groups: all
+          appId: ${{secrets.FIREBASE_APP_ID}}
+          serviceCredentialsFileContent: ${{secrets.CREDENTIAL_FILE_CONTENT}}
+          file: app/build/outputs/apk/release/app-release-unsigned.apk
+          debug: true
