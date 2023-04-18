@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  Firebase App Distribution:
+  Firebase-App-Distribution:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@main
