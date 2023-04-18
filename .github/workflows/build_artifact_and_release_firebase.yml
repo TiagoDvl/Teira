@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  android_tests:
+  Firebase App Distribution:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@main
@@ -20,4 +20,3 @@ jobs:
           appId: ${{secrets.FIREBASE_APP_ID}}
           serviceCredentialsFileContent: ${{secrets.CREDENTIAL_FILE_CONTENT}}
           file: app/build/outputs/apk/release/app-release-unsigned.apk
-          debug: true
