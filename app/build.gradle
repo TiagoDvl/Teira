@@ -76,6 +76,7 @@ dependencies {
     implementation "com.google.firebase:firebase-analytics-ktx:$firebaseAnalytics"
     debugImplementation "androidx.compose.ui:ui-tooling:$composeVersion"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$composeVersion"
+    
 
     implementation "com.google.dagger:hilt-android:$hiltVersion"
     implementation "androidx.hilt:hilt-navigation-compose:$hiltNavigationComposeVersion"
