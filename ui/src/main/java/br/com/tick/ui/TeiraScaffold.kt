@@ -23,7 +23,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import br.com.tick.R
 import br.com.tick.sdk.domain.NotificationPeriodicity
 import br.com.tick.sdk.extensions.getPeriodicityTimeDiff
 import br.com.tick.ui.extensions.collectAsEffect

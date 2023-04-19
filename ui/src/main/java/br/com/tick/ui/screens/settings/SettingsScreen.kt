@@ -16,7 +16,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import br.com.tick.R
+import br.com.tick.ui.R
 import br.com.tick.sdk.domain.NotificationPeriodicity
 import br.com.tick.ui.core.TeiraBaseTextField
 import br.com.tick.ui.core.TeiraDropdown

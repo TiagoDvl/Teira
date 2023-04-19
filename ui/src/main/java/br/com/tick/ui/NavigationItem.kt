@@ -1,6 +1,5 @@
 package br.com.tick.ui
 
-import br.com.tick.R
 import br.com.tick.ui.NavigationItem.Routes.ANALYSIS
 import br.com.tick.ui.NavigationItem.Routes.SETTINGS
 import br.com.tick.ui.NavigationItem.Routes.WALLET

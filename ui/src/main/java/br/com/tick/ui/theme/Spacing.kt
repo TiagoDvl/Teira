@@ -11,7 +11,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import br.com.tick.R
+import br.com.tick.ui.R
 
 data class Spacing(
     val smallest: Dp = 2.dp,

@@ -1,8 +1,8 @@
 package br.com.tick.ui.screens.settings.states
 
 import android.content.Context
-import br.com.tick.R
 import br.com.tick.sdk.domain.NotificationPeriodicity
+import br.com.tick.ui.R
 
 sealed class SettingsNotificationPeriodicityStates {
 

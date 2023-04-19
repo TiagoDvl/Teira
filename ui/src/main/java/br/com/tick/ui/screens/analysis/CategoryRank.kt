@@ -15,7 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import br.com.tick.R
+import br.com.tick.ui.R
 import br.com.tick.ui.screens.analysis.models.MostExpensiveCategory
 import br.com.tick.ui.screens.analysis.states.MostExpensiveCategoriesStates
 import br.com.tick.ui.screens.analysis.viewmodels.AnalysisScreenViewModel

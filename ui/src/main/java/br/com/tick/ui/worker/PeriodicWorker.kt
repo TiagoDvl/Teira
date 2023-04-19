@@ -1,17 +1,16 @@
 package br.com.tick.ui.worker
 
 import android.content.Context
-import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import br.com.tick.R
 import br.com.tick.sdk.dispatchers.DispatcherProvider
 import br.com.tick.sdk.extensions.getPeriodicityTimeDiff
 import br.com.tick.sdk.notifications.NotificationCenter
 import br.com.tick.sdk.repositories.localdata.LocalDataRepository
+import br.com.tick.ui.R
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.first

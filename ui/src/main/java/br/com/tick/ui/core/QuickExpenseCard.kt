@@ -12,9 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import br.com.tick.R
 import br.com.tick.sdk.domain.ExpenseCategory
 import br.com.tick.sdk.domain.ExpenseRisk
+import br.com.tick.ui.R
 import br.com.tick.ui.screens.wallet.models.ExpenseCard
 import br.com.tick.ui.theme.spacing
 import br.com.tick.ui.theme.textStyle

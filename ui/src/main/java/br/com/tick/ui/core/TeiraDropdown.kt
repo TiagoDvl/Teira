@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import br.com.tick.R
+import br.com.tick.ui.R
 import br.com.tick.ui.theme.spacing
 import br.com.tick.ui.theme.textStyle
 

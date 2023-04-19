@@ -9,6 +9,7 @@ plugins {
 
 android {
     compileSdk 33
+    namespace 'br.com.tick.teira'
 
     defaultConfig {
         applicationId "br.com.tick.teira"
@@ -57,9 +58,7 @@ android {
     // This allows us to use experimental coroutine components without warnings
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.AbstractKotlinCompile).all {
         kotlinOptions.freeCompilerArgs += [
-                "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-                "-Xopt-in=androidx.compose.material.ExperimentalMaterialApi",
-                "-Xopt-in=androidx.compose.foundation.ExperimentalFoundationApi"
+                "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
         ]
     }
     hilt {

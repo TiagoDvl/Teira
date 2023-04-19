@@ -15,7 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.hilt.navigation.compose.hiltViewModel
-import br.com.tick.R
+import br.com.tick.ui.R
 import br.com.tick.ui.core.TeiraBaseTextField
 import br.com.tick.ui.core.TeiraDropdown
 import br.com.tick.ui.core.TeiraOutlinedButton
