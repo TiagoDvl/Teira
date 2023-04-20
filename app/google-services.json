@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "167446638537",
-    "project_id": "teira-5b0a0",
-    "storage_bucket": "teira-5b0a0.appspot.com"
+    "project_number": "207660474671",
+    "project_id": "teira-384322",
+    "storage_bucket": "teira-384322.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:167446638537:android:8489dca76c21b85fecc218",
+        "mobilesdk_app_id": "1:207660474671:android:42ef1930687518bab441da",
         "android_client_info": {
           "package_name": "br.com.tick.teira"
         }
       },
       "oauth_client": [
         {
-          "client_id": "167446638537-u827oki99vutvtf3ptij2ksgai7glso7.apps.googleusercontent.com",
+          "client_id": "207660474671-kr6krsd1v1qqr9t50mi4f6k373jfkocs.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD2X3-OUeolhO6fZP_tnxJJ7u01BO0tOFc"
+          "current_key": "AIzaSyCsMy2UdekN_2xztk4dBEDd34gbPHdd5GQ"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "167446638537-u827oki99vutvtf3ptij2ksgai7glso7.apps.googleusercontent.com",
+              "client_id": "207660474671-kr6krsd1v1qqr9t50mi4f6k373jfkocs.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
