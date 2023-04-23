@@ -24,7 +24,7 @@ jobs:
           cache: 'gradle'
 
       - name: Build the Release
-        run: ./gradlew bundleRelease
+        run: ./gradlew assembleRelease
         env:
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
@@ -35,4 +35,4 @@ jobs:
         with:
           appId: ${{secrets.FIREBASE_APP_ID}}
           serviceCredentialsFileContent: ${{secrets.CREDENTIAL_FILE_CONTENT}}
-          file: app/build/outputs/bundle/release/app-release.aab
+          file: app/build/outputs/apk/release/app-release-unsigned.apk
