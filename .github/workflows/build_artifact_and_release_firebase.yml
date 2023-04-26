@@ -20,11 +20,11 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '11'
+          java-version: '17'
           cache: 'gradle'
 
-      - name: Build the Release
-        run: ./gradlew assembleRelease
+      - name: Build the Release AAB
+        run: ./gradlew bundleRelease
         env:
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
@@ -35,4 +35,4 @@ jobs:
         with:
           appId: ${{secrets.FIREBASE_APP_ID}}
           serviceCredentialsFileContent: ${{secrets.CREDENTIAL_FILE_CONTENT}}
-          file: app/build/outputs/apk/release/app-release-unsigned.apk
+          file: app/build/outputs/bundle/release/app-release.aab
