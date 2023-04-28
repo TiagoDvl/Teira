@@ -49,7 +49,7 @@ fun SettingsScreen(
         )
         val currencyFormat by viewModel.currencyFormat.collectAsState(initial = SettingsCurrencyFormatStates.Unset)
 
-        SettingField(monthlyIncomeState = monthlyIncome) {
+        MonthlyIncomeSetting(monthlyIncomeState = monthlyIncome) {
             viewModel.saveMonthlyIncome(it)
         }
         NotificationsSetting(notificationPeriodicity = notificationPeriodicity) {
@@ -63,7 +63,7 @@ fun SettingsScreen(
 }
 
 @Composable
-fun SettingField(
+fun MonthlyIncomeSetting(
     modifier: Modifier = Modifier,
     monthlyIncomeState: MonthlyIncomeStates,
     onValueChanged: (Double) -> Unit
@@ -92,7 +92,7 @@ fun SettingField(
             }
         }
         Text(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(top = MaterialTheme.spacing.extraSmall),
             text = stringResource(id = R.string.settings_monthly_income_hint),
             textAlign = TextAlign.Center,
             style = MaterialTheme.textStyle.h4,
@@ -204,7 +204,7 @@ fun CurrencyFormatSetting(
 @Preview
 @Composable
 fun SettingsScreenPreview() {
-    SettingField(monthlyIncomeState = MonthlyIncomeStates.Value(2000.0)) {
+    MonthlyIncomeSetting(monthlyIncomeState = MonthlyIncomeStates.Value(2000.0)) {
 
     }
 }
