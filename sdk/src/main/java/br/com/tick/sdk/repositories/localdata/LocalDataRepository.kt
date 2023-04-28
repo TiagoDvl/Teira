@@ -1,5 +1,6 @@
 package br.com.tick.sdk.repositories.localdata
 
+import br.com.tick.sdk.domain.CurrencyFormat
 import br.com.tick.sdk.domain.NotificationPeriodicity
 import br.com.tick.sdk.domain.PersistedMonthlyIncome
 import kotlinx.coroutines.flow.Flow
@@ -17,4 +18,8 @@ interface LocalDataRepository {
     fun getNotificationPeriodicity(): Flow<NotificationPeriodicity?>
 
     suspend fun setNotificationPeriodicity(notificationPeriodicity: NotificationPeriodicity)
+
+    fun getCurrencyFormat(): Flow<CurrencyFormat?>
+
+    suspend fun setCurrencyFormat(currencyFormat: CurrencyFormat)
 }

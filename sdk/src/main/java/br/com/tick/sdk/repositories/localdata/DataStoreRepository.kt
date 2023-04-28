@@ -2,6 +2,7 @@ package br.com.tick.sdk.repositories.localdata
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
+import br.com.tick.sdk.domain.CurrencyFormat
 import br.com.tick.sdk.domain.NotificationPeriodicity
 import br.com.tick.sdk.domain.PersistedMonthlyIncome
 import kotlinx.coroutines.flow.Flow
@@ -14,8 +15,9 @@ class DataStoreRepository @Inject constructor(
 
     companion object {
         const val MONTHLY_INCOME_KEY = "MONTHLY_INCOME_KEY"
-        const val NOTIFICATION_PERIODICITY = "NOTIFICATION_PERIODICITY_KEY"
+        const val NOTIFICATION_PERIODICITY_KEY = "NOTIFICATION_PERIODICITY_KEY"
         const val PERIODIC_NOTIFICATION_ID_KEY = "PERIODIC_NOTIFICATION_ID_KEY"
+        const val CURRENCY_FORMAT_KEY = "CURRENCY_FORMAT_KEY"
     }
 
     override fun getMonthlyIncome(): Flow<PersistedMonthlyIncome> {
@@ -44,7 +46,7 @@ class DataStoreRepository @Inject constructor(
 
     override fun getNotificationPeriodicity(): Flow<NotificationPeriodicity?> {
         return dataStore.data.map { preferences ->
-            val cachedPeriodicity = preferences[stringPreferencesKey(NOTIFICATION_PERIODICITY)]
+            val cachedPeriodicity = preferences[stringPreferencesKey(NOTIFICATION_PERIODICITY_KEY)]
 
             cachedPeriodicity?.let { NotificationPeriodicity.valueOf(it) }
         }
@@ -52,7 +54,21 @@ class DataStoreRepository @Inject constructor(
 
     override suspend fun setNotificationPeriodicity(notificationPeriodicity: NotificationPeriodicity) {
         dataStore.edit { settings ->
-            settings[stringPreferencesKey(NOTIFICATION_PERIODICITY)] = notificationPeriodicity.name
+            settings[stringPreferencesKey(NOTIFICATION_PERIODICITY_KEY)] = notificationPeriodicity.name
+        }
+    }
+
+    override fun getCurrencyFormat(): Flow<CurrencyFormat?> {
+        return dataStore.data.map { preferences ->
+            val cachedCurrencyFormat = preferences[stringPreferencesKey(CURRENCY_FORMAT_KEY)]
+
+            cachedCurrencyFormat?.let { CurrencyFormat.valueOf(it) }
+        }
+    }
+
+    override suspend fun setCurrencyFormat(currencyFormat: CurrencyFormat) {
+        dataStore.edit { settings ->
+            settings[stringPreferencesKey(CURRENCY_FORMAT_KEY)] = currencyFormat.name
         }
     }
 }

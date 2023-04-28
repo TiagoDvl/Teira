@@ -10,11 +10,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import br.com.tick.sdk.domain.CurrencyFormat
 import br.com.tick.sdk.domain.ExpenseCategory
 import br.com.tick.sdk.domain.ExpenseRisk
 import br.com.tick.ui.R
+import br.com.tick.ui.extensions.getLabelResource
 import br.com.tick.ui.screens.wallet.models.ExpenseCard
 import br.com.tick.ui.theme.spacing
 import br.com.tick.ui.theme.textStyle
@@ -54,9 +57,10 @@ fun QuickExpenseCard(
                 )
             }
 
+            val currency = stringResource(id = expenseCard.currency.getLabelResource())
             Text(
                 modifier = Modifier.align(Alignment.BottomStart),
-                text = "€${expenseCard.value}",
+                text = "$currency${expenseCard.value}",
                 style = MaterialTheme.textStyle.h3small,
                 color = MaterialTheme.colorScheme.onTertiary
             )
@@ -142,6 +146,7 @@ fun QuickExpenseCardPreview() {
         expenseCard = ExpenseCard(
             id = 0,
             name = "Expense 1",
+            currency = CurrencyFormat.EURO,
             value = 50.0,
             category = ExpenseCategory(0, "Category 1"),
             risk = ExpenseRisk.HIGH
