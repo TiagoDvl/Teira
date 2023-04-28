@@ -10,4 +10,13 @@
     <string name="settings_notifications_periodicity_daily">Daily</string>
     <string name="settings_notifications_periodicity_weekly">Weekly</string>
     <string name="settings_notifications_periodicity_canceled">Canceled</string>
+
+    <string name="settings_currency_title">Currency</string>
+    <string name="settings_currency_explanation">If you feel like it, set your preferred currency</string>
+    <string name="settings_currency_unset">Set your currency</string>
+    <string name="settings_currency_format_real">R$</string>
+    <string name="settings_currency_format_euro">€</string>
+    <string name="settings_currency_format_dollar">$</string>
+    <string name="settings_currency_format_yen">¥</string>
+    <string name="settings_currency_format_pounds">£</string>
 </resources>
