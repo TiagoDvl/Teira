@@ -42,11 +42,8 @@ fun TeiraBaseTextField(
                 )
             }
         },
-        colors = TextFieldDefaults.textFieldColors(
-            textColor = MaterialTheme.colorScheme.onTertiary,
-            containerColor = MaterialTheme.colorScheme.onSecondary,
+        colors = TextFieldDefaults.colors(
             cursorColor = MaterialTheme.colorScheme.tertiary,
-            placeholderColor = MaterialTheme.colorScheme.tertiary,
             focusedLabelColor = MaterialTheme.colorScheme.tertiary,
             unfocusedLabelColor = MaterialTheme.colorScheme.primary
         ),
