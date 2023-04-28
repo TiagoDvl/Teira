@@ -1,12 +1,20 @@
 package br.com.tick.ui.screens.wallet
 
+import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,7 +30,10 @@ import br.com.tick.ui.core.TeiraOutlinedButton
 import br.com.tick.ui.screens.wallet.viewmodels.QuickExpenseBarViewModel
 import br.com.tick.ui.theme.spacing
 import br.com.tick.ui.theme.textStyle
+import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -59,7 +70,7 @@ fun ExpandedQuickExpense(
     var expenseName by remember { mutableStateOf("") }
     var expenseValue by remember { mutableStateOf(0.0) }
     var selectedCategoryId by remember { mutableStateOf(-1) }
-    val localDateTime = LocalDate.now()
+    var localDateTime by remember { mutableStateOf(LocalDate.now()) }
     val categoriesList by remember { quickExpenseBarViewModel.categories }.collectAsState(initial = listOf())
 
     val label = if (selectedCategoryId == -1) {
@@ -125,10 +136,9 @@ fun ExpandedQuickExpense(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.Bottom
         ) {
-            QuickExpenseDate(
-                modifier = Modifier.weight(0.5f),
-                date = localDateTime
-            )
+            QuickExpenseDate(modifier = Modifier.weight(0.5f)) {
+                localDateTime = it
+            }
             TeiraOutlinedButton(
                 modifier = Modifier.weight(0.5f),
                 text = stringResource(id = R.string.wallet_quick_expense_save),
@@ -173,17 +183,68 @@ fun ClosedQuickExpense(onClick: () -> Unit) {
     }
 }
 
+@SuppressLint("UnrememberedMutableState")
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuickExpenseDate(
     modifier: Modifier = Modifier,
-    date: LocalDate
+    onDateChanged: (LocalDate) -> Unit
 ) {
+    var openDialog by remember { mutableStateOf(false) }
+    var localDate by remember { mutableStateOf(LocalDate.now()) }
+
+    if (openDialog) {
+        val datePickerState = rememberDatePickerState()
+        val confirmEnabled = derivedStateOf { datePickerState.selectedDateMillis != null }
+
+        DatePickerDialog(
+            onDismissRequest = { openDialog = false },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        openDialog = false
+                        localDate = LocalDateTime.ofInstant(
+                            Instant.ofEpochMilli(datePickerState.selectedDateMillis!!),
+                            ZoneId.systemDefault()
+                        ).toLocalDate()
+                        onDateChanged(localDate)
+                    },
+                    enabled = confirmEnabled.value
+                ) {
+                    Text(text = stringResource(id = R.string.generic_ok))
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { openDialog = false }
+                ) {
+                    Text(text = stringResource(id = R.string.generic_cancel))
+                }
+            }
+        ) {
+            DatePicker(
+                state = datePickerState,
+                colors = DatePickerDefaults.colors(
+                    titleContentColor = MaterialTheme.colorScheme.tertiary,
+                    headlineContentColor = MaterialTheme.colorScheme.tertiary,
+                    weekdayContentColor = MaterialTheme.colorScheme.primary,
+                    dayContentColor = MaterialTheme.colorScheme.primary,
+                    disabledDayContentColor = MaterialTheme.colorScheme.secondary,
+                    selectedDayContentColor = MaterialTheme.colorScheme.tertiary,
+                    selectedDayContainerColor = MaterialTheme.colorScheme.onSecondary,
+                )
+            )
+        }
+    }
+
     Box(
         modifier = modifier
     ) {
         Text(
-            modifier = Modifier.align(Alignment.BottomStart),
-            text = date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .clickable { openDialog = true },
+            text = localDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
             textDecoration = TextDecoration.Underline,
             style = MaterialTheme.textStyle.h4,
             color = MaterialTheme.colorScheme.onPrimary

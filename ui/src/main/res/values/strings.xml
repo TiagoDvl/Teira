@@ -3,4 +3,6 @@
     <string name="app_name">Teira</string>
 
     <string name="generic_loading">Loading…</string>
+    <string name="generic_ok">OK</string>
+    <string name="generic_cancel">Cancel</string>
 </resources>
