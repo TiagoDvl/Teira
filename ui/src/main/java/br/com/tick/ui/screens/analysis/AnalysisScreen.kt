@@ -1,6 +1,11 @@
 package br.com.tick.ui.screens.analysis
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -11,16 +16,14 @@ fun AnalysisScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(MaterialTheme.spacing.small),
+            .verticalScroll(rememberScrollState())
+            .padding(MaterialTheme.spacing.small)
     ) {
         ExpenseDateRelation(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(0.5f)
+            modifier = Modifier.fillMaxWidth()
         )
-        Column(modifier = Modifier
-            .fillMaxWidth()
-            .weight(0.5f)
+        Column(
+            modifier = Modifier.fillMaxWidth()
         ) {
             CategoryRank(
                 modifier = Modifier
