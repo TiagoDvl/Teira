@@ -6,6 +6,8 @@ import br.com.tick.sdk.repositories.expensecategory.ExpenseCategoryRepository
 import br.com.tick.sdk.repositories.expensecategory.ExpenseCategoryRepositoryImpl
 import br.com.tick.sdk.repositories.localdata.DataStoreRepository
 import br.com.tick.sdk.repositories.localdata.LocalDataRepository
+import br.com.tick.sdk.repositories.user.UserRepository
+import br.com.tick.sdk.repositories.user.UserRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -27,4 +29,7 @@ abstract class RepositoriesModule {
 
     @Binds
     abstract fun bindLocalDataRepository(dataStoreRepository: DataStoreRepository): LocalDataRepository
+
+    @Binds
+    abstract fun bindUserRepository(userRepository: UserRepositoryImpl): UserRepository
 }

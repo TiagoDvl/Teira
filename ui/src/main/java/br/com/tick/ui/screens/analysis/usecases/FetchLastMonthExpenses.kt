@@ -11,7 +11,7 @@ import javax.inject.Inject
 class FetchLastMonthExpenses @Inject constructor(private val expenseRepository: CategorizedExpenseRepository) {
 
     suspend operator fun invoke(): Flow<AnalysisGraphStates> {
-        return expenseRepository.getThirtyDaysCategorizedExpenses().map {
+        return expenseRepository.getAccountingCycleExpenses().map {
             AnalysisGraphStates.of(mergeAndSumExpenses(it))
         }
     }

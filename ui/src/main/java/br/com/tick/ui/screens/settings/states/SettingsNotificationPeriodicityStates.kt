@@ -6,16 +6,6 @@ import br.com.tick.ui.R
 
 sealed class SettingsNotificationPeriodicityStates {
 
-    companion object {
-
-        fun of(notificationPeriodicity: NotificationPeriodicity?): SettingsNotificationPeriodicityStates {
-            return when (notificationPeriodicity) {
-                null -> Loading
-                else -> Content(notificationPeriodicity)
-            }
-        }
-    }
-
     object Loading : SettingsNotificationPeriodicityStates()
 
     class Content(val label: NotificationPeriodicity) : SettingsNotificationPeriodicityStates()

@@ -173,7 +173,7 @@ private fun setDelayedPeriodicWorker(
 ) {
     val name = context.getString(R.string.teira_periodic_reminder_channel_name)
     val periodicWorker = OneTimeWorkRequestBuilder<PeriodicWorker>()
-        .setInitialDelay(LocalDateTime.now().getPeriodicityTimeDiff(notificationPeriodicity), TimeUnit.MINUTES)
+        .setInitialDelay(notificationPeriodicity.getPeriodicityTimeDiff(), TimeUnit.MINUTES)
         .addTag(name)
         .build()
     workManager.enqueue(periodicWorker)
