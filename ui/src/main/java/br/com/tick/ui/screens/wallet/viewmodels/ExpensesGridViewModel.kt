@@ -5,11 +5,13 @@ import androidx.lifecycle.viewModelScope
 import br.com.tick.sdk.dispatchers.DispatcherProvider
 import br.com.tick.ui.screens.wallet.states.ExpensesGridStates
 import br.com.tick.ui.screens.wallet.usecases.CreateExpensesCards
+import br.com.tick.ui.screens.wallet.usecases.GetAvailableBalance
 import br.com.tick.ui.screens.wallet.usecases.RemoveExpenseCard
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,12 +19,20 @@ import javax.inject.Inject
 class ExpensesGridViewModel @Inject constructor(
     private val createExpensesCards: CreateExpensesCards,
     private val removeExpenseCard: RemoveExpenseCard,
+    private val getAvailableBalance: GetAvailableBalance,
     private val dispatcherProvider: DispatcherProvider
 ) : ViewModel() {
 
     val getExpensesGridState: Flow<ExpensesGridStates>
         get() = flow {
             createExpensesCards().collect {
+                emit(it)
+            }
+        }.flowOn(dispatcherProvider.io())
+
+    val availableBalanceState: Flow<Double>
+        get() = flow {
+            getAvailableBalance().collect {
                 emit(it)
             }
         }.flowOn(dispatcherProvider.io())
