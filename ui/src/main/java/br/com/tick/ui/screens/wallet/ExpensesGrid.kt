@@ -14,12 +14,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import br.com.tick.ui.R
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import br.com.tick.ui.core.QuickExpenseCard
 import br.com.tick.ui.screens.wallet.models.ExpenseCard
 import br.com.tick.ui.screens.wallet.states.ExpensesGridStates
 import br.com.tick.ui.screens.wallet.viewmodels.ExpensesGridViewModel
 import br.com.tick.ui.theme.spacing
+import br.com.tick.ui.theme.textStyle
 
 @Composable
 fun ExpensesGrid(
@@ -30,6 +33,11 @@ fun ExpensesGrid(
         expensesGridViewModel.getExpensesGridState
     }.collectAsState(ExpensesGridStates.Loading)
 
+    val availableBalance by remember {
+        expensesGridViewModel.availableBalanceState
+    }.collectAsState(initial = 0.0)
+
+    AvailableBalance(availableBalance)
     Body(modifier, expensesListState, expensesGridViewModel)
 }
 
@@ -43,6 +51,7 @@ fun Body(
         ExpensesGridStates.Empty,
         ExpensesGridStates.Error,
         ExpensesGridStates.Loading -> LoadingGrid(modifier = modifier.fillMaxSize())
+
         is ExpensesGridStates.Success -> BodyGrid(modifier, expensesListState.expensesList, expensesGridViewModel)
     }
 }
@@ -83,7 +92,22 @@ fun LoadingGrid(
         Row(verticalAlignment = Alignment.CenterVertically) {
             CircularProgressIndicator()
             Spacer(modifier = Modifier.width(MaterialTheme.spacing.small))
-            Text(text = "Loading...")
+            Text(text = stringResource(id = R.string.generic_loading))
         }
+    }
+}
+
+@Composable
+fun AvailableBalance(
+    availableBalance: Double
+) {
+    Box(
+        modifier = Modifier.fillMaxWidth(),
+        contentAlignment = Alignment.CenterEnd
+    ) {
+        Text(
+            text = stringResource(id = R.string.wallet_available_balance_title, availableBalance),
+            style = MaterialTheme.textStyle.h3small
+        )
     }
 }
