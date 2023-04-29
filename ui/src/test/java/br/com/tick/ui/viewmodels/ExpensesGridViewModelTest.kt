@@ -8,6 +8,7 @@ import br.com.tick.sdk.repositories.categorizedexpense.CategorizedExpenseReposit
 import br.com.tick.sdk.repositories.user.UserRepository
 import br.com.tick.ui.screens.wallet.states.ExpensesGridStates
 import br.com.tick.ui.screens.wallet.usecases.CreateExpensesCards
+import br.com.tick.ui.screens.wallet.usecases.GetAvailableBalance
 import br.com.tick.ui.screens.wallet.usecases.RemoveExpenseCard
 import br.com.tick.ui.screens.wallet.viewmodels.ExpensesGridViewModel
 import br.com.tick.utils.CoroutineTestRule
@@ -30,8 +31,9 @@ class ExpensesGridViewModelTest {
     ): ExpensesGridViewModel {
         val createExpensesCards = CreateExpensesCards(categorizedExpenseRepository, userRepository)
         val removeExpenseCard = RemoveExpenseCard(categorizedExpenseRepository)
+        val getAvailableBalance = GetAvailableBalance(categorizedExpenseRepository, userRepository)
 
-        return ExpensesGridViewModel(createExpensesCards, removeExpenseCard, FakeDispatcher())
+        return ExpensesGridViewModel(createExpensesCards, removeExpenseCard, getAvailableBalance, FakeDispatcher())
     }
 
     @Test
