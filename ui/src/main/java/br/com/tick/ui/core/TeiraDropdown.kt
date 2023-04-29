@@ -16,7 +16,6 @@ import br.com.tick.ui.R
 import br.com.tick.ui.theme.spacing
 import br.com.tick.ui.theme.textStyle
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TeiraDropdown(
     modifier: Modifier = Modifier,

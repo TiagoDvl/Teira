@@ -1,10 +1,9 @@
 package br.com.tick.sdk.repositories.localdata
 
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.*
-import br.com.tick.sdk.domain.CurrencyFormat
-import br.com.tick.sdk.domain.NotificationPeriodicity
-import br.com.tick.sdk.domain.PersistedMonthlyIncome
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -20,17 +19,6 @@ class DataStoreRepository @Inject constructor(
         const val CURRENCY_FORMAT_KEY = "CURRENCY_FORMAT_KEY"
     }
 
-    override fun getMonthlyIncome(): Flow<PersistedMonthlyIncome> {
-        return dataStore.data.map { preferences ->
-            PersistedMonthlyIncome(preferences[doublePreferencesKey(MONTHLY_INCOME_KEY)] ?: 0.0)
-        }
-    }
-
-    override suspend fun saveMonthlyIncome(value: Double) {
-        dataStore.edit { settings ->
-            settings[doublePreferencesKey(MONTHLY_INCOME_KEY)] = value
-        }
-    }
 
     override fun getPeriodicNotificationId(): Flow<Int?> {
         return dataStore.data.map { preferences ->
@@ -41,34 +29,6 @@ class DataStoreRepository @Inject constructor(
     override suspend fun setPeriodicNotificationId(notificationId: Int) {
         dataStore.edit { settings ->
             settings[intPreferencesKey(PERIODIC_NOTIFICATION_ID_KEY)] = notificationId
-        }
-    }
-
-    override fun getNotificationPeriodicity(): Flow<NotificationPeriodicity?> {
-        return dataStore.data.map { preferences ->
-            val cachedPeriodicity = preferences[stringPreferencesKey(NOTIFICATION_PERIODICITY_KEY)]
-
-            cachedPeriodicity?.let { NotificationPeriodicity.valueOf(it) }
-        }
-    }
-
-    override suspend fun setNotificationPeriodicity(notificationPeriodicity: NotificationPeriodicity) {
-        dataStore.edit { settings ->
-            settings[stringPreferencesKey(NOTIFICATION_PERIODICITY_KEY)] = notificationPeriodicity.name
-        }
-    }
-
-    override fun getCurrencyFormat(): Flow<CurrencyFormat?> {
-        return dataStore.data.map { preferences ->
-            val cachedCurrencyFormat = preferences[stringPreferencesKey(CURRENCY_FORMAT_KEY)]
-
-            cachedCurrencyFormat?.let { CurrencyFormat.valueOf(it) }
-        }
-    }
-
-    override suspend fun setCurrencyFormat(currencyFormat: CurrencyFormat) {
-        dataStore.edit { settings ->
-            settings[stringPreferencesKey(CURRENCY_FORMAT_KEY)] = currencyFormat.name
         }
     }
 }

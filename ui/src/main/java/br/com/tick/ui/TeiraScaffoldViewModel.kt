@@ -6,6 +6,7 @@ import br.com.tick.sdk.dispatchers.DispatcherProvider
 import br.com.tick.sdk.domain.NotificationPeriodicity
 import br.com.tick.sdk.notifications.NotificationRegister
 import br.com.tick.sdk.repositories.localdata.LocalDataRepository
+import br.com.tick.sdk.repositories.user.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -17,6 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class TeiraScaffoldViewModel @Inject constructor(
     private val localDataRepository: LocalDataRepository,
+    private val userRepository: UserRepository,
     private val notificationRegister: NotificationRegister,
     dispatcherProvider: DispatcherProvider
 ) : ViewModel() {
@@ -31,10 +33,9 @@ class TeiraScaffoldViewModel @Inject constructor(
     }
 
     private suspend fun getPeriodicNotificationRegistrationState() {
-        when (localDataRepository.getNotificationPeriodicity().first()) {
+        when (localDataRepository.getPeriodicNotificationId().first()) {
             null -> {
-                val newNotificationPeriodicity = NotificationPeriodicity.DAILY
-                localDataRepository.setNotificationPeriodicity(newNotificationPeriodicity)
+                val newNotificationPeriodicity = userRepository.getUser().first().notificationPeriodicity
                 _initialPeriodicNotificationRegistration.emit(newNotificationPeriodicity)
             }
             else -> Unit

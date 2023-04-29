@@ -5,6 +5,7 @@ import androidx.room.Room
 import br.com.tick.sdk.database.CategoryDao
 import br.com.tick.sdk.database.ExpenseDao
 import br.com.tick.sdk.database.TeiraDatabase
+import br.com.tick.sdk.database.UserDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,7 +21,16 @@ object DatabaseModule {
     @Provides
     fun provideTeiraDatabase(
         @ApplicationContext app: Context
-    ) = Room.databaseBuilder(app, TeiraDatabase::class.java, "TeiraDb.db").fallbackToDestructiveMigration().build()
+    ): TeiraDatabase {
+        return Room.databaseBuilder(app, TeiraDatabase::class.java, "TeiraDb.db")
+            .createFromAsset("database/PrePopulated_TeiraDb.db")
+            .fallbackToDestructiveMigration()
+            .build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideUserDao(teiraDatabase: TeiraDatabase): UserDao = teiraDatabase.userDao()
 
     @Singleton
     @Provides
