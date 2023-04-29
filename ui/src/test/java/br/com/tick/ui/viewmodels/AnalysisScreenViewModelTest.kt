@@ -3,9 +3,9 @@ package br.com.tick.ui.viewmodels
 import app.cash.turbine.test
 import br.com.tick.sdk.dispatchers.FakeDispatcher
 import br.com.tick.sdk.repositories.FakeCategorizedExpenseRepository
-import br.com.tick.sdk.repositories.FakeDataStoreRepository
+import br.com.tick.sdk.repositories.FakeUserRepository
 import br.com.tick.sdk.repositories.categorizedexpense.CategorizedExpenseRepository
-import br.com.tick.sdk.repositories.localdata.LocalDataRepository
+import br.com.tick.sdk.repositories.user.UserRepository
 import br.com.tick.ui.screens.analysis.states.AnalysisGraphStates
 import br.com.tick.ui.screens.analysis.usecases.CalculateFinancialHealthSituation
 import br.com.tick.ui.screens.analysis.usecases.FetchLastMonthExpenses
@@ -13,7 +13,6 @@ import br.com.tick.ui.screens.analysis.usecases.GetMostExpensiveCategories
 import br.com.tick.ui.screens.analysis.viewmodels.AnalysisScreenViewModel
 import br.com.tick.utils.CoroutineTestRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 import org.junit.Test
@@ -27,13 +26,13 @@ class AnalysisScreenViewModelTest {
 
     private fun getViewModel(
         categorizedExpenseRepository: CategorizedExpenseRepository = FakeCategorizedExpenseRepository(),
-        localDataRepository: LocalDataRepository = FakeDataStoreRepository()
+        userRepository: UserRepository = FakeUserRepository()
     ): AnalysisScreenViewModel {
         val fetchLastMonthExpenses = FetchLastMonthExpenses(categorizedExpenseRepository)
         val getMostExpensiveCategories = GetMostExpensiveCategories(categorizedExpenseRepository)
         val calculateFinancialHealthSituation = CalculateFinancialHealthSituation(
             categorizedExpenseRepository,
-            localDataRepository
+            userRepository
         )
 
         return AnalysisScreenViewModel(
@@ -47,13 +46,13 @@ class AnalysisScreenViewModelTest {
     @Test
     fun `When user made an expense, financial health should reflect this change`() = runTest {
         val expenseRepository = FakeCategorizedExpenseRepository()
-        val localDataRepository = FakeDataStoreRepository()
+        val userRepository: UserRepository = FakeUserRepository()
         val analysisScreenViewModel = getViewModel(
             categorizedExpenseRepository = expenseRepository,
-            localDataRepository = localDataRepository
+            userRepository = userRepository
         )
 
-        localDataRepository.saveMonthlyIncome(1500.0)
+        userRepository.setMonthlyIncome(1500.0)
         expenseRepository.addExpense(0, "Name_1", 10.0, LocalDate.now())
 
         analysisScreenViewModel.financialHealthSituation.test {
@@ -64,13 +63,13 @@ class AnalysisScreenViewModelTest {
     @Test
     fun `When user has no expenses, financial health should be 0`() = runTest {
         val expenseRepository = FakeCategorizedExpenseRepository()
-        val localDataRepository = FakeDataStoreRepository()
+        val userRepository: UserRepository = FakeUserRepository()
         val analysisScreenViewModel = getViewModel(
             categorizedExpenseRepository = expenseRepository,
-            localDataRepository = localDataRepository
+            userRepository = userRepository
         )
 
-        localDataRepository.saveMonthlyIncome(1500.0)
+        userRepository.setMonthlyIncome(1500.0)
 
         analysisScreenViewModel.financialHealthSituation.test {
             assert(awaitItem().percentageOfCompromisedIncome == 0f)

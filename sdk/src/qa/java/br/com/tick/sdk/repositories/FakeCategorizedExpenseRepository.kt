@@ -23,7 +23,7 @@ class FakeCategorizedExpenseRepository : CategorizedExpenseRepository {
         return flowOf(expenses.take(numberOfExpenses))
     }
 
-    override suspend fun getThirtyDaysCategorizedExpenses(): Flow<List<CategorizedExpense>> {
+    override suspend fun getAccountingCycleExpenses(): Flow<List<CategorizedExpense>> {
         return flowOf(expenses.take(30))
     }
 }

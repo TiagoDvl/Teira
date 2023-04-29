@@ -1,11 +1,11 @@
 package br.com.tick.ui.viewmodels
 
 import app.cash.turbine.test
-import br.com.tick.sdk.repositories.categorizedexpense.CategorizedExpenseRepository
-import br.com.tick.sdk.repositories.localdata.LocalDataRepository
 import br.com.tick.sdk.dispatchers.FakeDispatcher
 import br.com.tick.sdk.repositories.FakeCategorizedExpenseRepository
-import br.com.tick.sdk.repositories.FakeDataStoreRepository
+import br.com.tick.sdk.repositories.FakeUserRepository
+import br.com.tick.sdk.repositories.categorizedexpense.CategorizedExpenseRepository
+import br.com.tick.sdk.repositories.user.UserRepository
 import br.com.tick.ui.screens.wallet.states.ExpensesGridStates
 import br.com.tick.ui.screens.wallet.usecases.CreateExpensesCards
 import br.com.tick.ui.screens.wallet.usecases.RemoveExpenseCard
@@ -26,9 +26,9 @@ class ExpensesGridViewModelTest {
 
     private fun getViewModel(
         categorizedExpenseRepository: CategorizedExpenseRepository = FakeCategorizedExpenseRepository(),
-        localDataRepository: LocalDataRepository = FakeDataStoreRepository()
+        userRepository: UserRepository = FakeUserRepository()
     ): ExpensesGridViewModel {
-        val createExpensesCards = CreateExpensesCards(categorizedExpenseRepository, localDataRepository)
+        val createExpensesCards = CreateExpensesCards(categorizedExpenseRepository, userRepository)
         val removeExpenseCard = RemoveExpenseCard(categorizedExpenseRepository)
 
         return ExpensesGridViewModel(createExpensesCards, removeExpenseCard, FakeDispatcher())
@@ -46,14 +46,14 @@ class ExpensesGridViewModelTest {
     @Test
     fun `When user has one expense, expenses grid should only have one expense card`() = runTest {
         val categorizedExpenseRepository = FakeCategorizedExpenseRepository()
-        val localDataRepository = FakeDataStoreRepository()
+        val userRepository: UserRepository = FakeUserRepository()
 
         val expensesGridViewModel = getViewModel(
             categorizedExpenseRepository = categorizedExpenseRepository,
-            localDataRepository = localDataRepository
+            userRepository = userRepository
         )
 
-        localDataRepository.saveMonthlyIncome(1500.0)
+        userRepository.setMonthlyIncome(1500.0)
         categorizedExpenseRepository.addExpense(0, "Name_1", 15.0, LocalDate.now())
 
         expensesGridViewModel.getExpensesGridState.test {
@@ -64,14 +64,14 @@ class ExpensesGridViewModelTest {
     @Test
     fun `When user has multiple expenses, expenses grid should only have 30`() = runTest {
         val categorizedExpenseRepository = FakeCategorizedExpenseRepository()
-        val localDataRepository = FakeDataStoreRepository()
+        val userRepository: UserRepository = FakeUserRepository()
 
         val expensesGridViewModel = getViewModel(
             categorizedExpenseRepository = categorizedExpenseRepository,
-            localDataRepository = localDataRepository
+            userRepository = userRepository
         )
 
-        localDataRepository.saveMonthlyIncome(1500.0)
+        userRepository.setMonthlyIncome(1500.0)
         for (i in 0..50) categorizedExpenseRepository.addExpense(0, "Name_1", 15.0, LocalDate.now())
 
         expensesGridViewModel.getExpensesGridState.test {
