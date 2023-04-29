@@ -9,12 +9,11 @@ import androidx.work.WorkerParameters
 import br.com.tick.sdk.dispatchers.DispatcherProvider
 import br.com.tick.sdk.extensions.getPeriodicityTimeDiff
 import br.com.tick.sdk.notifications.NotificationCenter
-import br.com.tick.sdk.repositories.localdata.LocalDataRepository
+import br.com.tick.sdk.repositories.user.UserRepository
 import br.com.tick.ui.R
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.first
-import java.time.LocalDateTime
 import java.util.concurrent.TimeUnit
 
 @HiltWorker
@@ -23,17 +22,16 @@ class PeriodicWorker @AssistedInject constructor(
     @Assisted workerParams: WorkerParameters,
     private val notificationCenter: NotificationCenter,
     private val dispatcherProvider: DispatcherProvider,
-    private val dataStoreRepository: LocalDataRepository
+    private val userRepository: UserRepository
 ) : CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
         return with(dispatcherProvider.io()) {
             showPeriodicExpenseReminderNotification()
-            val notificationPeriodicity =
-                dataStoreRepository.getNotificationPeriodicity().first() ?: return@with Result.failure()
+            val notificationPeriodicity = userRepository.getUser().first().notificationPeriodicity
 
             val dailyWorkRequest = OneTimeWorkRequestBuilder<PeriodicWorker>()
-                .setInitialDelay(LocalDateTime.now().getPeriodicityTimeDiff(notificationPeriodicity), TimeUnit.MINUTES)
+                .setInitialDelay(notificationPeriodicity.getPeriodicityTimeDiff(), TimeUnit.MINUTES)
                 .addTag(applicationContext.getString(R.string.teira_periodic_reminder_channel_name))
                 .build()
 

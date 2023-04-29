@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import br.com.tick.sdk.domain.CurrencyFormat
 import br.com.tick.sdk.domain.NotificationPeriodicity
+import br.com.tick.sdk.domain.AccountingDate
 import br.com.tick.ui.R
 import br.com.tick.ui.core.TeiraBaseTextField
 import br.com.tick.ui.core.TeiraDropdown
@@ -31,7 +32,7 @@ import br.com.tick.ui.extensions.getLabelResource
 import br.com.tick.ui.screens.settings.states.MonthlyIncomeStates
 import br.com.tick.ui.screens.settings.states.SettingsCurrencyFormatStates
 import br.com.tick.ui.screens.settings.states.SettingsNotificationPeriodicityStates
-import br.com.tick.ui.screens.settings.states.getCurrencyFormatStateLabel
+import br.com.tick.ui.screens.settings.states.SettingsAccountingDateStates
 import br.com.tick.ui.screens.settings.states.getNotificationPeriodicityLabel
 import br.com.tick.ui.screens.settings.viewmodels.SettingsScreenViewModel
 import br.com.tick.ui.theme.spacing
@@ -54,7 +55,8 @@ fun SettingsScreen(
         val notificationPeriodicity by viewModel.notificationPeriodicity.collectAsState(
             SettingsNotificationPeriodicityStates.Loading
         )
-        val currencyFormat by viewModel.currencyFormat.collectAsState(initial = SettingsCurrencyFormatStates.Unset)
+        val currencyFormat by viewModel.currencyFormat.collectAsState(initial = SettingsCurrencyFormatStates.Loading)
+        val accountingDateState by viewModel.startDate.collectAsState(initial = SettingsAccountingDateStates.Loading)
 
         MonthlyIncomeSetting(monthlyIncomeState = monthlyIncome) {
             viewModel.saveMonthlyIncome(it)
@@ -65,6 +67,9 @@ fun SettingsScreen(
         }
         CurrencyFormatSetting(settingsCurrencyFormatStates = currencyFormat) {
             viewModel.setCurrencyFormat(it)
+        }
+        StartDateSetting(settingsAccountingDateStates = accountingDateState) {
+            viewModel.setAccountingDate(it)
         }
     }
 }
@@ -91,7 +96,7 @@ fun MonthlyIncomeSetting(
             value = monthlyIncomeState.value.toString(),
             keyboardType = KeyboardType.Decimal,
             label = stringResource(id = R.string.settings_monthly_income_label)
-        ){
+        ) {
             try {
                 onValueChanged(it.toDouble())
             } catch (exception: NumberFormatException) {
@@ -99,7 +104,9 @@ fun MonthlyIncomeSetting(
             }
         }
         Text(
-            modifier = Modifier.fillMaxWidth().padding(top = MaterialTheme.spacing.extraSmall),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = MaterialTheme.spacing.extraSmall),
             text = stringResource(id = R.string.settings_monthly_income_hint),
             textAlign = TextAlign.Center,
             style = MaterialTheme.textStyle.h4,
@@ -168,11 +175,15 @@ fun CurrencyFormatSetting(
     settingsCurrencyFormatStates: SettingsCurrencyFormatStates,
     onCurrencyFormatSelected: (CurrencyFormat) -> Unit
 ) {
-    val context = LocalContext.current
-
     val dropdownItemLabels = CurrencyFormat.values().map {
         stringResource(it.getLabelResource())
     }
+
+    val labelResourceId = when (settingsCurrencyFormatStates) {
+        is SettingsCurrencyFormatStates.Loading -> R.string.generic_loading
+        is SettingsCurrencyFormatStates.Content -> settingsCurrencyFormatStates.currencyFormat.getLabelResource()
+    }
+
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -197,11 +208,60 @@ fun CurrencyFormatSetting(
                 modifier = Modifier
                     .weight(0.4f)
                     .padding(start = MaterialTheme.spacing.extraSmall),
-                label = settingsCurrencyFormatStates.getCurrencyFormatStateLabel(context),
+                label = stringResource(id = labelResourceId),
                 borderColor = MaterialTheme.colorScheme.primary,
                 dropdownItemLabels = dropdownItemLabels,
                 onItemSelected = {
                     onCurrencyFormatSelected(CurrencyFormat.values()[it])
+                }
+            )
+        }
+    }
+}
+
+@Composable
+fun StartDateSetting(
+    modifier: Modifier = Modifier,
+    settingsAccountingDateStates: SettingsAccountingDateStates,
+    onStartDateSelected: (AccountingDate) -> Unit
+) {
+    val dropdownItemLabels = AccountingDate.values().map {
+        stringResource(it.getLabelResource())
+    }
+    val labelResourceId = when (settingsAccountingDateStates) {
+        is SettingsAccountingDateStates.Loading -> R.string.generic_loading
+        is SettingsAccountingDateStates.Content -> settingsAccountingDateStates.accountingDate.getLabelResource()
+    }
+
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(MaterialTheme.spacing.small)
+    ) {
+        Text(
+            text = stringResource(id = R.string.settings_accounting_date_title),
+            color = MaterialTheme.colorScheme.primary,
+            style = MaterialTheme.textStyle.h2
+        )
+        Row(modifier = Modifier.padding(top = MaterialTheme.spacing.small)) {
+            Text(
+                modifier = Modifier
+                    .weight(0.6f)
+                    .align(Alignment.CenterVertically),
+                text = stringResource(id = R.string.settings_accounting_date_explanation),
+                textAlign = TextAlign.Start,
+                style = MaterialTheme.textStyle.h4,
+                color = MaterialTheme.colorScheme.tertiary
+            )
+            TeiraDropdown(
+                modifier = Modifier
+                    .weight(0.4f)
+                    .padding(start = MaterialTheme.spacing.extraSmall),
+                label = stringResource(id = labelResourceId),
+                borderColor = MaterialTheme.colorScheme.primary,
+                dropdownItemLabels = dropdownItemLabels,
+                onItemSelected = {
+                    onStartDateSelected(AccountingDate.values()[it])
                 }
             )
         }

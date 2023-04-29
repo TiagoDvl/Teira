@@ -7,23 +7,14 @@ import br.com.tick.ui.extensions.getLabelResource
 
 sealed class SettingsCurrencyFormatStates {
 
-    companion object {
-
-        fun of(currencyFormat: CurrencyFormat?): SettingsCurrencyFormatStates {
-            if (currencyFormat == null) return Unset
-
-            return Content(currencyFormat)
-        }
-    }
-
-    object Unset : SettingsCurrencyFormatStates()
+    object Loading : SettingsCurrencyFormatStates()
 
     class Content(val currencyFormat: CurrencyFormat) : SettingsCurrencyFormatStates()
 }
 
 fun SettingsCurrencyFormatStates.getCurrencyFormatStateLabel(context: Context): String {
     val resourceId = when (this) {
-        is SettingsCurrencyFormatStates.Unset -> R.string.settings_currency_unset
+        is SettingsCurrencyFormatStates.Loading -> R.string.generic_loading
         is SettingsCurrencyFormatStates.Content -> currencyFormat.getLabelResource()
     }
     return context.getString(resourceId)

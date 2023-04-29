@@ -13,10 +13,15 @@
 
     <string name="settings_currency_title">Currency</string>
     <string name="settings_currency_explanation">If you feel like it, set your preferred currency</string>
-    <string name="settings_currency_unset">Set your currency</string>
     <string name="settings_currency_format_real">R$</string>
     <string name="settings_currency_format_euro">€</string>
     <string name="settings_currency_format_dollar">$</string>
     <string name="settings_currency_format_yen">¥</string>
     <string name="settings_currency_format_pounds">£</string>
+
+    <string name="settings_accounting_date_title">Accounting Date</string>
+    <string name="settings_accounting_date_explanation">We will use this day as your accounting date. Usually the day you get paid.</string>
+    <string name="settings_accounting_date_one">Day 1</string>
+    <string name="settings_accounting_date_fifteen">Day 15</string>
+    <string name="settings_accounting_date_twenty_five">Day 25</string>
 </resources>

@@ -3,8 +3,12 @@ package br.com.tick.sdk.database.entities
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
+import br.com.tick.sdk.database.converters.LocalDateConverter
+import java.time.LocalDate
 
 @Entity
+@TypeConverters(LocalDateConverter::class)
 data class Expense(
 
     @PrimaryKey(autoGenerate = true)
@@ -21,5 +25,5 @@ data class Expense(
     val value: Double,
 
     @ColumnInfo(name = "date")
-    val date: String
+    val date: LocalDate
 )

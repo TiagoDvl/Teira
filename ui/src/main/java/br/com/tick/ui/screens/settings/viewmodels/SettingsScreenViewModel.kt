@@ -5,10 +5,12 @@ import androidx.lifecycle.viewModelScope
 import br.com.tick.sdk.dispatchers.DispatcherProvider
 import br.com.tick.sdk.domain.CurrencyFormat
 import br.com.tick.sdk.domain.NotificationPeriodicity
-import br.com.tick.sdk.repositories.localdata.LocalDataRepository
+import br.com.tick.sdk.domain.AccountingDate
+import br.com.tick.sdk.repositories.user.UserRepository
 import br.com.tick.ui.screens.settings.states.MonthlyIncomeStates
 import br.com.tick.ui.screens.settings.states.SettingsCurrencyFormatStates
 import br.com.tick.ui.screens.settings.states.SettingsNotificationPeriodicityStates
+import br.com.tick.ui.screens.settings.states.SettingsAccountingDateStates
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -17,46 +19,59 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsScreenViewModel @Inject constructor(
-    private val dataStoreRepository: LocalDataRepository,
+    private val userRepository: UserRepository,
     private val dispatcherProvider: DispatcherProvider
 ) : ViewModel() {
 
-    val monthlyIncomeFlow = dataStoreRepository
-        .getMonthlyIncome()
+    val monthlyIncomeFlow = userRepository
+        .getUser()
         .flowOn(dispatcherProvider.io())
         .map {
-            MonthlyIncomeStates.of(it.monthlyIncomeValue)
+            MonthlyIncomeStates.of(it.monthlyIncome)
         }
 
-    val notificationPeriodicity = dataStoreRepository
-        .getNotificationPeriodicity()
+    val notificationPeriodicity = userRepository
+        .getUser()
         .flowOn(dispatcherProvider.io())
         .map {
-            SettingsNotificationPeriodicityStates.of(it)
+            SettingsNotificationPeriodicityStates.Content(it.notificationPeriodicity)
         }
 
-    val currencyFormat = dataStoreRepository
-        .getCurrencyFormat()
+    val currencyFormat = userRepository
+        .getUser()
         .flowOn(dispatcherProvider.io())
         .map {
-            SettingsCurrencyFormatStates.of(it)
+            SettingsCurrencyFormatStates.Content(it.currency)
+        }
+
+    val startDate = userRepository
+        .getUser()
+        .flowOn(dispatcherProvider.io())
+        .map {
+            SettingsAccountingDateStates.Content(it.accountingDate)
         }
 
     fun saveMonthlyIncome(value: Double) {
         viewModelScope.launch(dispatcherProvider.io()) {
-            dataStoreRepository.saveMonthlyIncome(value)
+            userRepository.setMonthlyIncome(value)
         }
     }
 
     fun setNotificationPeriodicity(notificationPeriodicity: NotificationPeriodicity) {
         viewModelScope.launch(dispatcherProvider.io()) {
-            dataStoreRepository.setNotificationPeriodicity(notificationPeriodicity)
+            userRepository.setNotificationPeriodicity(notificationPeriodicity)
         }
     }
 
     fun setCurrencyFormat(currencyFormat: CurrencyFormat) {
         viewModelScope.launch(dispatcherProvider.io()) {
-            dataStoreRepository.setCurrencyFormat(currencyFormat)
+            userRepository.setCurrency(currencyFormat)
+        }
+    }
+
+    fun setAccountingDate(accountingDate: AccountingDate) {
+        viewModelScope.launch(dispatcherProvider.io()) {
+            userRepository.setAccountingDate(accountingDate)
         }
     }
 }
