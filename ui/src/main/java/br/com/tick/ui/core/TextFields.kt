@@ -13,12 +13,16 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import br.com.tick.ui.theme.textStyle
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun TeiraBaseTextField(
     modifier: Modifier = Modifier,
-    value: String,
+    initialValue: String,
     label: String? = null,
+    placeholderText: String? = null,
+    prefixText: String? = null,
+    isError: Boolean = false,
+    trailingIcon: @Composable (() -> Unit)? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
     onImeDoneAction: ((String) -> Unit)? = null,
     onValueChanged: ((String) -> Unit)? = null
@@ -26,28 +30,24 @@ fun TeiraBaseTextField(
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
 
-    var valueState by remember { mutableStateOf("") }
+    var valueState by remember { mutableStateOf(initialValue) }
 
-    LaunchedEffect(key1 = value) {
-        valueState = value
-    }
-
-    TextField(
+    OutlinedTextField(
         modifier = modifier.fillMaxWidth(),
+        value = valueState,
+        onValueChange = {
+            valueState = it
+            onValueChanged?.invoke(valueState)
+        },
+        textStyle = MaterialTheme.textStyle.h2,
         label = {
-            if (label != null) {
+            label?.let {
                 Text(
-                    text = label,
+                    text = it,
                     style = MaterialTheme.textStyle.h2small
                 )
             }
         },
-        colors = TextFieldDefaults.colors(
-            cursorColor = MaterialTheme.colorScheme.tertiary,
-            focusedLabelColor = MaterialTheme.colorScheme.tertiary,
-            unfocusedLabelColor = MaterialTheme.colorScheme.primary
-        ),
-        value = valueState,
         singleLine = true,
         keyboardOptions = KeyboardOptions(
             keyboardType = keyboardType,
@@ -60,10 +60,7 @@ fun TeiraBaseTextField(
                 focusManager.clearFocus()
             }
         ),
-        onValueChange = {
-            valueState = it
-            onValueChanged?.invoke(it)
-        },
-        textStyle = MaterialTheme.textStyle.h2
+        trailingIcon = trailingIcon,
+        isError = isError
     )
 }

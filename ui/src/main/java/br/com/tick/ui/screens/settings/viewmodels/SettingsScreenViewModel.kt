@@ -51,6 +51,13 @@ class SettingsScreenViewModel @Inject constructor(
             SettingsAccountingDateStates.Content(it.accountingDate)
         }
 
+    val currency = userRepository
+        .getUser()
+        .flowOn(dispatcherProvider.io())
+        .map {
+            it.currency
+        }
+
     fun saveMonthlyIncome(value: Double) {
         viewModelScope.launch(dispatcherProvider.io()) {
             userRepository.setMonthlyIncome(value)
