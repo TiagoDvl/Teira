@@ -3,7 +3,9 @@
 
     <string name="settings_monthly_income_title">Monthly income</string>
     <string name="settings_monthly_income_label">Your income</string>
-    <string name="settings_monthly_income_hint">The value will be automatically saved after you type.</string>
+    <string name="settings_monthly_income_hint">Will be used for analytical calculations</string>
+    <string name="settings_monthly_income_dialog_confirmation_title">Change in income</string>
+    <string name="settings_monthly_income_dialog_confirmation_text">Are you sure you want save this change?</string>
 
     <string name="settings_notifications_title">Notifications</string>
     <string name="settings_notifications_explanation">We send notifications to remind you to log your expenses</string>
@@ -20,7 +22,7 @@
     <string name="settings_currency_format_pounds">£</string>
 
     <string name="settings_accounting_date_title">Accounting Date</string>
-    <string name="settings_accounting_date_explanation">We will use this day as your accounting date. Usually the day you get paid.</string>
+    <string name="settings_accounting_date_explanation">We will use this day as your accounting date. Usually the day you get paid</string>
     <string name="settings_accounting_date_one">Day 1</string>
     <string name="settings_accounting_date_fifteen">Day 15</string>
     <string name="settings_accounting_date_twenty_five">Day 25</string>
