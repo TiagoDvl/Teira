@@ -90,7 +90,7 @@ fun ExpandedQuickExpense(
             .padding(MaterialTheme.spacing.medium)
     ) {
         TeiraBaseTextField(
-            value = expenseName,
+            initialValue = expenseName,
             label = stringResource(id = R.string.wallet_quick_expense_name)
         ) {
             expenseName = it
@@ -103,7 +103,7 @@ fun ExpandedQuickExpense(
         ) {
             TeiraBaseTextField(
                 modifier = Modifier.weight(0.5f),
-                value = expenseValue.toString(),
+                initialValue = expenseValue.toString(),
                 label = stringResource(id = R.string.wallet_quick_expense_value),
                 keyboardType = KeyboardType.NumberPassword
             ) {

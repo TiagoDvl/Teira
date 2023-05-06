@@ -41,7 +41,7 @@ fun AddNewCategoryDialog(
 
                 TeiraBaseTextField(
                     modifier = Modifier.width(200.dp),
-                    value = categoryName,
+                    initialValue = categoryName,
                     label = stringResource(id = R.string.wallet_add_new_category_label)
                 ) {
                     categoryName = it

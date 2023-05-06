@@ -1,38 +1,60 @@
 package br.com.tick.ui.screens.settings
 
-import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterVertically
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import br.com.tick.sdk.domain.AccountingDate
 import br.com.tick.sdk.domain.CurrencyFormat
 import br.com.tick.sdk.domain.NotificationPeriodicity
-import br.com.tick.sdk.domain.AccountingDate
 import br.com.tick.ui.R
-import br.com.tick.ui.core.TeiraBaseTextField
 import br.com.tick.ui.core.TeiraDropdown
 import br.com.tick.ui.extensions.getLabelResource
+import br.com.tick.ui.extensions.twoDecimalPlacesFormat
 import br.com.tick.ui.screens.settings.states.MonthlyIncomeStates
+import br.com.tick.ui.screens.settings.states.SettingsAccountingDateStates
 import br.com.tick.ui.screens.settings.states.SettingsCurrencyFormatStates
 import br.com.tick.ui.screens.settings.states.SettingsNotificationPeriodicityStates
-import br.com.tick.ui.screens.settings.states.SettingsAccountingDateStates
 import br.com.tick.ui.screens.settings.states.getNotificationPeriodicityLabel
 import br.com.tick.ui.screens.settings.viewmodels.SettingsScreenViewModel
 import br.com.tick.ui.theme.spacing
@@ -57,8 +79,9 @@ fun SettingsScreen(
         )
         val currencyFormat by viewModel.currencyFormat.collectAsState(initial = SettingsCurrencyFormatStates.Loading)
         val accountingDateState by viewModel.startDate.collectAsState(initial = SettingsAccountingDateStates.Loading)
+        val currency by viewModel.currency.collectAsState(initial = CurrencyFormat.REAL)
 
-        MonthlyIncomeSetting(monthlyIncomeState = monthlyIncome) {
+        MonthlyIncomeSetting(monthlyIncomeState = monthlyIncome, currencyFormat = currency) {
             viewModel.saveMonthlyIncome(it)
         }
         NotificationsSetting(notificationPeriodicity = notificationPeriodicity) {
@@ -74,43 +97,180 @@ fun SettingsScreen(
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun MonthlyIncomeSetting(
     modifier: Modifier = Modifier,
     monthlyIncomeState: MonthlyIncomeStates,
-    onValueChanged: (Double) -> Unit
+    currencyFormat: CurrencyFormat,
+    saveIncome: (Double) -> Unit
 ) {
-    val context = LocalContext.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
+
+    var monthlyIncomeText by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue()) }
+    var errorState by remember { mutableStateOf(false) }
+    var showTrailingIcons by remember { mutableStateOf(false) }
+    var showConfirmationDialog by remember { mutableStateOf(false) }
+    var isVisibleValue by remember { mutableStateOf(false) }
+
+    if (showConfirmationDialog) {
+        AlertDialog(
+            onDismissRequest = { showConfirmationDialog = false },
+            icon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_priority_high),
+                    contentDescription = null
+                )
+            },
+            confirmButton = {
+                Text(
+                    modifier = Modifier.clickable {
+                        showConfirmationDialog = false
+
+                        errorState = try {
+                            val parsedIncome = monthlyIncomeText.text.toDouble()
+                            saveIncome(parsedIncome)
+                            monthlyIncomeText = TextFieldValue()
+                            focusManager.clearFocus()
+                            false
+                        } catch (exception: NumberFormatException) {
+                            true
+                        }
+                    },
+                    text = stringResource(id = R.string.generic_ok).uppercase()
+                )
+            },
+            dismissButton = {
+                Text(
+                    modifier = Modifier.clickable {
+                        showConfirmationDialog = false
+                    },
+                    text = stringResource(id = R.string.generic_cancel).uppercase()
+                )
+            },
+            title = {
+                Text(text = stringResource(id = R.string.settings_monthly_income_dialog_confirmation_title))
+            },
+            text = {
+                Text(text = stringResource(id = R.string.settings_monthly_income_dialog_confirmation_text))
+            },
+            containerColor = MaterialTheme.colorScheme.surface,
+            titleContentColor = MaterialTheme.colorScheme.tertiary,
+            textContentColor = MaterialTheme.colorScheme.primary,
+            iconContentColor = MaterialTheme.colorScheme.onTertiary
+        )
+    }
+
     Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(MaterialTheme.spacing.small)
     ) {
-        Text(
-            text = stringResource(id = R.string.settings_monthly_income_title),
-            color = MaterialTheme.colorScheme.primary,
-            style = MaterialTheme.textStyle.h2
-        )
-        TeiraBaseTextField(
-            modifier = Modifier.padding(top = MaterialTheme.spacing.medium),
-            value = monthlyIncomeState.value.toString(),
-            keyboardType = KeyboardType.Decimal,
-            label = stringResource(id = R.string.settings_monthly_income_label)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            try {
-                onValueChanged(it.toDouble())
-            } catch (exception: NumberFormatException) {
-                Toast.makeText(context, "This value is not a value", Toast.LENGTH_SHORT).show()
+            Text(
+                text = stringResource(id = R.string.settings_monthly_income_title),
+                color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.textStyle.h2
+            )
+            Row {
+                if (isVisibleValue) {
+                    val currencyLabel = stringResource(id = currencyFormat.getLabelResource())
+                    val formattedMonthlyIncome = monthlyIncomeState.value.twoDecimalPlacesFormat()
+                    Text(
+                        modifier = Modifier
+                            .align(CenterVertically)
+                            .padding(end = MaterialTheme.spacing.small),
+                        text = "$currencyLabel$formattedMonthlyIncome",
+                        style = MaterialTheme.textStyle.h3small
+                    )
+                }
+                val resource = if (isVisibleValue) {
+                    R.drawable.ic_visibility_on
+                } else {
+                    R.drawable.ic_visibility_off
+                }
+                Icon(
+                    modifier = Modifier.clickable { isVisibleValue = !isVisibleValue  },
+                    painter = painterResource(id = resource),
+                    contentDescription = null
+                )
             }
         }
-        Text(
+
+        OutlinedTextField(
             modifier = Modifier
+                .padding(top = MaterialTheme.spacing.medium)
                 .fillMaxWidth()
-                .padding(top = MaterialTheme.spacing.extraSmall),
-            text = stringResource(id = R.string.settings_monthly_income_hint),
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.textStyle.h4,
-            color = MaterialTheme.colorScheme.tertiary
+                .onFocusChanged { focusState ->
+                    showTrailingIcons = focusState.isFocused
+                },
+            value = monthlyIncomeText,
+            prefix = { Text(text = stringResource(id = currencyFormat.getLabelResource())) },
+            onValueChange = {
+                monthlyIncomeText = it
+                errorState = false
+            },
+            textStyle = MaterialTheme.textStyle.h2,
+            label = {
+                Text(
+                    text = stringResource(id = R.string.settings_monthly_income_label),
+                    style = MaterialTheme.textStyle.h2small
+                )
+            },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Decimal,
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    try {
+                        val newIncomeValue = monthlyIncomeText.text.toDouble()
+
+                        keyboardController?.hide()
+                        focusManager.clearFocus()
+
+                        if (newIncomeValue != monthlyIncomeState.value && monthlyIncomeText.text.isNotEmpty()) {
+                            showConfirmationDialog = true
+                        }
+                    } catch (exception: NumberFormatException) {
+                        errorState = true
+                    }
+                }
+            ),
+            trailingIcon = {
+                if (showTrailingIcons) {
+                    Row {
+                        if (monthlyIncomeText.text.isNotEmpty()) {
+                            IconButton(onClick = { monthlyIncomeText = TextFieldValue() }) {
+                                Icon(painter = painterResource(id = R.drawable.ic_clear), contentDescription = null)
+                            }
+                        }
+                    }
+                }
+            },
+            isError = errorState,
+            supportingText = {
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = stringResource(id = R.string.settings_monthly_income_hint),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.textStyle.h4,
+                    color = MaterialTheme.colorScheme.tertiary
+                )
+            },
+            colors = OutlinedTextFieldDefaults.colors(
+                unfocusedContainerColor = Color.Transparent,
+                focusedContainerColor = Color.Transparent,
+                focusedLabelColor = MaterialTheme.colorScheme.tertiary,
+                unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+                errorBorderColor = MaterialTheme.colorScheme.tertiary,
+                focusedTextColor = MaterialTheme.colorScheme.onTertiary
+            )
         )
     }
 }
@@ -271,7 +431,7 @@ fun StartDateSetting(
 @Preview
 @Composable
 fun SettingsScreenPreview() {
-    MonthlyIncomeSetting(monthlyIncomeState = MonthlyIncomeStates.Value(2000.0)) {
+    MonthlyIncomeSetting(monthlyIncomeState = MonthlyIncomeStates.Value(2000.0), currencyFormat = CurrencyFormat.REAL) {
 
     }
 }
