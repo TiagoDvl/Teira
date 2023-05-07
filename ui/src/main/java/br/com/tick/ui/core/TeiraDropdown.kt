@@ -1,17 +1,23 @@
 package br.com.tick.ui.core
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import br.com.tick.ui.R
 import br.com.tick.ui.theme.spacing
 import br.com.tick.ui.theme.textStyle
@@ -33,11 +39,8 @@ fun TeiraDropdown(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .border(width = MaterialTheme.spacing.smallest, color = borderColor)
-            .defaultMinSize(
-                minWidth = TextFieldDefaults.MinWidth,
-                minHeight = TextFieldDefaults.MinHeight
-            )
+            .height(56.dp)
+            .border(width = 1.dp, color = borderColor, shape = RoundedCornerShape(8))
             .clickable(onClick = { isDropdownExpanded = true })
     ) {
         Text(
@@ -47,15 +50,16 @@ fun TeiraDropdown(
             style = MaterialTheme.textStyle.h3
         )
         DropdownMenu(
-            modifier = Modifier.defaultMinSize(
-                minWidth = TextFieldDefaults.MinWidth,
-                minHeight = TextFieldDefaults.MinHeight
-            ),
+            modifier = Modifier.background(MaterialTheme.colorScheme.onSecondary),
             expanded = isDropdownExpanded,
-            onDismissRequest = { isDropdownExpanded = false },
+            onDismissRequest = { isDropdownExpanded = false }
         ) {
             dropdownItemLabels.forEachIndexed { index, label ->
                 DropdownMenuItem(
+                    modifier = Modifier.background(MaterialTheme.colorScheme.onSecondary),
+                    colors = MenuDefaults.itemColors(
+                        textColor = MaterialTheme.colorScheme.primary
+                    ),
                     onClick = {
                         selectedItemName = label
                         isDropdownExpanded = false
@@ -64,8 +68,7 @@ fun TeiraDropdown(
                     text = {
                         Text(
                             text = label,
-                            style = MaterialTheme.textStyle.h3extra,
-                            color = MaterialTheme.colorScheme.tertiary
+                            style = MaterialTheme.textStyle.h3extra
                         )
                     }
                 )

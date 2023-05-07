@@ -10,7 +10,7 @@ import androidx.compose.ui.graphics.Color
 import br.com.tick.ui.theme.textStyle
 
 @Composable
-fun TeiraOutlinedButton(
+fun TeiraFilledTonalButton(
     modifier: Modifier = Modifier,
     text: String,
     onClick: () -> Unit
