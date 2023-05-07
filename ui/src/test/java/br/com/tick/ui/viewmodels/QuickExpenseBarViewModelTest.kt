@@ -5,8 +5,10 @@ import br.com.tick.sdk.dispatchers.DispatcherProvider
 import br.com.tick.sdk.dispatchers.FakeDispatcher
 import br.com.tick.sdk.repositories.FakeCategorizedExpenseRepository
 import br.com.tick.sdk.repositories.FakeExpenseCategoryRepository
+import br.com.tick.sdk.repositories.FakeUserRepository
 import br.com.tick.sdk.repositories.categorizedexpense.CategorizedExpenseRepository
 import br.com.tick.sdk.repositories.expensecategory.ExpenseCategoryRepository
+import br.com.tick.sdk.repositories.user.UserRepository
 import br.com.tick.ui.screens.wallet.viewmodels.QuickExpenseBarViewModel
 import br.com.tick.utils.CoroutineTestRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -23,9 +25,10 @@ class QuickExpenseBarViewModelTest {
     private fun getViewModel(
         expenseRepository: CategorizedExpenseRepository = FakeCategorizedExpenseRepository(),
         categoryRepository: ExpenseCategoryRepository = FakeExpenseCategoryRepository(),
+        userRepository: UserRepository = FakeUserRepository(),
         dispatcherProvider: DispatcherProvider = FakeDispatcher()
     ): QuickExpenseBarViewModel {
-        return QuickExpenseBarViewModel(expenseRepository, categoryRepository, dispatcherProvider)
+        return QuickExpenseBarViewModel(expenseRepository, categoryRepository, userRepository, dispatcherProvider)
     }
 
     @Test
