@@ -19,7 +19,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -28,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Bottom
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -112,7 +112,6 @@ fun MonthlyIncomeSetting(
     var errorState by remember { mutableStateOf(false) }
     var showTrailingIcons by remember { mutableStateOf(false) }
     var showConfirmationDialog by remember { mutableStateOf(false) }
-    var isVisibleValue by remember { mutableStateOf(false) }
 
     if (showConfirmationDialog) {
         AlertDialog(
@@ -155,7 +154,7 @@ fun MonthlyIncomeSetting(
             text = {
                 Text(text = stringResource(id = R.string.settings_monthly_income_dialog_confirmation_text))
             },
-            containerColor = MaterialTheme.colorScheme.surface,
+            containerColor = MaterialTheme.colorScheme.onSecondary,
             titleContentColor = MaterialTheme.colorScheme.tertiary,
             textContentColor = MaterialTheme.colorScheme.primary,
             iconContentColor = MaterialTheme.colorScheme.onTertiary
@@ -171,34 +170,22 @@ fun MonthlyIncomeSetting(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
+            val currencyLabel = stringResource(id = currencyFormat.getLabelResource())
+            val formattedMonthlyIncome = monthlyIncomeState.value.twoDecimalPlacesFormat()
+            val currentLabel = stringResource(id = R.string.settings_current_income_label)
+
             Text(
                 text = stringResource(id = R.string.settings_monthly_income_title),
                 color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.textStyle.h2
             )
-            Row {
-                if (isVisibleValue) {
-                    val currencyLabel = stringResource(id = currencyFormat.getLabelResource())
-                    val formattedMonthlyIncome = monthlyIncomeState.value.twoDecimalPlacesFormat()
-                    Text(
-                        modifier = Modifier
-                            .align(CenterVertically)
-                            .padding(end = MaterialTheme.spacing.small),
-                        text = "$currencyLabel$formattedMonthlyIncome",
-                        style = MaterialTheme.textStyle.h3small
-                    )
-                }
-                val resource = if (isVisibleValue) {
-                    R.drawable.ic_visibility_on
-                } else {
-                    R.drawable.ic_visibility_off
-                }
-                Icon(
-                    modifier = Modifier.clickable { isVisibleValue = !isVisibleValue  },
-                    painter = painterResource(id = resource),
-                    contentDescription = null
-                )
-            }
+            Text(
+                modifier = Modifier
+                    .align(Bottom)
+                    .padding(end = MaterialTheme.spacing.small),
+                text = "$currentLabel $currencyLabel$formattedMonthlyIncome",
+                style = MaterialTheme.textStyle.h3small
+            )
         }
 
         OutlinedTextField(

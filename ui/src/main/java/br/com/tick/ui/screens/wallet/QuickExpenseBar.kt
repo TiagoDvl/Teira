@@ -12,7 +12,6 @@ import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -23,7 +22,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -33,6 +31,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import br.com.tick.sdk.domain.CurrencyFormat
+import br.com.tick.sdk.domain.ExpenseCategory
 import br.com.tick.ui.R
 import br.com.tick.ui.core.TeiraDropdown
 import br.com.tick.ui.core.TeiraFilledTonalButton
@@ -49,8 +48,7 @@ import java.time.format.DateTimeFormatter
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun QuickExpense(
-    modifier: Modifier = Modifier,
-    onAddNewCategoryClicked: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     var isExpanded by remember { mutableStateOf(false) }
 
@@ -59,7 +57,7 @@ fun QuickExpense(
         targetState = isExpanded
     ) { targetState ->
         if (targetState) {
-            ExpandedQuickExpense(onAddNewCategoryClicked = onAddNewCategoryClicked) {
+            ExpandedQuickExpense {
                 isExpanded = isExpanded.not()
             }
         } else {
@@ -74,8 +72,7 @@ fun QuickExpense(
 fun ExpandedQuickExpense(
     modifier: Modifier = Modifier,
     quickExpenseBarViewModel: QuickExpenseBarViewModel = hiltViewModel(),
-    onAddNewCategoryClicked: () -> Unit,
-    onClick: () -> Unit
+    closeExpandedDialog: () -> Unit
 ) {
     var expenseName by remember { mutableStateOf(TextFieldValue()) }
     var expenseValue by remember { mutableStateOf(TextFieldValue()) }
@@ -84,14 +81,26 @@ fun ExpandedQuickExpense(
     var localDateTime by remember { mutableStateOf(LocalDate.now()) }
     val categoriesList by remember { quickExpenseBarViewModel.categories }.collectAsState(initial = listOf())
     val currency by quickExpenseBarViewModel.currency.collectAsState(initial = CurrencyFormat.REAL)
+    val label = stringResource(id = R.string.wallet_quick_expense_select_category)
+    var categoryLabel by remember { mutableStateOf(label) }
+    var showAddNewCategoryDialog by remember { mutableStateOf(false) }
 
-    val label = if (selectedCategoryId == -1) {
-        stringResource(id = R.string.wallet_quick_expense_select_category)
-    } else {
-        categoriesList[selectedCategoryId].name
+    if (showAddNewCategoryDialog) {
+        AddNewCategoryDialog(
+            onAddNewCategory = {
+                categoryLabel = it
+                quickExpenseBarViewModel.addCategory(it)
+            }
+        ) {
+            showAddNewCategoryDialog = false
+        }
     }
 
-    var categoryLabel by remember { mutableStateOf(label) }
+    LaunchedEffect(key1 = categoriesList) {
+        selectedCategoryId = categoriesList.find { categories ->
+            categories.name == categoryLabel
+        }?.expenseCategoryId ?: -1
+    }
 
     Column(
         modifier = modifier
@@ -179,12 +188,12 @@ fun ExpandedQuickExpense(
                 borderColor = MaterialTheme.colorScheme.onSecondary,
                 dropdownItemLabels = categoriesList.map { it.name },
                 onItemSelected = {
-                    selectedCategoryId = it
-                    categoryLabel = categoriesList[selectedCategoryId].name
+                    selectedCategoryId = categoriesList[it].expenseCategoryId
+                    categoryLabel = categoriesList[it].name
                 },
                 lastItemLabel = stringResource(id = R.string.wallet_quick_expense_add_category),
                 onLastItemSelected = {
-                    onAddNewCategoryClicked()
+                    showAddNewCategoryDialog = true
                 }
             )
         }
@@ -201,7 +210,7 @@ fun ExpandedQuickExpense(
                 text = stringResource(id = R.string.wallet_quick_expense_save),
                 onClick = {
                     if (!isInvalidValue) {
-                        onClick() // This will cause a recomposition
+                        closeExpandedDialog()
                         if (expenseName.text.isNotEmpty() &&
                             expenseValue.text.toDouble() != 0.0 &&
                             selectedCategoryId != -1
