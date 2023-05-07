@@ -15,7 +15,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import br.com.tick.ui.R
 import br.com.tick.ui.core.TeiraBaseTextField
-import br.com.tick.ui.core.TeiraOutlinedButton
+import br.com.tick.ui.core.TeiraFilledTonalButton
 import br.com.tick.ui.screens.wallet.viewmodels.QuickExpenseBarViewModel
 import br.com.tick.ui.theme.spacing
 
@@ -46,7 +46,7 @@ fun AddNewCategoryDialog(
                 ) {
                     categoryName = it
                 }
-                TeiraOutlinedButton(
+                TeiraFilledTonalButton(
                     modifier = Modifier.padding(top = MaterialTheme.spacing.small),
                     text = stringResource(id = R.string.wallet_add_new_category_button_text)
                 ) {
