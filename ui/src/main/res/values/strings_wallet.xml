@@ -6,8 +6,8 @@
 
     <string name="wallet_closed_quick_expense_title">Add a quick expense</string>
     <string name="wallet_quick_expense_title">New Expense</string>
-    <string name="wallet_quick_expense_name">Name</string>
-    <string name="wallet_quick_expense_value">Value</string>
+    <string name="wallet_quick_expense_name">What was your expense?</string>
+    <string name="wallet_quick_expense_value">Price</string>
     <string name="wallet_quick_expense_save">Save</string>
     <string name="wallet_quick_expense_select_category">Select Category</string>
     <string name="wallet_quick_expense_add_category">Add new Category</string>
