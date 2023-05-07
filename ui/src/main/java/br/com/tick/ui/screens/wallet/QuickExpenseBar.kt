@@ -31,7 +31,6 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import br.com.tick.sdk.domain.CurrencyFormat
-import br.com.tick.sdk.domain.ExpenseCategory
 import br.com.tick.ui.R
 import br.com.tick.ui.core.TeiraDropdown
 import br.com.tick.ui.core.TeiraFilledTonalButton
