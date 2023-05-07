@@ -17,7 +17,10 @@ import androidx.compose.ui.Modifier
 import br.com.tick.ui.R
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import br.com.tick.sdk.domain.CurrencyFormat
 import br.com.tick.ui.core.QuickExpenseCard
+import br.com.tick.ui.extensions.getLabelResource
+import br.com.tick.ui.screens.wallet.models.AvailableBalance
 import br.com.tick.ui.screens.wallet.models.ExpenseCard
 import br.com.tick.ui.screens.wallet.states.ExpensesGridStates
 import br.com.tick.ui.screens.wallet.viewmodels.ExpensesGridViewModel
@@ -35,9 +38,9 @@ fun ExpensesGrid(
 
     val availableBalance by remember {
         expensesGridViewModel.availableBalanceState
-    }.collectAsState(initial = 0.0)
+    }.collectAsState(null)
 
-    AvailableBalance(availableBalance)
+    AvailableBalanceIndicator(availableBalance)
     Body(modifier, expensesListState, expensesGridViewModel)
 }
 
@@ -98,16 +101,24 @@ fun LoadingGrid(
 }
 
 @Composable
-fun AvailableBalance(
-    availableBalance: Double
+fun AvailableBalanceIndicator(
+    availableBalance: AvailableBalance?
 ) {
-    Box(
-        modifier = Modifier.fillMaxWidth(),
-        contentAlignment = Alignment.CenterEnd
-    ) {
-        Text(
-            text = stringResource(id = R.string.wallet_available_balance_title, availableBalance),
-            style = MaterialTheme.textStyle.h3small
-        )
+    if (availableBalance != null) {
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.CenterEnd
+        ) {
+            val formattedAmount = stringResource(
+                id = R.string.wallet_available_balance_title,
+                stringResource(id = availableBalance.currencyFormat.getLabelResource()),
+                availableBalance.amount
+            )
+
+            Text(
+                text = formattedAmount,
+                style = MaterialTheme.textStyle.h3small
+            )
+        }
     }
 }
