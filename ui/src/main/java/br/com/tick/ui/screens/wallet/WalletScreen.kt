@@ -12,8 +12,6 @@ import br.com.tick.ui.theme.spacing
 
 @Composable
 fun WalletScreen() {
-    var showAddCategoryDialogState by remember { mutableStateOf(false) }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -21,14 +19,7 @@ fun WalletScreen() {
             .padding(MaterialTheme.spacing.small),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
     ) {
-        if (showAddCategoryDialogState) {
-            AddNewCategoryDialog {
-                showAddCategoryDialogState = false
-            }
-        }
-        QuickExpense {
-            showAddCategoryDialogState = true
-        }
+        QuickExpense()
         ExpensesGrid()
     }
 }

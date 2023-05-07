@@ -1,61 +1,79 @@
 package br.com.tick.ui.screens.wallet
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
+import androidx.compose.foundation.clickable
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.ui.text.input.TextFieldValue
 import br.com.tick.ui.R
-import br.com.tick.ui.core.TeiraBaseTextField
-import br.com.tick.ui.core.TeiraFilledTonalButton
-import br.com.tick.ui.screens.wallet.viewmodels.QuickExpenseBarViewModel
-import br.com.tick.ui.theme.spacing
+import br.com.tick.ui.theme.textStyle
 
 @Composable
 fun AddNewCategoryDialog(
-    viewModel: QuickExpenseBarViewModel = hiltViewModel(),
-    onClick: () -> Unit
+    onAddNewCategory: (String) -> Unit,
+    dismiss: () -> Unit
 ) {
-    Dialog(onDismissRequest = { onClick() }) {
-        Card(
-            modifier = Modifier
-                .height(200.dp)
-                .width(300.dp)
-                .padding(MaterialTheme.spacing.extraSmall),
-            shape = RoundedCornerShape(CornerSize(5.dp))
-        ) {
-            Column(
-                modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.onSecondary),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                var categoryName = ""
+    var newCategoryName by remember { mutableStateOf(TextFieldValue()) }
+    val focusRequester = FocusRequester()
 
-                TeiraBaseTextField(
-                    modifier = Modifier.width(200.dp),
-                    initialValue = categoryName,
-                    label = stringResource(id = R.string.wallet_add_new_category_label)
-                ) {
-                    categoryName = it
-                }
-                TeiraFilledTonalButton(
-                    modifier = Modifier.padding(top = MaterialTheme.spacing.small),
-                    text = stringResource(id = R.string.wallet_add_new_category_button_text)
-                ) {
-                    if (categoryName.isNotBlank()) {
-                        viewModel.addCategory(categoryName)
-                    }
-                    onClick()
-                }
-            }
-        }
+    LaunchedEffect(key1 = Unit) {
+        focusRequester.requestFocus()
     }
+
+    AlertDialog(
+        modifier = Modifier.focusRequester(focusRequester),
+        onDismissRequest = { dismiss() },
+        confirmButton = {
+            Text(
+                modifier = Modifier.clickable {
+                    if (newCategoryName.text.isNotEmpty()) {
+                        onAddNewCategory(newCategoryName.text)
+                        dismiss()
+                    }
+                },
+                text = stringResource(id = R.string.wallet_add_new_category_button_text),
+                style = MaterialTheme.textStyle.h2small
+            )
+        },
+        dismissButton = {
+            Text(
+                modifier = Modifier.clickable {
+                    dismiss()
+                },
+                text = stringResource(id = R.string.generic_cancel),
+                style = MaterialTheme.textStyle.h2small
+            )
+        },
+        icon = {
+            Icon(painter = painterResource(id = R.drawable.ic_add), contentDescription = null)
+        },
+        title = {
+            Text(text = stringResource(id = R.string.wallet_add_new_category_label))
+        },
+        text = {
+            OutlinedTextField(
+                value = newCategoryName,
+                onValueChange = {
+                    newCategoryName = it
+                }
+            )
+        },
+        containerColor = MaterialTheme.colorScheme.onSecondary,
+        titleContentColor = MaterialTheme.colorScheme.tertiary,
+        textContentColor = MaterialTheme.colorScheme.primary,
+        iconContentColor = MaterialTheme.colorScheme.onTertiary
+    )
 }
