@@ -210,12 +210,13 @@ fun ExpandedQuickExpense(
                 onClick = {
                     if (!isInvalidValue) {
                         closeExpandedDialog()
+                        val selectedCategory = categoriesList.find { it.expenseCategoryId == selectedCategoryId }
                         if (expenseName.text.isNotEmpty() &&
                             expenseValue.text.toDouble() != 0.0 &&
-                            selectedCategoryId != -1
+                            selectedCategory != null
                         ) {
                             quickExpenseBarViewModel.saveQuickExpense(
-                                categoriesList[selectedCategoryId].expenseCategoryId,
+                                selectedCategory.expenseCategoryId,
                                 expenseName.text,
                                 expenseValue.text.toDouble(),
                                 localDateTime

@@ -3,19 +3,20 @@ package br.com.tick.ui.screens.analysis.usecases
 import androidx.compose.ui.graphics.Color
 import br.com.tick.sdk.repositories.categorizedexpense.CategorizedExpenseRepository
 import br.com.tick.ui.screens.analysis.models.MostExpensiveCategory
-import br.com.tick.ui.screens.analysis.states.MostExpensiveCategoriesStates
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class GetMostExpensiveCategories @Inject constructor(private val expenseRepository: CategorizedExpenseRepository) {
 
-    suspend operator fun invoke(): Flow<MostExpensiveCategoriesStates> =
-        expenseRepository.getAccountingCycleExpenses().map { thirtyDaysOfCategorizedExpenses ->
+    suspend operator fun invoke(): Flow<List<MostExpensiveCategory>> =
+        expenseRepository.getAccountingCycleExpenses().map { accountingCycleExpenses->
             val mostExpensiveCategories = mutableListOf<MostExpensiveCategory>()
 
-            thirtyDaysOfCategorizedExpenses.forEach { categorizedExpense ->
-                val mostExpensiveCategory = mostExpensiveCategories.find { it.categoryName == categorizedExpense.name }
+            accountingCycleExpenses.forEach { categorizedExpense ->
+                val mostExpensiveCategory = mostExpensiveCategories.find {
+                    it.categoryName == categorizedExpense.category.name
+                }
 
                 if (mostExpensiveCategory == null) {
                     mostExpensiveCategories.add(
@@ -30,6 +31,6 @@ class GetMostExpensiveCategories @Inject constructor(private val expenseReposito
                 }
             }
 
-            MostExpensiveCategoriesStates.of(mostExpensiveCategories.sortedByDescending { it.amount })
+            mostExpensiveCategories
         }
 }
