@@ -2,6 +2,7 @@ package br.com.tick.sdk.di
 
 import android.content.Context
 import androidx.room.Room
+import br.com.tick.sdk.database.CategoryColorDao
 import br.com.tick.sdk.database.CategoryDao
 import br.com.tick.sdk.database.ExpenseDao
 import br.com.tick.sdk.database.TeiraDatabase
@@ -39,4 +40,8 @@ object DatabaseModule {
     @Singleton
     @Provides
     fun provideCategoryDao(teiraDatabase: TeiraDatabase): CategoryDao = teiraDatabase.categoryDao()
+
+    @Singleton
+    @Provides
+    fun provideCategoryColorDao(teiraDatabase: TeiraDatabase): CategoryColorDao = teiraDatabase.categoryColorDao()
 }
