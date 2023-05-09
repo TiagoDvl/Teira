@@ -1,7 +1,6 @@
 package br.com.tick.ui.screens.analysis.viewmodels
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import br.com.tick.sdk.dispatchers.DispatcherProvider
 import br.com.tick.ui.screens.analysis.states.AnalysisGraphStates
 import br.com.tick.ui.screens.analysis.states.FinancialHealth
@@ -13,7 +12,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.launchIn
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,7 +32,7 @@ class AnalysisScreenViewModel @Inject constructor(
     val mostExpenseCategoryList: Flow<MostExpensiveCategoriesStates>
         get() = flow {
             getMostExpensiveCategories().collect {
-                emit(it)
+                emit(MostExpensiveCategoriesStates.of(it))
             }
         }.flowOn(dispatcherProvider.io())
 

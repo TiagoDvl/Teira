@@ -25,7 +25,7 @@ fun AnalysisScreen() {
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
-            CategoryRank(
+            MostExpensiveCategory(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = MaterialTheme.spacing.large)
