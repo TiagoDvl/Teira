@@ -8,6 +8,7 @@ import br.com.tick.sdk.domain.CategorizedExpense
 import br.com.tick.sdk.domain.ExpenseCategory
 import br.com.tick.sdk.domain.getAccountingDateDayOfMonth
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import java.time.LocalDate
@@ -48,7 +49,12 @@ class CategorizedExpensesRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getAccountingCycleExpenses(): Flow<List<CategorizedExpense>> {
-        val userAccountingDayOfMonth = userDao.getUniqueUser().first().accountingDate.getAccountingDateDayOfMonth()
+        val userAccountingDayOfMonth = userDao.getUniqueUser()
+            .filterNotNull()
+            .first()
+            .accountingDate
+            .getAccountingDateDayOfMonth()
+
         val pivot = LocalDate.now()
 
         val nextAccountingDate = if (pivot.dayOfMonth > userAccountingDayOfMonth) {
