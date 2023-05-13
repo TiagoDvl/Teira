@@ -28,8 +28,13 @@ class TeiraScaffoldViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(dispatcherProvider.io()) {
+            registerUser()
             getPeriodicNotificationRegistrationState()
         }
+    }
+
+    private suspend fun registerUser() {
+        userRepository.setInitialUser()
     }
 
     private suspend fun getPeriodicNotificationRegistrationState() {
