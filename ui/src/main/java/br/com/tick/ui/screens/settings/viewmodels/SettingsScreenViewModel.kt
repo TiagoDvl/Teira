@@ -3,14 +3,14 @@ package br.com.tick.ui.screens.settings.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.tick.sdk.dispatchers.DispatcherProvider
+import br.com.tick.sdk.domain.AccountingDate
 import br.com.tick.sdk.domain.CurrencyFormat
 import br.com.tick.sdk.domain.NotificationPeriodicity
-import br.com.tick.sdk.domain.AccountingDate
 import br.com.tick.sdk.repositories.user.UserRepository
 import br.com.tick.ui.screens.settings.states.MonthlyIncomeStates
+import br.com.tick.ui.screens.settings.states.SettingsAccountingDateStates
 import br.com.tick.ui.screens.settings.states.SettingsCurrencyFormatStates
 import br.com.tick.ui.screens.settings.states.SettingsNotificationPeriodicityStates
-import br.com.tick.ui.screens.settings.states.SettingsAccountingDateStates
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map

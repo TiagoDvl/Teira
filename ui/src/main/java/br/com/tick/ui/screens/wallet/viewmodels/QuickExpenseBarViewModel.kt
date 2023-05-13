@@ -8,7 +8,6 @@ import br.com.tick.sdk.repositories.expensecategory.ExpenseCategoryRepository
 import br.com.tick.sdk.repositories.user.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.time.LocalDate

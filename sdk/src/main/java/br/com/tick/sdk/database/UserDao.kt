@@ -1,6 +1,8 @@
 package br.com.tick.sdk.database
 
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import br.com.tick.sdk.database.entities.User
 import br.com.tick.sdk.domain.CurrencyFormat
@@ -13,6 +15,9 @@ interface UserDao {
 
     @Query("SELECT * FROM user WHERE user_id = 1")
     fun getUniqueUser(): Flow<User>
+
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    fun setInitialUser(user: User)
 
     @Query("UPDATE User SET monthly_income = :newValue WHERE user_id = 1")
     suspend fun setMonthlyIncome(newValue: Double)

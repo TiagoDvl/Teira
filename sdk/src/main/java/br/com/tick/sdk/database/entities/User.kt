@@ -28,4 +28,10 @@ data class User(
 
     @ColumnInfo(name = "accounting_date")
     val accountingDate: AccountingDate
-)
+) {
+    companion object {
+        fun initial(): User {
+            return User(0, 0.0, NotificationPeriodicity.DAILY, CurrencyFormat.EURO, AccountingDate.DAY_ONE)
+        }
+    }
+}

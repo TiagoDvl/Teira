@@ -10,6 +10,8 @@ interface UserRepository {
 
     fun getUser(): Flow<User>
 
+    suspend fun setInitialUser()
+
     suspend fun setMonthlyIncome(newValue: Double)
 
     suspend fun setNotificationPeriodicity(notificationPeriodicity: NotificationPeriodicity)
