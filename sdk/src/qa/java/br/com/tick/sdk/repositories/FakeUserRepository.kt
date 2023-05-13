@@ -13,10 +13,13 @@ class FakeUserRepository: UserRepository {
     private val user: MutableSharedFlow<User> = MutableSharedFlow(replay = 1)
 
     init {
-        user.tryEmit(User(0, 0.0, NotificationPeriodicity.DAILY, CurrencyFormat.REAL, AccountingDate.DAY_ONE))
+        user.tryEmit(User.initial())
     }
 
     override fun getUser() = user
+    override suspend fun setInitialUser() {
+        user.tryEmit(User.initial())
+    }
 
     override suspend fun setMonthlyIncome(newValue: Double) {
         user.emit(getUser().first().copy(monthlyIncome = newValue))
