@@ -22,10 +22,10 @@ object DatabaseModule {
     fun provideTeiraDatabase(
         @ApplicationContext app: Context
     ): TeiraDatabase {
-        return Room.databaseBuilder(app, TeiraDatabase::class.java, "TeiraDb.db")
-            .createFromAsset("database/PrePopulated_TeiraDb.db")
-            .fallbackToDestructiveMigration()
-            .build()
+        return Room.databaseBuilder(
+            app,
+            TeiraDatabase::class.java, "TeiraDb.db"
+        ).build()
     }
 
     @Singleton
