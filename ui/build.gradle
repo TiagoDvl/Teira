@@ -81,6 +81,7 @@ dependencies {
     implementation "androidx.work:work-runtime-ktx:$workManagerVersion"
 
     implementation "com.patrykandpatrick.vico:compose-m3:$vicoVersion"
+    implementation "com.godaddy.android.colorpicker:compose-color-picker:$composeColorPicker"
 
     // Unit Tests dependencies
     testImplementation "junit:junit:$jUnitVersion"

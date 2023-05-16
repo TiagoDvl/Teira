@@ -12,5 +12,8 @@ data class Category(
     val categoryId: Int = 0,
 
     @ColumnInfo(name = "name")
-    val name: String
+    val name: String,
+
+    @ColumnInfo(name = "category_color_id")
+    val categoryColorId: Int
 )

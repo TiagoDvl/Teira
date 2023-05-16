@@ -1,5 +1,6 @@
 package br.com.tick.sdk.repositories.categorizedexpense
 
+import br.com.tick.sdk.database.CategoryColorDao
 import br.com.tick.sdk.database.CategoryDao
 import br.com.tick.sdk.database.ExpenseDao
 import br.com.tick.sdk.database.UserDao
@@ -17,6 +18,7 @@ import javax.inject.Inject
 class CategorizedExpensesRepositoryImpl @Inject constructor(
     private val expenseDao: ExpenseDao,
     private val categoryDao: CategoryDao,
+    private val categoryColorDao: CategoryColorDao,
     private val userDao: UserDao
 ) : CategorizedExpenseRepository {
 
@@ -85,7 +87,8 @@ class CategorizedExpensesRepositoryImpl @Inject constructor(
 
     private suspend fun categorize(expense: Expense): CategorizedExpense {
         val category = categoryDao.getCategoryById(expense.categoryId)
-        val expenseCategory = ExpenseCategory(category.categoryId, category.name)
+        val color = categoryColorDao.getCategoriesColors().first().first { it.id == category.categoryColorId }
+        val expenseCategory = ExpenseCategory(category.categoryId, category.name, color.color)
 
         with(expense) {
             return CategorizedExpense(
