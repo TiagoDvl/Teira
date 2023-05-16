@@ -23,6 +23,7 @@ buildscript {
         dataStoreVersion = '1.0.0'
         navigationVersion = '2.5.3'
         vicoVersion = '1.6.4'
+        composeColorPicker = '0.7.0'
         firebaseCrashlytics = '18.3.5'
         firebaseAnalytics = '21.2.0'
         workManagerVersion = '2.8.1'

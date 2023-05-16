@@ -43,6 +43,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import kotlin.random.Random
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -83,12 +84,17 @@ fun ExpandedQuickExpense(
     val label = stringResource(id = R.string.wallet_quick_expense_select_category)
     var categoryLabel by remember { mutableStateOf(label) }
     var showAddNewCategoryDialog by remember { mutableStateOf(false) }
+    val colors by quickExpenseBarViewModel.categoryColors.collectAsState(listOf())
 
     if (showAddNewCategoryDialog) {
         AddNewCategoryDialog(
-            onAddNewCategory = {
-                categoryLabel = it
-                quickExpenseBarViewModel.addCategory(it)
+            colors = colors,
+            onNewColor = {
+                quickExpenseBarViewModel.addNewColor(it)
+            },
+            onAddNewCategory = { name, color ->
+                categoryLabel = name
+                quickExpenseBarViewModel.addCategory(name, color)
             }
         ) {
             showAddNewCategoryDialog = false

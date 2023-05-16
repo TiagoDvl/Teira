@@ -1,24 +1,17 @@
 package br.com.tick.sdk.repositories.categorycolor
 
-import android.graphics.Color
 import br.com.tick.sdk.database.CategoryColorDao
 import br.com.tick.sdk.database.entities.CategoryColor
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class CategoryColorRepositoryImpl(
+class CategoryColorRepositoryImpl @Inject constructor(
     private val categoryColorDao: CategoryColorDao
 ): CategoryColorRepository {
 
-    override suspend fun addColor(color: Color) {
-        categoryColorDao.addCategoryColor(CategoryColor(color = color.pack()))
+    override suspend fun addColor(color: Int) {
+        categoryColorDao.addCategoryColor(CategoryColor(color = color))
     }
 
-    override fun getColors(): Flow<List<Color>> {
-        return categoryColorDao.getCategoriesColors().map {
-            it.map { categoryColor ->
-                Color.valueOf(categoryColor.color)
-            }
-        }
-    }
+    override fun getColors(): Flow<List<CategoryColor>> = categoryColorDao.getCategoriesColors()
 }
