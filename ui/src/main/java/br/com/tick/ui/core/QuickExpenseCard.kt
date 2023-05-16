@@ -3,12 +3,14 @@ package br.com.tick.ui.core
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,7 +24,7 @@ import br.com.tick.ui.screens.wallet.models.ExpenseCard
 import br.com.tick.ui.theme.spacing
 import br.com.tick.ui.theme.textStyle
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
+@OptIn(ExperimentalAnimationApi::class)
 @ExperimentalFoundationApi
 @Composable
 fun QuickExpenseCard(
@@ -81,6 +83,16 @@ fun QuickExpenseCard(
                     }
                 }
             }
+        }
+
+        Box(modifier = Modifier.fillMaxSize()) {
+            Spacer(
+                modifier = Modifier
+                    .height(6.dp)
+                    .background(Color(expenseCard.category.color))
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+            )
         }
     }
 }
@@ -148,7 +160,7 @@ fun QuickExpenseCardPreview() {
             name = "Expense 1",
             currency = CurrencyFormat.EURO,
             value = 50.0,
-            category = ExpenseCategory(0, "Category 1"),
+            category = ExpenseCategory(0, "Category 1", Color.Red.value.toInt()),
             risk = ExpenseRisk.HIGH
         )
     ) {

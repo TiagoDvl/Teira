@@ -1,3 +1,3 @@
 package br.com.tick.sdk.domain
 
-data class ExpenseCategory(val expenseCategoryId: Int, val name: String)
+data class ExpenseCategory(val expenseCategoryId: Int, val name: String, val color: Int)

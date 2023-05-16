@@ -2,8 +2,10 @@ package br.com.tick.ui.screens.wallet.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import br.com.tick.sdk.database.entities.CategoryColor
 import br.com.tick.sdk.dispatchers.DispatcherProvider
 import br.com.tick.sdk.repositories.categorizedexpense.CategorizedExpenseRepository
+import br.com.tick.sdk.repositories.categorycolor.CategoryColorRepository
 import br.com.tick.sdk.repositories.expensecategory.ExpenseCategoryRepository
 import br.com.tick.sdk.repositories.user.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,17 +19,14 @@ import javax.inject.Inject
 class QuickExpenseBarViewModel @Inject constructor(
     private val expenseRepository: CategorizedExpenseRepository,
     private val categoryRepository: ExpenseCategoryRepository,
-    private val userRepository: UserRepository,
+    private val categoryColorRepository: CategoryColorRepository,
+    userRepository: UserRepository,
     private val dispatcherProvider: DispatcherProvider
 ) : ViewModel() {
 
     val categories = categoryRepository.getCategories().flowOn(dispatcherProvider.io())
-
-    val currency = userRepository.getUser()
-        .flowOn(dispatcherProvider.io())
-        .map {
-            it.currency
-        }
+    val categoryColors = categoryColorRepository.getColors().flowOn(dispatcherProvider.io())
+    val currency = userRepository.getUser().flowOn(dispatcherProvider.io()).map { it.currency }
 
     fun saveQuickExpense(categoryId: Int, name: String, value: Double, expenseDate: LocalDate) {
         viewModelScope.launch(dispatcherProvider.io()) {
@@ -35,9 +34,15 @@ class QuickExpenseBarViewModel @Inject constructor(
         }
     }
 
-    fun addCategory(categoryName: String) {
+    fun addCategory(categoryName: String, color: CategoryColor) {
         viewModelScope.launch(dispatcherProvider.io()) {
-            categoryRepository.addCategory(categoryName)
+            categoryRepository.addCategory(categoryName, color)
+        }
+    }
+
+    fun addNewColor(color: Int) {
+        viewModelScope.launch(dispatcherProvider.io()) {
+            categoryColorRepository.addColor(color)
         }
     }
 }

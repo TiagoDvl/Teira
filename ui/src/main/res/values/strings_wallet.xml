@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="wallet_add_new_category_label">New Category Name</string>
+    <string name="wallet_add_new_category_label">New Category name</string>
+    <string name="wallet_add_new_category_color">Category color</string>
+    <string name="wallet_choose_category_color">Choose a color</string>
     <string name="wallet_add_new_category_button_text">Add</string>
 
     <string name="wallet_closed_quick_expense_title">Add a quick expense</string>
