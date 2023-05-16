@@ -12,7 +12,7 @@ class FakeCategorizedExpenseRepository : CategorizedExpenseRepository {
     private val expenses = mutableListOf<CategorizedExpense>()
 
     override suspend fun addExpense(categoryId: Int, name: String, value: Double, expenseDate: LocalDate) {
-        expenses.add(CategorizedExpense(expenses.size, name, value, expenseDate, ExpenseCategory(categoryId, "")))
+        expenses.add(CategorizedExpense(expenses.size, name, value, expenseDate, ExpenseCategory(categoryId, "", 0)))
     }
 
     override suspend fun removeExpense(expenseId: Int) {
