@@ -43,7 +43,6 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import kotlin.random.Random
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -192,6 +191,7 @@ fun ExpandedQuickExpense(
                 label = categoryLabel,
                 borderColor = MaterialTheme.colorScheme.onSecondary,
                 dropdownItemLabels = categoriesList.map { it.name },
+                dropdownItemColors = categoriesList.map { it.color },
                 onItemSelected = {
                     selectedCategoryId = categoriesList[it].expenseCategoryId
                     categoryLabel = categoriesList[it].name
