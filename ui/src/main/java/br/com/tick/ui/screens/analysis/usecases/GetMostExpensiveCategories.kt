@@ -22,7 +22,7 @@ class GetMostExpensiveCategories @Inject constructor(private val expenseReposito
                     mostExpensiveCategories.add(
                         MostExpensiveCategory(
                             categorizedExpense.category.name,
-                            Color.Red,
+                            Color(categorizedExpense.category.color),
                             categorizedExpense.expenseValue
                         )
                     )
