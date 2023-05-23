@@ -19,4 +19,6 @@ interface UserRepository {
     suspend fun setCurrency(currencyFormat: CurrencyFormat)
 
     suspend fun setAccountingDate(accountingDate: AccountingDate)
+
+    suspend fun toggleMonthlyIncomeVisibility()
 }

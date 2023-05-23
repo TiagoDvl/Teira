@@ -15,4 +15,5 @@
     <string name="wallet_quick_expense_add_category">Add new Category</string>
 
     <string name="wallet_available_balance_title">Available Balance: %1$s%2\$.2f</string>
+    <string name="wallet_available_balance_hidden_title">Show available balance</string>
 </resources>

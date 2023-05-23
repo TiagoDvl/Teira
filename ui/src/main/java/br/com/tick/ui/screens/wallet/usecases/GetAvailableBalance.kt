@@ -21,7 +21,7 @@ class GetAvailableBalance @Inject constructor(
             val expensesSum = _cycleExpenses.sumOf { it.expenseValue }
 
             val diff = monthlyIncome - expensesSum
-            AvailableBalance(_user.currency, diff)
+            AvailableBalance(_user.currency, diff, _user.monthlyIncomeVisibility)
         }
     }
 }
