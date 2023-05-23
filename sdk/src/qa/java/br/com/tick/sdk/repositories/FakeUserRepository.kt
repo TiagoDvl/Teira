@@ -36,4 +36,9 @@ class FakeUserRepository: UserRepository {
     override suspend fun setAccountingDate(accountingDate: AccountingDate) {
         user.tryEmit(getUser().first().copy(accountingDate = accountingDate))
     }
+
+    override suspend fun toggleMonthlyIncomeVisibility() {
+        val currentUser = getUser().first()
+        user.tryEmit(getUser().first().copy(monthlyIncomeVisibility = !currentUser.monthlyIncomeVisibility))
+    }
 }
