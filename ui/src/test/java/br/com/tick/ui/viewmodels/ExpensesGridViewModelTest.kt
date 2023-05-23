@@ -12,6 +12,7 @@ import br.com.tick.ui.screens.wallet.usecases.GetAvailableBalance
 import br.com.tick.ui.screens.wallet.usecases.RemoveExpenseCard
 import br.com.tick.ui.screens.wallet.viewmodels.ExpensesGridViewModel
 import br.com.tick.utils.CoroutineTestRule
+import com.google.common.truth.Truth
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
@@ -33,7 +34,13 @@ class ExpensesGridViewModelTest {
         val removeExpenseCard = RemoveExpenseCard(categorizedExpenseRepository)
         val getAvailableBalance = GetAvailableBalance(categorizedExpenseRepository, userRepository)
 
-        return ExpensesGridViewModel(createExpensesCards, removeExpenseCard, getAvailableBalance, FakeDispatcher())
+        return ExpensesGridViewModel(
+            createExpensesCards,
+            removeExpenseCard,
+            getAvailableBalance,
+            userRepository,
+            FakeDispatcher()
+        )
     }
 
     @Test
@@ -80,6 +87,38 @@ class ExpensesGridViewModelTest {
             val expensesGridState = awaitItem()
             assert(expensesGridState is ExpensesGridStates.Success)
             assert((expensesGridState as ExpensesGridStates.Success).expensesList.size == 30)
+        }
+    }
+
+    @Test
+    fun `When user removes one expense, expenses grid should have one less`() = runTest {
+        val categorizedExpenseRepository = FakeCategorizedExpenseRepository()
+        categorizedExpenseRepository.addExpense(1, "Name One", 10.0, LocalDate.now())
+        categorizedExpenseRepository.addExpense(2, "Name Two", 20.0, LocalDate.now())
+        categorizedExpenseRepository.addExpense(3, "Name Three", 30.0, LocalDate.now())
+
+        val expensesGridViewModel = getViewModel(categorizedExpenseRepository)
+
+        expensesGridViewModel.removeCard(1)
+
+        expensesGridViewModel.getExpensesGridState.test {
+            val expensesGridState = awaitItem()
+            val numberOfItems = (expensesGridState as ExpensesGridStates.Success).expensesList.size
+            Truth.assertThat(numberOfItems == 2)
+        }
+    }
+
+    @Test
+    fun `When user toggles available balance visibility, it should receive changed value`() = runTest {
+        val userRepository = FakeUserRepository()
+        userRepository.setInitialUser()
+
+        val expensesGridViewModel = getViewModel(userRepository = userRepository)
+
+        expensesGridViewModel.toggleAvailableBalanceVisibility()
+
+        expensesGridViewModel.availableBalanceState.test {
+            Truth.assertThat(awaitItem()?.isVisible == false)
         }
     }
 }
