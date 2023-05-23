@@ -4,6 +4,7 @@
     <string name="settings_monthly_income_title">Monthly income</string>
     <string name="settings_monthly_income_label">Your income</string>
     <string name="settings_current_income_label">Current:</string>
+    <string name="settings_current_income_hidden_label">Show Monthly Income</string>
     <string name="settings_monthly_income_hint">Will be used for analytical calculations</string>
     <string name="settings_monthly_income_dialog_confirmation_title">Change in income</string>
     <string name="settings_monthly_income_dialog_confirmation_text">Are you sure you want save this change?</string>

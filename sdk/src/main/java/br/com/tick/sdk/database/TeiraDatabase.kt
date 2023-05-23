@@ -14,8 +14,7 @@ import br.com.tick.sdk.database.entities.User
         Category::class,
         CategoryColor::class
     ],
-    version = 5,
-    exportSchema = false
+    version = 6
 )
 abstract class TeiraDatabase : RoomDatabase() {
 

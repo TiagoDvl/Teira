@@ -27,7 +27,7 @@ class SettingsScreenViewModel @Inject constructor(
         .getUser()
         .flowOn(dispatcherProvider.io())
         .map {
-            MonthlyIncomeStates.of(it.monthlyIncome)
+            MonthlyIncomeStates.of(it.monthlyIncome, it.monthlyIncomeVisibility)
         }
 
     val notificationPeriodicity = userRepository
@@ -79,6 +79,12 @@ class SettingsScreenViewModel @Inject constructor(
     fun setAccountingDate(accountingDate: AccountingDate) {
         viewModelScope.launch(dispatcherProvider.io()) {
             userRepository.setAccountingDate(accountingDate)
+        }
+    }
+
+    fun toggleMonthlyIncomeVisibility() {
+        viewModelScope.launch(dispatcherProvider.io()) {
+            userRepository.toggleMonthlyIncomeVisibility()
         }
     }
 }

@@ -28,7 +28,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Bottom
-import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
@@ -42,6 +41,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import br.com.tick.sdk.domain.AccountingDate
@@ -81,9 +81,20 @@ fun SettingsScreen(
         val accountingDateState by viewModel.startDate.collectAsState(initial = SettingsAccountingDateStates.Loading)
         val currency by viewModel.currency.collectAsState(initial = CurrencyFormat.REAL)
 
-        MonthlyIncomeSetting(monthlyIncomeState = monthlyIncome, currencyFormat = currency) {
-            viewModel.saveMonthlyIncome(it)
+        monthlyIncome.also {
+            if (it is MonthlyIncomeStates.Value) {
+                MonthlyIncomeSetting(
+                    monthlyIncomeState = it,
+                    currencyFormat = currency,
+                    toggleMonthlyIncome = {
+                        viewModel.toggleMonthlyIncomeVisibility()
+                    }
+                ) { value ->
+                    viewModel.saveMonthlyIncome(value)
+                }
+            }
         }
+
         NotificationsSetting(notificationPeriodicity = notificationPeriodicity) {
             onPeriodicNotificationStateChanged(it)
             viewModel.setNotificationPeriodicity(it)
@@ -101,8 +112,9 @@ fun SettingsScreen(
 @Composable
 fun MonthlyIncomeSetting(
     modifier: Modifier = Modifier,
-    monthlyIncomeState: MonthlyIncomeStates,
+    monthlyIncomeState: MonthlyIncomeStates.Value,
     currencyFormat: CurrencyFormat,
+    toggleMonthlyIncome: () -> Unit,
     saveIncome: (Double) -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -172,7 +184,13 @@ fun MonthlyIncomeSetting(
         ) {
             val currencyLabel = stringResource(id = currencyFormat.getLabelResource())
             val formattedMonthlyIncome = monthlyIncomeState.value.twoDecimalPlacesFormat()
-            val currentLabel = stringResource(id = R.string.settings_current_income_label)
+
+            val label = if (monthlyIncomeState.showMonthlyIncome) {
+                val incomeLabel =  stringResource(id = R.string.settings_current_income_label)
+                "$incomeLabel $currencyLabel$formattedMonthlyIncome"
+            } else {
+                stringResource(id = R.string.settings_current_income_hidden_label)
+            }
 
             Text(
                 text = stringResource(id = R.string.settings_monthly_income_title),
@@ -182,9 +200,11 @@ fun MonthlyIncomeSetting(
             Text(
                 modifier = Modifier
                     .align(Bottom)
+                    .clickable { toggleMonthlyIncome() }
                     .padding(end = MaterialTheme.spacing.small),
-                text = "$currentLabel $currencyLabel$formattedMonthlyIncome",
-                style = MaterialTheme.textStyle.h3small
+                text = label,
+                style = MaterialTheme.textStyle.h3small,
+                textDecoration = TextDecoration.Underline
             )
         }
 
@@ -418,7 +438,11 @@ fun StartDateSetting(
 @Preview
 @Composable
 fun SettingsScreenPreview() {
-    MonthlyIncomeSetting(monthlyIncomeState = MonthlyIncomeStates.Value(2000.0), currencyFormat = CurrencyFormat.REAL) {
+    MonthlyIncomeSetting(
+        monthlyIncomeState = MonthlyIncomeStates.Value(2000.0, true),
+        currencyFormat = CurrencyFormat.REAL,
+        toggleMonthlyIncome = {}
+    ) {
 
     }
 }

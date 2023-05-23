@@ -5,6 +5,7 @@ import androidx.room.Room
 import br.com.tick.sdk.database.CategoryColorDao
 import br.com.tick.sdk.database.CategoryDao
 import br.com.tick.sdk.database.ExpenseDao
+import br.com.tick.sdk.database.MIGRATION_5_6
 import br.com.tick.sdk.database.TeiraDatabase
 import br.com.tick.sdk.database.UserDao
 import dagger.Module
@@ -26,7 +27,7 @@ object DatabaseModule {
         return Room.databaseBuilder(
             app,
             TeiraDatabase::class.java, "TeiraDb.db"
-        ).build()
+        ).addMigrations(MIGRATION_5_6).build()
     }
 
     @Singleton
