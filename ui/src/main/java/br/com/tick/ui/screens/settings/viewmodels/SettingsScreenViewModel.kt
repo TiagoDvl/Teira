@@ -27,7 +27,7 @@ class SettingsScreenViewModel @Inject constructor(
         .getUser()
         .flowOn(dispatcherProvider.io())
         .map {
-            MonthlyIncomeStates.of(it.monthlyIncome, it.monthlyIncomeVisibility)
+            MonthlyIncomeStates.Value(it.monthlyIncome, it.monthlyIncomeVisibility)
         }
 
     val notificationPeriodicity = userRepository
