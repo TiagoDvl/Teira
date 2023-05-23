@@ -3,6 +3,7 @@ package br.com.tick.sdk.notifications
 import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
@@ -31,7 +32,13 @@ class TeiraNotificationCenter @Inject constructor(
         notificationManager.createNotificationChannel(channel)
     }
 
-    override suspend fun sendNotification(title: String, text: String, icon: Int, channelId: String) {
+    override suspend fun sendNotification(
+        title: String,
+        text: String,
+        icon: Int,
+        channelId: String,
+        pendingIntent: PendingIntent
+    ) {
         if (ActivityCompat.checkSelfPermission(
                 context,
                 Manifest.permission.POST_NOTIFICATIONS
@@ -43,6 +50,7 @@ class TeiraNotificationCenter @Inject constructor(
                 .setSmallIcon(icon)
                 .setContentTitle(title)
                 .setContentText(text)
+                .setContentIntent(pendingIntent)
                 .build()
             NotificationManagerCompat.from(context).notify(getNotificationId(), notification)
         }

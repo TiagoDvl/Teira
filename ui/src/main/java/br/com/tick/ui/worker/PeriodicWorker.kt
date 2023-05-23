@@ -1,11 +1,13 @@
 package br.com.tick.ui.worker
 
+import android.app.PendingIntent
 import android.content.Context
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import br.com.tick.sdk.di.MainActivityPendingIntent
 import br.com.tick.sdk.dispatchers.DispatcherProvider
 import br.com.tick.sdk.extensions.getPeriodicityTimeDiff
 import br.com.tick.sdk.notifications.NotificationCenter
@@ -20,6 +22,7 @@ import java.util.concurrent.TimeUnit
 class PeriodicWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted workerParams: WorkerParameters,
+    @MainActivityPendingIntent private val mainActivityPendingIntent: PendingIntent,
     private val notificationCenter: NotificationCenter,
     private val dispatcherProvider: DispatcherProvider,
     private val userRepository: UserRepository
@@ -45,7 +48,8 @@ class PeriodicWorker @AssistedInject constructor(
             applicationContext.getString(R.string.periodic_reminder_title),
             applicationContext.getString(R.string.periodic_reminder_description),
             R.drawable.ic_wallet,
-            applicationContext.getString(R.string.teira_periodic_reminder_channel_id)
+            applicationContext.getString(R.string.teira_periodic_reminder_channel_id),
+            mainActivityPendingIntent
         )
     }
 
