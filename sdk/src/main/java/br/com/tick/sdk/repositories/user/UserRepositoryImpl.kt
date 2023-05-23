@@ -35,4 +35,8 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun setAccountingDate(accountingDate: AccountingDate) {
         userDao.setAccountingDate(accountingDate)
     }
+
+    override suspend fun toggleMonthlyIncomeVisibility() {
+        userDao.toggleMonthlyIncomeVisibility()
+    }
 }

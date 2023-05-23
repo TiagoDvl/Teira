@@ -1,6 +1,7 @@
 package br.com.tick.ui.screens.wallet
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -14,10 +15,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import br.com.tick.ui.R
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.hilt.navigation.compose.hiltViewModel
-import br.com.tick.sdk.domain.CurrencyFormat
+import br.com.tick.ui.R
 import br.com.tick.ui.core.QuickExpenseCard
 import br.com.tick.ui.extensions.getLabelResource
 import br.com.tick.ui.screens.wallet.models.AvailableBalance
@@ -40,7 +41,9 @@ fun ExpensesGrid(
         expensesGridViewModel.availableBalanceState
     }.collectAsState(null)
 
-    AvailableBalanceIndicator(availableBalance)
+    AvailableBalanceIndicator(availableBalance) {
+        expensesGridViewModel.toggleAvailableBalanceVisibility()
+    }
     Body(modifier, expensesListState, expensesGridViewModel)
 }
 
@@ -102,22 +105,29 @@ fun LoadingGrid(
 
 @Composable
 fun AvailableBalanceIndicator(
-    availableBalance: AvailableBalance?
+    availableBalance: AvailableBalance?,
+    onToggleAvailableBalanceVisibility: () -> Unit
 ) {
     if (availableBalance != null) {
         Box(
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.CenterEnd
         ) {
-            val formattedAmount = stringResource(
-                id = R.string.wallet_available_balance_title,
-                stringResource(id = availableBalance.currencyFormat.getLabelResource()),
-                availableBalance.amount
-            )
+            val formattedAmount = if (availableBalance.isVisible) {
+                stringResource(
+                    id = R.string.wallet_available_balance_title,
+                    stringResource(id = availableBalance.currencyFormat.getLabelResource()),
+                    availableBalance.amount
+                )
+            } else {
+                stringResource(id = R.string.wallet_available_balance_hidden_title)
+            }
 
             Text(
+                modifier = Modifier.clickable { onToggleAvailableBalanceVisibility() },
                 text = formattedAmount,
-                style = MaterialTheme.textStyle.h3small
+                style = MaterialTheme.textStyle.h3small,
+                textDecoration = TextDecoration.Underline
             )
         }
     }

@@ -1,17 +1,17 @@
 package br.com.tick.ui.screens.settings.states
 
-sealed class MonthlyIncomeStates(val value: Double) {
+sealed class MonthlyIncomeStates {
 
     companion object {
-        fun of(value: Double): MonthlyIncomeStates {
+        fun of(value: Double, monthlyIncomeVisibility: Boolean): MonthlyIncomeStates {
             require(value >= 0.0) { "Negative values should not produce MonthlyIncomeStates" }
             if (value == 0.0) return Loading
 
-            return Value(value)
+            return Value(value, monthlyIncomeVisibility)
         }
     }
 
-    object Loading : MonthlyIncomeStates(0.0)
+    object Loading : MonthlyIncomeStates()
 
-    class Value(value: Double) : MonthlyIncomeStates(value)
+    class Value(val value: Double, val showMonthlyIncome: Boolean) : MonthlyIncomeStates()
 }

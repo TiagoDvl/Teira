@@ -5,9 +5,9 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import br.com.tick.sdk.database.entities.User
+import br.com.tick.sdk.domain.AccountingDate
 import br.com.tick.sdk.domain.CurrencyFormat
 import br.com.tick.sdk.domain.NotificationPeriodicity
-import br.com.tick.sdk.domain.AccountingDate
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -30,4 +30,7 @@ interface UserDao {
 
     @Query("UPDATE User SET accounting_date = :accountingDate WHERE user_id = 1")
     suspend fun setAccountingDate(accountingDate: AccountingDate)
+
+    @Query("UPDATE User SET monthly_income_visibility = CASE WHEN monthly_income_visibility = 0 THEN 1 ELSE 0 END;")
+    suspend fun toggleMonthlyIncomeVisibility()
 }

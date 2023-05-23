@@ -27,11 +27,15 @@ data class User(
     val currency: CurrencyFormat,
 
     @ColumnInfo(name = "accounting_date")
-    val accountingDate: AccountingDate
+    val accountingDate: AccountingDate,
+
+    @ColumnInfo(name = "monthly_income_visibility")
+    val monthlyIncomeVisibility: Boolean,
+
 ) {
     companion object {
         fun initial(): User {
-            return User(0, 0.0, NotificationPeriodicity.DAILY, CurrencyFormat.EURO, AccountingDate.DAY_ONE)
+            return User(0, 0.0, NotificationPeriodicity.DAILY, CurrencyFormat.EURO, AccountingDate.DAY_ONE, true)
         }
     }
 }
