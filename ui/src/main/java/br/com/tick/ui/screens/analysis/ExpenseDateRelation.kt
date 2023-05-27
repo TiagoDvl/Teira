@@ -1,12 +1,21 @@
 package br.com.tick.ui.screens.analysis
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import br.com.tick.ui.R
 import br.com.tick.ui.screens.analysis.states.AnalysisGraphStates
@@ -21,33 +30,13 @@ import com.patrykandpatrick.vico.compose.m3.style.m3ChartStyle
 import com.patrykandpatrick.vico.compose.style.LocalChartStyle
 import com.patrykandpatrick.vico.core.entry.entryModelOf
 import com.patrykandpatrick.vico.core.entry.entryOf
-import java.time.LocalDate
 
 @Composable
 fun ExpenseDateRelation(
     modifier: Modifier = Modifier,
     viewModel: AnalysisScreenViewModel = hiltViewModel()
 ) {
-    val analysisGraph by remember { viewModel.graphStates }.collectAsState(AnalysisGraphStates.Loading)
-
-    when (analysisGraph) {
-        is AnalysisGraphStates.AnalysisGraph -> ExpenseGraph(
-            modifier = modifier,
-            analysisGraph = analysisGraph as AnalysisGraphStates.AnalysisGraph
-        )
-        AnalysisGraphStates.Loading -> GraphLoading()
-    }
-}
-
-@Composable
-fun ExpenseGraph(
-    modifier: Modifier = Modifier,
-    analysisGraph: AnalysisGraphStates.AnalysisGraph
-) {
-    val maxNumber = analysisGraph.expenses.maxOf { it.value.toInt() }
-    val entries = analysisGraph.expenses.map {
-        entryOf(it.key.dayOfMonth, it.value)
-    }
+    val analysisGraph by remember { viewModel.graphStates }.collectAsState(AnalysisGraphStates.NoDataAvailable)
 
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
@@ -66,41 +55,36 @@ fun ExpenseGraph(
 
         )
         CompositionLocalProvider(LocalChartStyle provides chartStyle) {
-            Chart(
-                modifier = modifier,
-                chart = lineChart(),
-                model = entryModelOf(entries),
-                startAxis = startAxis(maxLabelCount = maxNumber),
-                bottomAxis = bottomAxis()
-            )
+            var maxNumber = 100
+            var entries = listOf(entryOf(0, 0))
+
+            Box(modifier = Modifier.fillMaxSize()) {
+                when (val graphStates = analysisGraph) {
+                    is AnalysisGraphStates.AnalysisGraph -> {
+                        maxNumber = graphStates.expenses.maxOf { it.value.toInt() }
+                        entries = graphStates.expenses.map {
+                            entryOf(it.key.dayOfMonth, it.value)
+                        }
+                    }
+
+                    AnalysisGraphStates.NoDataAvailable -> {
+                        Text(
+                            modifier = Modifier.align(Alignment.Center),
+                            text = stringResource(id = R.string.generic_no_data_available),
+                            style = MaterialTheme.textStyle.h3,
+                            color = MaterialTheme.colorScheme.tertiary
+                        )
+                    }
+                }
+
+                Chart(
+                    modifier = modifier,
+                    chart = lineChart(),
+                    model = entryModelOf(entries),
+                    startAxis = startAxis(maxLabelCount = maxNumber),
+                    bottomAxis = bottomAxis()
+                )
+            }
         }
     }
-}
-
-@Composable
-fun GraphLoading() {
-    Text(
-        modifier = Modifier.fillMaxSize(),
-        text = stringResource(id = R.string.generic_loading),
-        style = MaterialTheme.textStyle.h4
-    )
-}
-
-@Preview
-@Composable
-fun GraphLoadingPreview() {
-    GraphLoading()
-}
-
-@Preview
-@Composable
-fun ExpenseGraphPreview() {
-    ExpenseGraph(
-        analysisGraph = AnalysisGraphStates.AnalysisGraph(
-            mapOf(
-                LocalDate.now() to 200.0,
-                LocalDate.now().plusDays(1L) to 350.0
-            )
-        )
-    )
 }
