@@ -5,4 +5,7 @@
     <string name="generic_loading">Loading…</string>
     <string name="generic_ok">OK</string>
     <string name="generic_cancel">Cancel</string>
+    <string name="generic_error">Sorry, an error occurred</string>
+    <string name="generic_no_data_available">No data available</string>
+    <string name="generic_empty_state">Add more expenses to begin your journey</string>
 </resources>

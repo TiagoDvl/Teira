@@ -2,11 +2,11 @@ package br.com.tick.ui.screens.analysis.states
 
 import br.com.tick.sdk.domain.CategorizedExpense
 
-sealed class FinancialHealth(val percentageOfCompromisedIncome: Float) {
+sealed class FinancialHealth {
 
     companion object {
         fun of(expenses: List<CategorizedExpense>, monthlyIncome: Double): FinancialHealth {
-            if (expenses.isEmpty()) return Empty
+            if (expenses.isEmpty()) return NoDataAvailable
 
             val compromisedIncomePercentage = calculateCompromisedIncomePercentage(expenses, monthlyIncome)
 
@@ -21,20 +21,17 @@ sealed class FinancialHealth(val percentageOfCompromisedIncome: Float) {
             expenses: List<CategorizedExpense>,
             monthlyIncome: Double
         ): Float {
-            var sumOfExpenses = 0.0
-            expenses.forEach {
-                sumOfExpenses += it.expenseValue
-            }
+            val sumOfExpenses = expenses.sumOf { it.expenseValue }
             return (sumOfExpenses * 100 / monthlyIncome).toFloat()
         }
     }
 
-    sealed class Situation(percentageOfCompromisedIncome: Float) : FinancialHealth(percentageOfCompromisedIncome) {
+    sealed class Situation(val percentageOfCompromisedIncome: Float) : FinancialHealth() {
 
         class Safe(percentageOfCompromisedIncome: Float): Situation(percentageOfCompromisedIncome)
         class Caution(percentageOfCompromisedIncome: Float): Situation(percentageOfCompromisedIncome)
         class Dangerous(percentageOfCompromisedIncome: Float): Situation(percentageOfCompromisedIncome)
     }
 
-    object Empty : FinancialHealth(0f)
+    object NoDataAvailable : FinancialHealth()
 }

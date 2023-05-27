@@ -16,7 +16,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import br.com.tick.ui.R
+import br.com.tick.ui.core.TeiraNoAvailableDataState
 import br.com.tick.ui.screens.analysis.models.MostExpensiveCategory
 import br.com.tick.ui.screens.analysis.states.MostExpensiveCategoriesStates
 import br.com.tick.ui.screens.analysis.viewmodels.AnalysisScreenViewModel
@@ -37,18 +37,18 @@ fun MostExpensiveCategory(
     modifier: Modifier = Modifier,
     viewModel: AnalysisScreenViewModel = hiltViewModel()
 ) {
-    val mostExpensiveCategoriesStates by remember {
-        viewModel.mostExpenseCategoryList
-    }.collectAsState(initial = MostExpensiveCategoriesStates.Loading)
+    val mostExpensiveCategoriesStates by viewModel.mostExpenseCategoryList
+        .collectAsState(initial = MostExpensiveCategoriesStates.NoDataAvailable)
 
-    when (val state = mostExpensiveCategoriesStates) {
-        is MostExpensiveCategoriesStates.Full -> MostExpensiveCategoryBody(modifier, state)
-        MostExpensiveCategoriesStates.Loading -> {
-            Text(
-                modifier = Modifier.fillMaxSize(),
-                text = stringResource(id = R.string.generic_loading),
-                style = MaterialTheme.textStyle.h4
-            )
+    Column(modifier = modifier.fillMaxWidth()) {
+        Text(
+            text = stringResource(id = R.string.analysis_most_expensive_categories_title),
+            color = MaterialTheme.colorScheme.primary,
+            style = MaterialTheme.textStyle.h2
+        )
+        when (val state = mostExpensiveCategoriesStates) {
+            is MostExpensiveCategoriesStates.Full -> MostExpensiveCategoryBody(modifier, state)
+            MostExpensiveCategoriesStates.NoDataAvailable -> TeiraNoAvailableDataState(modifier)
         }
     }
 }
@@ -60,7 +60,7 @@ private fun MostExpensiveCategoryBody(
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
-            text = stringResource(id = R.string.analysis_most_expensive_category_title),
+            text = stringResource(id = R.string.analysis_most_expensive_categories_title),
             color = MaterialTheme.colorScheme.primary,
             style = MaterialTheme.textStyle.h2
         )
