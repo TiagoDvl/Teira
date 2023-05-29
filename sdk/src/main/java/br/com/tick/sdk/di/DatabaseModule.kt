@@ -27,7 +27,7 @@ object DatabaseModule {
         return Room.databaseBuilder(
             app,
             TeiraDatabase::class.java, "TeiraDb.db"
-        ).addMigrations(MIGRATION_5_6).build()
+        ).fallbackToDestructiveMigration().addMigrations(MIGRATION_5_6).build()
     }
 
     @Singleton

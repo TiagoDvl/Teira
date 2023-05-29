@@ -19,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -73,11 +74,15 @@ private fun MostExpensiveCategoryBody(
             modifier = modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            mostExpensiveCategoriesState.mostExpensiveCategories.forEach {
+            mostExpensiveCategoriesState.mostExpensiveCategories.forEach { mostExpensiveCategory ->
+                val categoryCardColor = mostExpensiveCategory.color?.let {
+                    Color(it)
+                } ?: MaterialTheme.colorScheme.secondary
+
                 CategoryCard(
-                    label = it.categoryName,
-                    subLabel = it.amount.toString(),
-                    color = it.color
+                    label = mostExpensiveCategory.categoryName,
+                    subLabel = mostExpensiveCategory.amount.toString(),
+                    color = categoryCardColor
                 )
             }
         }
@@ -118,7 +123,7 @@ fun CategoryCard(modifier: Modifier = Modifier, label: String, subLabel: String,
 fun MostExpensiveCategoryBodyPreview() {
     MostExpensiveCategoryBody(
         mostExpensiveCategoriesState = MostExpensiveCategoriesStates.Full(
-            listOf(MostExpensiveCategory("Test", Color.Red, 56.0))
+            listOf(MostExpensiveCategory("Test", Color.Red.toArgb(), 56.0))
         )
     )
 }

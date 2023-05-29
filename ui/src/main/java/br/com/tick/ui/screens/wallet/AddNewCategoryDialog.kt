@@ -37,7 +37,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import br.com.tick.sdk.database.entities.CategoryColor
 import br.com.tick.ui.R
 import br.com.tick.ui.extensions.conditional
 import br.com.tick.ui.theme.spacing
@@ -49,14 +48,14 @@ import com.godaddy.android.colorpicker.toColorInt
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun AddNewCategoryDialog(
-    onAddNewCategory: (String, CategoryColor) -> Unit,
-    colors: List<CategoryColor>,
+    colors: List<Int>,
     onNewColor: (Int) -> Unit,
+    onAddNewCategory: (String, Int?) -> Unit,
     dismiss: () -> Unit
 ) {
     var newCategoryName by remember { mutableStateOf(TextFieldValue()) }
     var showColorPicker by remember { mutableStateOf(false) }
-    var selectedCategoryColorIndex by remember { mutableStateOf(0) }
+    var selectedCategoryColorIndex by remember { mutableStateOf(-1) }
 
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = FocusRequester()
@@ -65,7 +64,6 @@ fun AddNewCategoryDialog(
     LaunchedEffect(key1 = Unit) {
         focusRequester.requestFocus()
     }
-
     AlertDialog(
         modifier = Modifier.focusRequester(focusRequester),
         onDismissRequest = { dismiss() },
@@ -73,7 +71,12 @@ fun AddNewCategoryDialog(
             Text(
                 modifier = Modifier.clickable {
                     if (newCategoryName.text.isNotEmpty()) {
-                        onAddNewCategory(newCategoryName.text, colors[selectedCategoryColorIndex])
+                        val color = if (selectedCategoryColorIndex >= 0 && selectedCategoryColorIndex < colors.size) {
+                            colors[selectedCategoryColorIndex]
+                        } else {
+                            null
+                        }
+                        onAddNewCategory(newCategoryName.text, color)
                         dismiss()
                     }
                 },
@@ -118,14 +121,20 @@ fun AddNewCategoryDialog(
                 ) {
                     colors.forEachIndexed { index, categoryColor ->
                         val borderColor = MaterialTheme.colorScheme.tertiary
+                        val isLastColor = index == colors.size - 1
+
+                        if (isLastColor) {
+                            selectedCategoryColorIndex = index
+                        }
+
                         val modifier = Modifier
                             .size(42.dp)
                             .clickable {
                                 selectedCategoryColorIndex = index
                             }
                             .clip(RoundedCornerShape(4.dp))
-                            .background(color = Color(categoryColor.color))
-                            .conditional(selectedCategoryColorIndex == index) {
+                            .background(color = Color(categoryColor))
+                            .conditional(selectedCategoryColorIndex == index || isLastColor) {
                                 border(
                                     width = 2.dp,
                                     color = borderColor,
