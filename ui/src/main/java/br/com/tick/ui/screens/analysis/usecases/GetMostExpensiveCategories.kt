@@ -1,6 +1,5 @@
 package br.com.tick.ui.screens.analysis.usecases
 
-import androidx.compose.ui.graphics.Color
 import br.com.tick.sdk.repositories.categorizedexpense.CategorizedExpenseRepository
 import br.com.tick.ui.screens.analysis.models.MostExpensiveCategory
 import kotlinx.coroutines.flow.Flow
@@ -22,7 +21,7 @@ class GetMostExpensiveCategories @Inject constructor(private val expenseReposito
                     mostExpensiveCategories.add(
                         MostExpensiveCategory(
                             categorizedExpense.category.name,
-                            Color(categorizedExpense.category.color),
+                            categorizedExpense.category.color,
                             categorizedExpense.expenseValue
                         )
                     )

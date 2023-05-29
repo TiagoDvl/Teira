@@ -86,10 +86,11 @@ fun QuickExpenseCard(
         }
 
         Box(modifier = Modifier.fillMaxSize()) {
+            val bottomBarColor = expenseCard.category.color?.let { Color(it) } ?: MaterialTheme.colorScheme.secondary
             Spacer(
                 modifier = Modifier
                     .height(6.dp)
-                    .background(Color(expenseCard.category.color))
+                    .background(bottomBarColor)
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
             )
