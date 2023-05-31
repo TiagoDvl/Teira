@@ -6,20 +6,24 @@ import br.com.tick.sdk.dispatchers.DispatcherProvider
 import br.com.tick.sdk.domain.AccountingDate
 import br.com.tick.sdk.domain.CurrencyFormat
 import br.com.tick.sdk.domain.NotificationPeriodicity
+import br.com.tick.sdk.repositories.expensecategory.ExpenseCategoryRepository
 import br.com.tick.sdk.repositories.user.UserRepository
 import br.com.tick.ui.screens.settings.states.MonthlyIncomeStates
 import br.com.tick.ui.screens.settings.states.SettingsAccountingDateStates
 import br.com.tick.ui.screens.settings.states.SettingsCurrencyFormatStates
 import br.com.tick.ui.screens.settings.states.SettingsNotificationPeriodicityStates
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SettingsScreenViewModel @Inject constructor(
     private val userRepository: UserRepository,
+    private val expenseCategoryRepository: ExpenseCategoryRepository,
     private val dispatcherProvider: DispatcherProvider
 ) : ViewModel() {
 
@@ -57,6 +61,15 @@ class SettingsScreenViewModel @Inject constructor(
         .map {
             it.currency
         }
+
+    val categories = expenseCategoryRepository
+        .getCategories()
+        .flowOn(dispatcherProvider.io())
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = listOf()
+        )
 
     fun saveMonthlyIncome(value: Double) {
         viewModelScope.launch(dispatcherProvider.io()) {
