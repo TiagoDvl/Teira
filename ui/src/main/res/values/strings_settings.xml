@@ -28,4 +28,8 @@
     <string name="settings_accounting_date_one">Day 1</string>
     <string name="settings_accounting_date_fifteen">Day 15</string>
     <string name="settings_accounting_date_twenty_five">Day 25</string>
+
+    <string name="settings_edit_category_title">Edit Category</string>
+    <string name="settings_edit_category_explanation">Choose a category you want to edit</string>
+    <string name="settings_edit_category_label">Category</string>
 </resources>
