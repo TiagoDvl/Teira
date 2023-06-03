@@ -30,11 +30,12 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import br.com.tick.sdk.domain.CurrencyFormat
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.tick.ui.R
 import br.com.tick.ui.core.TeiraDropdown
 import br.com.tick.ui.core.TeiraFilledTonalButton
 import br.com.tick.ui.extensions.getLabelResource
+import br.com.tick.ui.screens.shared.AddCategoryDialog
 import br.com.tick.ui.screens.wallet.viewmodels.QuickExpenseBarViewModel
 import br.com.tick.ui.theme.spacing
 import br.com.tick.ui.theme.textStyle
@@ -78,24 +79,15 @@ fun ExpandedQuickExpense(
     var isInvalidValue by remember { mutableStateOf(false) }
     var selectedCategoryId by remember { mutableStateOf(-1) }
     var localDateTime by remember { mutableStateOf(LocalDate.now()) }
-    val categoriesList by remember { quickExpenseBarViewModel.categories }.collectAsState(initial = listOf())
-    val currency by quickExpenseBarViewModel.currency.collectAsState(initial = CurrencyFormat.REAL)
+    var showAddNewCategoryDialog by remember { mutableStateOf(false) }
     val label = stringResource(id = R.string.wallet_quick_expense_select_category)
     var categoryLabel by remember { mutableStateOf(label) }
-    var showAddNewCategoryDialog by remember { mutableStateOf(false) }
-    val colors by quickExpenseBarViewModel.categoryColors.collectAsState(listOf())
+
+    val currency by quickExpenseBarViewModel.currency.collectAsStateWithLifecycle()
+    val categoriesList by quickExpenseBarViewModel.categories.collectAsStateWithLifecycle()
 
     if (showAddNewCategoryDialog) {
-        AddNewCategoryDialog(
-            colors = colors,
-            onNewColor = {
-                quickExpenseBarViewModel.addNewColor(it)
-            },
-            onAddNewCategory = { name, color ->
-                categoryLabel = name
-                quickExpenseBarViewModel.addCategory(name, color)
-            }
-        ) {
+        AddCategoryDialog(onAddNewCategory = { categoryLabel = it }) {
             showAddNewCategoryDialog = false
         }
     }

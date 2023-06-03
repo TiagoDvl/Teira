@@ -59,6 +59,7 @@ import br.com.tick.ui.screens.settings.states.SettingsCurrencyFormatStates
 import br.com.tick.ui.screens.settings.states.SettingsNotificationPeriodicityStates
 import br.com.tick.ui.screens.settings.states.getNotificationPeriodicityLabel
 import br.com.tick.ui.screens.settings.viewmodels.SettingsScreenViewModel
+import br.com.tick.ui.screens.shared.EditCategoryDialog
 import br.com.tick.ui.theme.spacing
 import br.com.tick.ui.theme.textStyle
 
@@ -447,7 +448,9 @@ fun EditCategorySetting(
     var showColorPickerDialog by remember { mutableStateOf(Pair(false, -1)) }
 
     if (showColorPickerDialog.first) {
-        
+        EditCategoryDialog(expenseCategory = categories[showColorPickerDialog.second]) {
+            showColorPickerDialog = false to -1
+        }
     }
 
     Column(
