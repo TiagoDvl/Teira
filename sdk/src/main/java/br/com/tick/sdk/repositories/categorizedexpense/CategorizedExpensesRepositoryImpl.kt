@@ -90,7 +90,7 @@ class CategorizedExpensesRepositoryImpl @Inject constructor(
         val categoryColorId = category.categoryColorId
 
         val color = if (categoryColorId != null) {
-            val categoryColor = categoryColorDao.getCategoriesColors().first().first { it.id == categoryColorId }
+            val categoryColor = categoryColorDao.getCategoryColors().first().first { it.id == categoryColorId }
             categoryColor.color
         } else {
             null

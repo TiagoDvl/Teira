@@ -13,5 +13,5 @@ class CategoryColorRepositoryImpl @Inject constructor(
         categoryColorDao.addCategoryColor(CategoryColor(color = color))
     }
 
-    override fun getColors(): Flow<List<CategoryColor>> = categoryColorDao.getCategoriesColors()
+    override fun getColors(): Flow<List<CategoryColor>> = categoryColorDao.getCategoryColors()
 }

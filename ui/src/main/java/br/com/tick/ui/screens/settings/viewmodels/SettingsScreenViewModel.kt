@@ -6,6 +6,7 @@ import br.com.tick.sdk.dispatchers.DispatcherProvider
 import br.com.tick.sdk.domain.AccountingDate
 import br.com.tick.sdk.domain.CurrencyFormat
 import br.com.tick.sdk.domain.NotificationPeriodicity
+import br.com.tick.sdk.repositories.categorycolor.CategoryColorRepository
 import br.com.tick.sdk.repositories.expensecategory.ExpenseCategoryRepository
 import br.com.tick.sdk.repositories.user.UserRepository
 import br.com.tick.ui.screens.settings.states.MonthlyIncomeStates
@@ -23,7 +24,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsScreenViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    private val expenseCategoryRepository: ExpenseCategoryRepository,
+    expenseCategoryRepository: ExpenseCategoryRepository,
+    categoryColorRepository: CategoryColorRepository,
     private val dispatcherProvider: DispatcherProvider
 ) : ViewModel() {
 
@@ -64,6 +66,15 @@ class SettingsScreenViewModel @Inject constructor(
 
     val categories = expenseCategoryRepository
         .getCategories()
+        .flowOn(dispatcherProvider.io())
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = listOf()
+        )
+
+    val colors = categoryColorRepository
+        .getColors()
         .flowOn(dispatcherProvider.io())
         .stateIn(
             scope = viewModelScope,
