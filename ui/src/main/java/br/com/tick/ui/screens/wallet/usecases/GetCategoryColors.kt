@@ -5,9 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class GetCategoryColors @Inject constructor(
-    private val categoryColorRepository: CategoryColorRepository
-) {
+class GetCategoryColors @Inject constructor(private val categoryColorRepository: CategoryColorRepository) {
 
     operator fun invoke(): Flow<List<Int>> {
         return categoryColorRepository.getColors().map { categoryColors -> categoryColors.map { it.color } }
