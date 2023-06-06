@@ -8,14 +8,13 @@ import br.com.tick.sdk.repositories.expensecategory.ExpenseCategoryRepository
 import br.com.tick.ui.screens.wallet.usecases.GetCategoryColors
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CategoryDialogViewModel @Inject constructor(
-    private val categoryRepository: ExpenseCategoryRepository,
+    private val expenseCategoryRepository: ExpenseCategoryRepository,
     private val categoryColorRepository: CategoryColorRepository,
     getCategoryColors: GetCategoryColors,
     private val dispatcherProvider: DispatcherProvider
@@ -23,23 +22,21 @@ class CategoryDialogViewModel @Inject constructor(
 
 
     val categoryColors = getCategoryColors()
-        .flowOn(dispatcherProvider.io())
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = listOf()
         )
 
-
     fun addCategory(categoryName: String, color: Int?) {
         viewModelScope.launch(dispatcherProvider.io()) {
-            categoryRepository.addExpenseCategory(categoryName, color)
+            expenseCategoryRepository.addExpenseCategory(categoryName, color)
         }
     }
 
     fun editExpenseCategory(expenseCategoryId: Int, updatedCategoryName: String, updatedCategoryColor: Int) {
         viewModelScope.launch(dispatcherProvider.io()) {
-            categoryRepository.editExpenseCategory(expenseCategoryId, updatedCategoryName, updatedCategoryColor)
+            expenseCategoryRepository.editExpenseCategory(expenseCategoryId, updatedCategoryName, updatedCategoryColor)
         }
     }
 
