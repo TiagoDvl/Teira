@@ -42,11 +42,9 @@ class CategorizedExpensesRepositoryImpl @Inject constructor(
         expenseDao.removeExpenseById(expenseId)
     }
 
-    override suspend fun getCategorizedExpenses(numberOfExpenses: Int): Flow<List<CategorizedExpense>> {
-        return expenseDao.getExpenses(numberOfExpenses).map { expenses ->
-            expenses.map { expense ->
-                categorize(expense)
-            }
+    override fun getCategorizedExpenses(): Flow<List<CategorizedExpense>> {
+        return expenseDao.getExpenses().map { expenses ->
+            expenses.map { categorize(it) }
         }
     }
 
