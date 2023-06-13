@@ -91,7 +91,7 @@ fun TeiraScaffold(
     TeiraNavigationDrawer(
         drawerState = drawerState,
         navBackStackEntry = navBackStackEntry,
-        navigateToRoute = { navigateTo(navHostController, it, shouldPopAll = false) }
+        navigateToRoute = { navigateTo(navHostController, it) }
     ) {
         Scaffold(
             topBar = {
@@ -147,7 +147,7 @@ fun TeiraScaffold(
                                 )
                             },
                             selected = currentRoute == navigationItem.route,
-                            onClick = { navigateTo(navHostController, navigationItem.route, shouldPopAll = true) }
+                            onClick = { navigateTo(navHostController, navigationItem.route) }
                         )
                     }
                 }
@@ -178,16 +178,14 @@ fun TeiraScaffold(
     }
 }
 
-private fun navigateTo(navHostController: NavHostController, route: String, shouldPopAll: Boolean = true) {
+private fun navigateTo(navHostController: NavHostController, route: String) {
     navHostController.navigate(route) {
         // Pop up to the start destination of the graph to
         // avoid building up a large stack of destinations
         // on the back stack as users select items
-        if (shouldPopAll) {
-            navHostController.graph.startDestinationRoute?.let { route ->
-                popUpTo(route) {
-                    saveState = true
-                }
+        navHostController.graph.startDestinationRoute?.let { route ->
+            popUpTo(route) {
+                saveState = true
             }
         }
         // Avoid multiple copies of the same destination when

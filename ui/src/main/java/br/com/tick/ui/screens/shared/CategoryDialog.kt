@@ -170,16 +170,15 @@ private fun CategoryDialog(
                     colors.forEachIndexed { index, categoryColor ->
                         val borderColor = MaterialTheme.colorScheme.tertiary
 
-                        if (initialCategory != null) {
-                            val isSelectedColorIndex = initialCategory.color == categoryColor
+                        if (selectedCategoryColorIndex == -1) {
+                            if (initialCategory != null) {
+                                val isSelectedColorIndex = initialCategory.color == categoryColor
 
-                            if (isSelectedColorIndex && selectedCategoryColorIndex == -1) {
-                                selectedCategoryColorIndex = index
+                                if (isSelectedColorIndex) selectedCategoryColorIndex = index
+                            } else {
+                                selectedCategoryColorIndex = colors.size - 1
                             }
-                        } else {
-                            selectedCategoryColorIndex = colors.size - 1
                         }
-
 
                         val modifier = Modifier
                             .size(42.dp)
