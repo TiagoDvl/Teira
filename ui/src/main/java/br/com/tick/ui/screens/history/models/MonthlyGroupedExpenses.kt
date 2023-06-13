@@ -13,5 +13,5 @@ data class Expense(
     val name: String,
     val value: Double,
     val categoryName: String,
-    val categoryColor: Int
+    val categoryColor: Int?
 )
