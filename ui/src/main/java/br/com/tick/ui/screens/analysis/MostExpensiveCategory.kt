@@ -42,11 +42,6 @@ fun MostExpensiveCategory(
         .collectAsState(initial = MostExpensiveCategoriesStates.NoDataAvailable)
 
     Column(modifier = modifier.fillMaxWidth()) {
-        Text(
-            text = stringResource(id = R.string.analysis_most_expensive_categories_title),
-            color = MaterialTheme.colorScheme.primary,
-            style = MaterialTheme.textStyle.h2
-        )
         when (val state = mostExpensiveCategoriesStates) {
             is MostExpensiveCategoriesStates.Full -> MostExpensiveCategoryBody(modifier, state)
             MostExpensiveCategoriesStates.NoDataAvailable -> TeiraNoAvailableDataState(modifier)
@@ -65,13 +60,8 @@ private fun MostExpensiveCategoryBody(
             color = MaterialTheme.colorScheme.primary,
             style = MaterialTheme.textStyle.h2
         )
-        Spacer(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(MaterialTheme.spacing.medium)
-        )
         Row(
-            modifier = modifier.fillMaxWidth(),
+            modifier = modifier.fillMaxWidth().padding(top = MaterialTheme.spacing.medium),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             mostExpensiveCategoriesState.mostExpensiveCategories.forEach { mostExpensiveCategory ->

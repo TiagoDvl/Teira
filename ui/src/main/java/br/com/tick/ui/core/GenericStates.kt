@@ -1,7 +1,7 @@
 package br.com.tick.ui.core
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -52,9 +52,10 @@ fun TeiraErrorState(
 
 @Composable
 fun TeiraEmptyState(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    @StringRes emptyStateLabel: Int = R.string.generic_empty_state
 ) {
-    DashedScreenState(modifier, R.drawable.ic_empty_list, R.string.generic_empty_state)
+    DashedScreenState(modifier, R.drawable.ic_empty_list, emptyStateLabel)
 }
 
 @Composable
