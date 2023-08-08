@@ -19,8 +19,8 @@ class FakeCategorizedExpenseRepository : CategorizedExpenseRepository {
         expenses.removeAt(expenseId)
     }
 
-    override suspend fun getCategorizedExpenses(numberOfExpenses: Int): Flow<List<CategorizedExpense>> {
-        return flowOf(expenses.take(numberOfExpenses))
+    override fun getCategorizedExpenses(): Flow<List<CategorizedExpense>> {
+        return flowOf(expenses)
     }
 
     override suspend fun getAccountingCycleExpenses(): Flow<List<CategorizedExpense>> {

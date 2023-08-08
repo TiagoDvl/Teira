@@ -1,17 +1,19 @@
 package br.com.tick.ui.viewmodels
 
 import app.cash.turbine.test
-import br.com.tick.sdk.dispatchers.FakeDispatcher
+import br.com.tick.utils.FakeDispatcher
 import br.com.tick.sdk.repositories.FakeCategorizedExpenseRepository
 import br.com.tick.sdk.repositories.FakeUserRepository
 import br.com.tick.sdk.repositories.categorizedexpense.CategorizedExpenseRepository
 import br.com.tick.sdk.repositories.user.UserRepository
 import br.com.tick.ui.screens.analysis.states.AnalysisGraphStates
+import br.com.tick.ui.screens.analysis.states.FinancialHealth
 import br.com.tick.ui.screens.analysis.usecases.CalculateFinancialHealthSituation
 import br.com.tick.ui.screens.analysis.usecases.FetchLastMonthExpenses
 import br.com.tick.ui.screens.analysis.usecases.GetMostExpensiveCategories
 import br.com.tick.ui.screens.analysis.viewmodels.AnalysisScreenViewModel
 import br.com.tick.utils.CoroutineTestRule
+import com.google.common.truth.Truth
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
@@ -56,12 +58,16 @@ class AnalysisScreenViewModelTest {
         expenseRepository.addExpense(0, "Name_1", 10.0, LocalDate.now())
 
         analysisScreenViewModel.financialHealthSituation.test {
-            assert(awaitItem().percentageOfCompromisedIncome > 0)
+            val financialHealthState = awaitItem()
+            Truth.assertThat(financialHealthState).isInstanceOf(FinancialHealth.Situation::class.java)
+            Truth.assertThat(
+                (financialHealthState as FinancialHealth.Situation).percentageOfCompromisedIncome
+            ).isGreaterThan(0)
         }
     }
 
     @Test
-    fun `When user has no expenses, financial health should be 0`() = runTest {
+    fun `When user has no expenses, financial health should have no available data`() = runTest {
         val expenseRepository = FakeCategorizedExpenseRepository()
         val userRepository: UserRepository = FakeUserRepository()
         val analysisScreenViewModel = getViewModel(
@@ -72,7 +78,8 @@ class AnalysisScreenViewModelTest {
         userRepository.setMonthlyIncome(1500.0)
 
         analysisScreenViewModel.financialHealthSituation.test {
-            assert(awaitItem().percentageOfCompromisedIncome == 0f)
+            val financialHealthState = awaitItem()
+            Truth.assertThat(financialHealthState).isInstanceOf(FinancialHealth.NoDataAvailable::class.java)
         }
     }
 

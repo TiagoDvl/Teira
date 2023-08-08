@@ -1,5 +1,6 @@
-package br.com.tick.sdk.dispatchers
+package br.com.tick.utils
 
+import br.com.tick.sdk.dispatchers.DispatcherProvider
 import kotlinx.coroutines.Dispatchers
 
 class FakeDispatcher: DispatcherProvider {

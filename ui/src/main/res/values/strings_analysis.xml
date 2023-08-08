@@ -2,12 +2,12 @@
 <resources>
 
     <string name="analysis_graph_title">Expense <b>x</b> Date</string>
-    <string name="analysis_most_expensive_category_title">Most expensive category</string>
+    <string name="analysis_most_expensive_categories_title">Most expensive categories</string>
     <string name="analysis_financial_health_title">Financial Health</string>
 
     <string name="analysis_financial_health_information">Your expenses is %1\$.2f percent of your income. %2\$s!</string>
 
     <string name="analysis_financial_health_safe">You are safe!</string>
     <string name="analysis_financial_health_caution">You need to be cautious.</string>
-    <string name="analysis_financial_health_dangerous">This is probably too much. Care.</string>
+    <string name="analysis_financial_health_dangerous">This is probably too much. Care</string>
 </resources>

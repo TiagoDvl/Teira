@@ -44,8 +44,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.tick.sdk.domain.AccountingDate
 import br.com.tick.sdk.domain.CurrencyFormat
+import br.com.tick.sdk.domain.ExpenseCategory
 import br.com.tick.sdk.domain.NotificationPeriodicity
 import br.com.tick.ui.R
 import br.com.tick.ui.core.TeiraDropdown
@@ -57,6 +59,7 @@ import br.com.tick.ui.screens.settings.states.SettingsCurrencyFormatStates
 import br.com.tick.ui.screens.settings.states.SettingsNotificationPeriodicityStates
 import br.com.tick.ui.screens.settings.states.getNotificationPeriodicityLabel
 import br.com.tick.ui.screens.settings.viewmodels.SettingsScreenViewModel
+import br.com.tick.ui.screens.shared.EditCategoryDialog
 import br.com.tick.ui.theme.spacing
 import br.com.tick.ui.theme.textStyle
 
@@ -80,6 +83,7 @@ fun SettingsScreen(
         val currencyFormat by viewModel.currencyFormat.collectAsState(initial = SettingsCurrencyFormatStates.Loading)
         val accountingDateState by viewModel.startDate.collectAsState(initial = SettingsAccountingDateStates.Loading)
         val currency by viewModel.currency.collectAsState(initial = CurrencyFormat.REAL)
+        val categories by viewModel.categories.collectAsStateWithLifecycle()
 
         monthlyIncome.also {
             if (it is MonthlyIncomeStates.Value) {
@@ -102,9 +106,10 @@ fun SettingsScreen(
         CurrencyFormatSetting(settingsCurrencyFormatStates = currencyFormat) {
             viewModel.setCurrencyFormat(it)
         }
-        StartDateSetting(settingsAccountingDateStates = accountingDateState) {
+        AccountingDateSetting(settingsAccountingDateStates = accountingDateState) {
             viewModel.setAccountingDate(it)
         }
+        EditCategorySetting(categories = categories)
     }
 }
 
@@ -186,7 +191,7 @@ fun MonthlyIncomeSetting(
             val formattedMonthlyIncome = monthlyIncomeState.value.twoDecimalPlacesFormat()
 
             val label = if (monthlyIncomeState.showMonthlyIncome) {
-                val incomeLabel =  stringResource(id = R.string.settings_current_income_label)
+                val incomeLabel = stringResource(id = R.string.settings_current_income_label)
                 "$incomeLabel $currencyLabel$formattedMonthlyIncome"
             } else {
                 stringResource(id = R.string.settings_current_income_hidden_label)
@@ -387,7 +392,7 @@ fun CurrencyFormatSetting(
 }
 
 @Composable
-fun StartDateSetting(
+fun AccountingDateSetting(
     modifier: Modifier = Modifier,
     settingsAccountingDateStates: SettingsAccountingDateStates,
     onStartDateSelected: (AccountingDate) -> Unit
@@ -429,6 +434,54 @@ fun StartDateSetting(
                 dropdownItemLabels = dropdownItemLabels,
                 onItemSelected = {
                     onStartDateSelected(AccountingDate.values()[it])
+                }
+            )
+        }
+    }
+}
+
+@Composable
+fun EditCategorySetting(
+    modifier: Modifier = Modifier,
+    categories: List<ExpenseCategory>
+) {
+    var showColorPickerDialog by remember { mutableStateOf(Pair(false, -1)) }
+
+    if (showColorPickerDialog.first) {
+        EditCategoryDialog(expenseCategory = categories[showColorPickerDialog.second]) {
+            showColorPickerDialog = false to -1
+        }
+    }
+
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(MaterialTheme.spacing.small)
+    ) {
+        Text(
+            text = stringResource(id = R.string.settings_edit_category_title),
+            color = MaterialTheme.colorScheme.primary,
+            style = MaterialTheme.textStyle.h2
+        )
+        Row(modifier = Modifier.padding(top = MaterialTheme.spacing.small)) {
+            Text(
+                modifier = Modifier
+                    .weight(0.6f)
+                    .align(Alignment.CenterVertically),
+                text = stringResource(id = R.string.settings_edit_category_explanation),
+                textAlign = TextAlign.Start,
+                style = MaterialTheme.textStyle.h4,
+                color = MaterialTheme.colorScheme.tertiary
+            )
+            TeiraDropdown(
+                modifier = Modifier
+                    .weight(0.4f)
+                    .padding(start = MaterialTheme.spacing.extraSmall),
+                label = stringResource(id = R.string.settings_edit_category_label),
+                borderColor = MaterialTheme.colorScheme.primary,
+                dropdownItemLabels = categories.map { it.name },
+                onItemSelected = {
+                    showColorPickerDialog = true to it
                 }
             )
         }

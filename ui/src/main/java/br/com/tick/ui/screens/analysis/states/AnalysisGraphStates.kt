@@ -6,10 +6,10 @@ sealed class AnalysisGraphStates {
 
     companion object {
         fun of(expenses: Map<LocalDate, Double>): AnalysisGraphStates {
-            return if (expenses.isEmpty()) Loading else AnalysisGraph(expenses)
+            return if (expenses.isEmpty()) NoDataAvailable else AnalysisGraph(expenses)
         }
     }
 
-    object Loading : AnalysisGraphStates()
+    object NoDataAvailable : AnalysisGraphStates()
     data class AnalysisGraph(val expenses: Map<LocalDate, Double>) : AnalysisGraphStates()
 }

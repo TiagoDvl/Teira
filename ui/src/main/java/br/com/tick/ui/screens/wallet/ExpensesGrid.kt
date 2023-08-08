@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,7 +18,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.hilt.navigation.compose.hiltViewModel
 import br.com.tick.ui.R
+import br.com.tick.ui.core.TeiraEmptyState
+import br.com.tick.ui.core.TeiraErrorState
 import br.com.tick.ui.core.QuickExpenseCard
+import br.com.tick.ui.core.TeiraLoadingState
 import br.com.tick.ui.extensions.getLabelResource
 import br.com.tick.ui.screens.wallet.models.AvailableBalance
 import br.com.tick.ui.screens.wallet.models.ExpenseCard
@@ -54,10 +56,9 @@ fun Body(
     expensesGridViewModel: ExpensesGridViewModel
 ) {
     when (expensesListState) {
-        ExpensesGridStates.Empty,
-        ExpensesGridStates.Error,
-        ExpensesGridStates.Loading -> LoadingGrid(modifier = modifier.fillMaxSize())
-
+        is ExpensesGridStates.Empty -> TeiraEmptyState(modifier = modifier.fillMaxSize())
+        is ExpensesGridStates.Error -> TeiraErrorState(modifier.fillMaxSize())
+        is ExpensesGridStates.Loading -> TeiraLoadingState(modifier = modifier.fillMaxSize())
         is ExpensesGridStates.Success -> BodyGrid(modifier, expensesListState.expensesList, expensesGridViewModel)
     }
 }
@@ -82,23 +83,6 @@ fun BodyGrid(
             ) { expenseId ->
                 expensesGridViewModel.removeCard(expenseId)
             }
-        }
-    }
-}
-
-@Composable
-fun LoadingGrid(
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier.padding(MaterialTheme.spacing.extraSmall),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            CircularProgressIndicator()
-            Spacer(modifier = Modifier.width(MaterialTheme.spacing.small))
-            Text(text = stringResource(id = R.string.generic_loading))
         }
     }
 }

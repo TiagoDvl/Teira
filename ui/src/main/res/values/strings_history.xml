@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="history_compare_past_months_title">Compare your past months expenses</string>
+    <string name="history_past_months_expenses_empty_list">Select the months above to see them listed in here</string>
+
+</resources>

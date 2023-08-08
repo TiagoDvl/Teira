@@ -8,20 +8,18 @@ sealed class MostExpensiveCategoriesStates {
         fun of(mostExpensiveCategories: List<MostExpensiveCategory>): MostExpensiveCategoriesStates {
 
             return if (mostExpensiveCategories.isEmpty()) {
-                Loading
+                NoDataAvailable
             } else {
                 Full(
                     mostExpensiveCategories
-                        .sortedByDescending {
-                            it.amount
-                        }
+                        .sortedByDescending { it.amount }
                         .take(5)
                 )
             }
         }
     }
 
-    object Loading : MostExpensiveCategoriesStates()
+    object NoDataAvailable : MostExpensiveCategoriesStates()
 
     data class Full(val mostExpensiveCategories: List<MostExpensiveCategory>) : MostExpensiveCategoriesStates()
 }
