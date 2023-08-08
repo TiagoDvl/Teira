@@ -42,11 +42,9 @@ class CategorizedExpensesRepositoryImpl @Inject constructor(
         expenseDao.removeExpenseById(expenseId)
     }
 
-    override suspend fun getCategorizedExpenses(numberOfExpenses: Int): Flow<List<CategorizedExpense>> {
-        return expenseDao.getExpenses(numberOfExpenses).map { expenses ->
-            expenses.map { expense ->
-                categorize(expense)
-            }
+    override fun getCategorizedExpenses(): Flow<List<CategorizedExpense>> {
+        return expenseDao.getExpenses().map { expenses ->
+            expenses.map { categorize(it) }
         }
     }
 
@@ -87,8 +85,16 @@ class CategorizedExpensesRepositoryImpl @Inject constructor(
 
     private suspend fun categorize(expense: Expense): CategorizedExpense {
         val category = categoryDao.getCategoryById(expense.categoryId)
-        val color = categoryColorDao.getCategoriesColors().first().first { it.id == category.categoryColorId }
-        val expenseCategory = ExpenseCategory(category.categoryId, category.name, color.color)
+        val categoryColorId = category.categoryColorId
+
+        val color = if (categoryColorId != null) {
+            val categoryColor = categoryColorDao.getCategoryColors().first().first { it.id == categoryColorId }
+            categoryColor.color
+        } else {
+            null
+        }
+
+        val expenseCategory = ExpenseCategory(category.categoryId, category.name, color)
 
         with(expense) {
             return CategorizedExpense(

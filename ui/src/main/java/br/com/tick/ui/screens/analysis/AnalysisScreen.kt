@@ -19,9 +19,7 @@ fun AnalysisScreen() {
             .verticalScroll(rememberScrollState())
             .padding(MaterialTheme.spacing.small)
     ) {
-        ExpenseDateRelation(
-            modifier = Modifier.fillMaxWidth()
-        )
+        ExpenseDateRelation(modifier = Modifier.fillMaxWidth())
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {

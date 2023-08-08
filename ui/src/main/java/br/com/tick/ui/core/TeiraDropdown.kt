@@ -34,7 +34,7 @@ fun TeiraDropdown(
     borderColor: Color,
     dropdownItemLabels: List<String>,
     onItemSelected: (Int) -> Unit,
-    dropdownItemColors: List<Int>? = null,
+    dropdownItemColors: List<Int?>? = null,
     lastItemLabel: String? = null,
     onLastItemSelected: (() -> Unit)? = null
 ) {
@@ -61,6 +61,10 @@ fun TeiraDropdown(
             onDismissRequest = { isDropdownExpanded = false }
         ) {
             dropdownItemLabels.forEachIndexed { index, label ->
+                val dropdownItemColor = dropdownItemColors?.get(index)?.let {
+                    Color(it)
+                } ?: MaterialTheme.colorScheme.secondary
+
                 DropdownMenuItem(
                     modifier = Modifier.background(MaterialTheme.colorScheme.onSecondary),
                     colors = MenuDefaults.itemColors(
@@ -75,7 +79,7 @@ fun TeiraDropdown(
                         Text(
                             text = label,
                             style = MaterialTheme.textStyle.h3extra,
-                            color = Color(dropdownItemColors?.get(index) ?: 0)
+                            color = dropdownItemColor
                         )
                     }
                 )

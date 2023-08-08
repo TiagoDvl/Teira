@@ -3,10 +3,8 @@ package br.com.tick.ui.screens.analysis
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
@@ -16,16 +14,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import br.com.tick.ui.R
+import br.com.tick.ui.core.TeiraNoAvailableDataState
 import br.com.tick.ui.screens.analysis.models.MostExpensiveCategory
 import br.com.tick.ui.screens.analysis.states.MostExpensiveCategoriesStates
 import br.com.tick.ui.screens.analysis.viewmodels.AnalysisScreenViewModel
@@ -37,18 +36,13 @@ fun MostExpensiveCategory(
     modifier: Modifier = Modifier,
     viewModel: AnalysisScreenViewModel = hiltViewModel()
 ) {
-    val mostExpensiveCategoriesStates by remember {
-        viewModel.mostExpenseCategoryList
-    }.collectAsState(initial = MostExpensiveCategoriesStates.Loading)
+    val mostExpensiveCategoriesStates by viewModel.mostExpenseCategoryList
+        .collectAsState(initial = MostExpensiveCategoriesStates.NoDataAvailable)
 
-    when (val state = mostExpensiveCategoriesStates) {
-        is MostExpensiveCategoriesStates.Full -> MostExpensiveCategoryBody(modifier, state)
-        MostExpensiveCategoriesStates.Loading -> {
-            Text(
-                modifier = Modifier.fillMaxSize(),
-                text = stringResource(id = R.string.generic_loading),
-                style = MaterialTheme.textStyle.h4
-            )
+    Column(modifier = modifier.fillMaxWidth()) {
+        when (val state = mostExpensiveCategoriesStates) {
+            is MostExpensiveCategoriesStates.Full -> MostExpensiveCategoryBody(modifier, state)
+            MostExpensiveCategoriesStates.NoDataAvailable -> TeiraNoAvailableDataState(modifier)
         }
     }
 }
@@ -60,24 +54,23 @@ private fun MostExpensiveCategoryBody(
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
-            text = stringResource(id = R.string.analysis_most_expensive_category_title),
+            text = stringResource(id = R.string.analysis_most_expensive_categories_title),
             color = MaterialTheme.colorScheme.primary,
             style = MaterialTheme.textStyle.h2
         )
-        Spacer(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(MaterialTheme.spacing.medium)
-        )
         Row(
-            modifier = modifier.fillMaxWidth(),
+            modifier = modifier.fillMaxWidth().padding(top = MaterialTheme.spacing.medium),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            mostExpensiveCategoriesState.mostExpensiveCategories.forEach {
+            mostExpensiveCategoriesState.mostExpensiveCategories.forEach { mostExpensiveCategory ->
+                val categoryCardColor = mostExpensiveCategory.color?.let {
+                    Color(it)
+                } ?: MaterialTheme.colorScheme.secondary
+
                 CategoryCard(
-                    label = it.categoryName,
-                    subLabel = it.amount.toString(),
-                    color = it.color
+                    label = mostExpensiveCategory.categoryName,
+                    subLabel = mostExpensiveCategory.amount.toString(),
+                    color = categoryCardColor
                 )
             }
         }
@@ -118,7 +111,7 @@ fun CategoryCard(modifier: Modifier = Modifier, label: String, subLabel: String,
 fun MostExpensiveCategoryBodyPreview() {
     MostExpensiveCategoryBody(
         mostExpensiveCategoriesState = MostExpensiveCategoriesStates.Full(
-            listOf(MostExpensiveCategory("Test", Color.Red, 56.0))
+            listOf(MostExpensiveCategory("Test", Color.Red.toArgb(), 56.0))
         )
     )
 }

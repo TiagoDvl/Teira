@@ -14,12 +14,8 @@ class CreateExpensesCards @Inject constructor(
     private val userRepository: UserRepository
 ) {
 
-    companion object {
-        private const val CENTER_GRID_EXPENSES = 30
-    }
-
     suspend operator fun invoke(): Flow<ExpensesGridStates> {
-        val expensesList = categorizedExpenseRepository.getCategorizedExpenses(CENTER_GRID_EXPENSES)
+        val expensesList = categorizedExpenseRepository.getAccountingCycleExpenses()
 
         return expensesList.combine(userRepository.getUser()) { _expensesList, _user ->
 

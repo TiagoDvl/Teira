@@ -1,7 +1,7 @@
 package br.com.tick.ui.viewmodels
 
 import app.cash.turbine.test
-import br.com.tick.sdk.dispatchers.FakeDispatcher
+import br.com.tick.utils.FakeDispatcher
 import br.com.tick.sdk.repositories.FakeCategorizedExpenseRepository
 import br.com.tick.sdk.repositories.FakeUserRepository
 import br.com.tick.sdk.repositories.categorizedexpense.CategorizedExpenseRepository
