@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
 fun TeiraNavigationDrawer(
     drawerState: DrawerState,
     navBackStackEntry: NavBackStackEntry?,
-    navigateToRoute: (String) -> Unit,
+    navigateToRoute: (NavigationItem) -> Unit,
     content: @Composable () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -49,7 +49,7 @@ fun TeiraNavigationDrawer(
                     coroutineScope = coroutineScope,
                     isCurrentRoute = currentRoute == NavigationItem.Settings.route
                 ) {
-                    navigateToRoute(NavigationItem.Settings.route)
+                    navigateToRoute(NavigationItem.Settings)
                 }
                 TeiraNavigationDrawerItem(
                     drawerState = drawerState,
@@ -58,7 +58,7 @@ fun TeiraNavigationDrawer(
                     coroutineScope = coroutineScope,
                     isCurrentRoute = currentRoute == NavigationItem.Wallet.route
                 ) {
-                    navigateToRoute(NavigationItem.Wallet.route)
+                    navigateToRoute(NavigationItem.Wallet)
                 }
                 TeiraNavigationDrawerItem(
                     drawerState = drawerState,
@@ -67,7 +67,7 @@ fun TeiraNavigationDrawer(
                     coroutineScope = coroutineScope,
                     isCurrentRoute = currentRoute == NavigationItem.Analysis.route
                 ) {
-                    navigateToRoute(NavigationItem.Analysis.route)
+                    navigateToRoute(NavigationItem.Analysis)
                 }
                 TeiraNavigationDrawerItem(
                     drawerState = drawerState,
@@ -76,7 +76,7 @@ fun TeiraNavigationDrawer(
                     coroutineScope = coroutineScope,
                     isCurrentRoute = currentRoute == NavigationItem.History.route
                 ) {
-                    navigateToRoute(NavigationItem.History.route)
+                    navigateToRoute(NavigationItem.History)
                 }
                 Spacer(modifier = Modifier.height(MaterialTheme.spacing.extraLarge))
                 TeiraNavigationDrawerItem(

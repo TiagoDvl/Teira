@@ -3,6 +3,11 @@ package br.com.tick.ui
 import android.Manifest
 import android.content.Context
 import android.os.Build
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.EaseInOut
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DrawerValue
@@ -31,10 +36,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import br.com.tick.sdk.domain.NotificationPeriodicity
@@ -42,6 +49,7 @@ import br.com.tick.sdk.extensions.getPeriodicityTimeDiff
 import br.com.tick.ui.core.TeiraNavigationDrawer
 import br.com.tick.ui.extensions.collectAsEffect
 import br.com.tick.ui.screens.analysis.AnalysisScreen
+import br.com.tick.ui.screens.expense.ExpenseScreen
 import br.com.tick.ui.screens.history.HistoryScreen
 import br.com.tick.ui.screens.settings.SettingsScreen
 import br.com.tick.ui.screens.wallet.WalletScreen
@@ -53,17 +61,11 @@ import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun TeiraScaffold(
     viewModel: TeiraScaffoldViewModel = hiltViewModel()
 ) {
-    val navHostController = rememberNavController()
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val coroutineScope = rememberCoroutineScope()
-    val navBackStackEntry by navHostController.currentBackStackEntryAsState()
-
-    val currentRoute = navBackStackEntry?.destination?.route
     val context = LocalContext.current
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -87,6 +89,48 @@ fun TeiraScaffold(
         setDelayedPeriodicWorker(context, WorkManager.getInstance(context), it)
     }
 
+    val navHostController = rememberNavController()
+
+    NavHost(
+        navController = navHostController,
+        startDestination = "home"
+    ) {
+        composable("home") {
+            HomeScreen(navHostController)
+        }
+        composable(
+            route = NavigationItem.EditExpense.route + "{expenseId}",
+            arguments = listOf(navArgument("expenseId") { type = NavType.IntType }),
+            enterTransition = {
+                slideIntoContainer(
+                    animationSpec = tween(400, easing = EaseInOut),
+                    towards = AnimatedContentTransitionScope.SlideDirection.Up
+                )
+            },
+            popExitTransition = {
+                slideOutOfContainer(
+                    animationSpec = tween(400, easing = EaseInOut),
+                    towards = AnimatedContentTransitionScope.SlideDirection.Down
+                )
+            }
+        ) { navBackStackEntry ->
+            navBackStackEntry.arguments?.getInt("expenseId")?.let {
+                ExpenseScreen(navHostController = navHostController, expenseId = it)
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun HomeScreen(parentNavController: NavHostController) {
+    val navHostController = rememberNavController()
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val coroutineScope = rememberCoroutineScope()
+    val navBackStackEntry by navHostController.currentBackStackEntryAsState()
+
+    val currentRoute = navBackStackEntry?.destination?.route
+    val context = LocalContext.current
 
     TeiraNavigationDrawer(
         drawerState = drawerState,
@@ -147,7 +191,7 @@ fun TeiraScaffold(
                                 )
                             },
                             selected = currentRoute == navigationItem.route,
-                            onClick = { navigateTo(navHostController, navigationItem.route) }
+                            onClick = { navigateTo(navHostController, navigationItem) }
                         )
                     }
                 }
@@ -156,7 +200,9 @@ fun TeiraScaffold(
             Box(modifier = Modifier.padding(innerPadding)) {
                 NavHost(
                     navController = navHostController,
-                    startDestination = NavigationItem.Wallet.route
+                    startDestination = NavigationItem.Wallet.route,
+                    enterTransition = { EnterTransition.None },
+                    exitTransition = { ExitTransition.None }
                 ) {
                     composable(NavigationItem.Settings.route) {
                         SettingsScreen {
@@ -164,7 +210,7 @@ fun TeiraScaffold(
                         }
                     }
                     composable(NavigationItem.Wallet.route) {
-                        WalletScreen()
+                        WalletScreen(parentNavController)
                     }
                     composable(NavigationItem.Analysis.route) {
                         AnalysisScreen()
@@ -178,8 +224,8 @@ fun TeiraScaffold(
     }
 }
 
-private fun navigateTo(navHostController: NavHostController, route: String) {
-    navHostController.navigate(route) {
+private fun navigateTo(navHostController: NavHostController, navigationItem: NavigationItem) {
+    navHostController.navigate(navigationItem.route) {
         // Pop up to the start destination of the graph to
         // avoid building up a large stack of destinations
         // on the back stack as users select items

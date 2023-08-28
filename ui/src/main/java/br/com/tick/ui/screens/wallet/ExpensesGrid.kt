@@ -17,6 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import br.com.tick.ui.NavigationItem
 import br.com.tick.ui.R
 import br.com.tick.ui.core.TeiraEmptyState
 import br.com.tick.ui.core.TeiraErrorState
@@ -33,6 +35,7 @@ import br.com.tick.ui.theme.textStyle
 @Composable
 fun ExpensesGrid(
     modifier: Modifier = Modifier,
+    navHostController: NavHostController,
     expensesGridViewModel: ExpensesGridViewModel = hiltViewModel()
 ) {
     val expensesListState by remember {
@@ -46,12 +49,13 @@ fun ExpensesGrid(
     AvailableBalanceIndicator(availableBalance) {
         expensesGridViewModel.toggleAvailableBalanceVisibility()
     }
-    Body(modifier, expensesListState, expensesGridViewModel)
+    Body(modifier, navHostController, expensesListState, expensesGridViewModel)
 }
 
 @Composable
 fun Body(
     modifier: Modifier,
+    navHostController: NavHostController,
     expensesListState: ExpensesGridStates,
     expensesGridViewModel: ExpensesGridViewModel
 ) {
@@ -59,7 +63,12 @@ fun Body(
         is ExpensesGridStates.Empty -> TeiraEmptyState(modifier = modifier.fillMaxSize())
         is ExpensesGridStates.Error -> TeiraErrorState(modifier.fillMaxSize())
         is ExpensesGridStates.Loading -> TeiraLoadingState(modifier = modifier.fillMaxSize())
-        is ExpensesGridStates.Success -> BodyGrid(modifier, expensesListState.expensesList, expensesGridViewModel)
+        is ExpensesGridStates.Success -> BodyGrid(
+            modifier = modifier,
+            expensesList = expensesListState.expensesList,
+            editExpense = { navHostController.navigate(NavigationItem.EditExpense.route + "$it") },
+            removeExpense = { expensesGridViewModel.removeCard(it) }
+        )
     }
 }
 
@@ -68,7 +77,8 @@ fun Body(
 fun BodyGrid(
     modifier: Modifier = Modifier,
     expensesList: List<ExpenseCard>,
-    expensesGridViewModel: ExpensesGridViewModel
+    editExpense: (expenseId: Int) -> Unit,
+    removeExpense: (expenseId: Int) -> Unit
 ) {
     LazyVerticalGrid(
         modifier = modifier.padding(),
@@ -79,10 +89,10 @@ fun BodyGrid(
                 expenseCard = expense,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(MaterialTheme.spacing.extraSmall)
-            ) { expenseId ->
-                expensesGridViewModel.removeCard(expenseId)
-            }
+                    .padding(MaterialTheme.spacing.extraSmall),
+                onQuickActionEdit = editExpense,
+                onQuickActionDelete = removeExpense
+            )
         }
     }
 }

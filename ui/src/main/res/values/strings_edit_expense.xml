@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="expense_title">Edit your expense</string>
+    <string name="expense_empty_category_title">Select Category</string>
+    <string name="expense_add_title">Expense</string>
+    <string name="expense_save">Save</string>
+    <string name="expense_add">Add</string>
+    <string name="expense_expense_expense">Expense</string>
+    <string name="expense_expense_cost">Cost</string>
+    <string name="expense_expense_category">Category</string>
+    <string name="expense_expense_date">Expense Date</string>
+    <string name="expense_expense_label">Label</string>
+    <string name="expense_add_category">Add new Category</string>
+    <string name="expense_select_date">Select a date</string>
+    <string name="expense_location">Location</string>
+    <string name="expense_picture">Picture</string>
+    <string name="expense_delete_title">Delete expense</string>
+    <string name="expense_delete_description">This will erase this expense and it will not be visible again</string>
+</resources>

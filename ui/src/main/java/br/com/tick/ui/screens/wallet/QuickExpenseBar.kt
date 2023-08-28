@@ -1,23 +1,17 @@
 package br.com.tick.ui.screens.wallet
 
-import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDefaults
-import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,11 +21,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.tick.ui.R
+import br.com.tick.ui.core.TeiraDatePicker
 import br.com.tick.ui.core.TeiraDropdown
 import br.com.tick.ui.core.TeiraFilledTonalButton
 import br.com.tick.ui.extensions.getLabelResource
@@ -39,11 +33,7 @@ import br.com.tick.ui.screens.shared.AddCategoryDialog
 import br.com.tick.ui.screens.wallet.viewmodels.QuickExpenseBarViewModel
 import br.com.tick.ui.theme.spacing
 import br.com.tick.ui.theme.textStyle
-import java.time.Instant
 import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -54,7 +44,8 @@ fun QuickExpense(
 
     AnimatedContent(
         modifier = modifier.fillMaxWidth(),
-        targetState = isExpanded
+        targetState = isExpanded,
+        label = ""
     ) { targetState ->
         if (targetState) {
             ExpandedQuickExpense {
@@ -77,7 +68,7 @@ fun ExpandedQuickExpense(
     var expenseName by remember { mutableStateOf(TextFieldValue()) }
     var expenseValue by remember { mutableStateOf(TextFieldValue()) }
     var isInvalidValue by remember { mutableStateOf(false) }
-    var selectedCategoryId by remember { mutableStateOf(-1) }
+    var selectedCategoryId by remember { mutableIntStateOf(-1) }
     var localDateTime by remember { mutableStateOf(LocalDate.now()) }
     var showAddNewCategoryDialog by remember { mutableStateOf(false) }
     val label = stringResource(id = R.string.wallet_quick_expense_select_category)
@@ -199,7 +190,11 @@ fun ExpandedQuickExpense(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.Bottom
         ) {
-            QuickExpenseDate(modifier = Modifier.weight(0.5f)) {
+            TeiraDatePicker(
+                modifier = Modifier.weight(0.5f),
+                color = MaterialTheme.colorScheme.onPrimary,
+                localDate = localDateTime
+            ) {
                 localDateTime = it
             }
             TeiraFilledTonalButton(
@@ -209,6 +204,7 @@ fun ExpandedQuickExpense(
                     if (!isInvalidValue) {
                         closeExpandedDialog()
                         val selectedCategory = categoriesList.find { it.expenseCategoryId == selectedCategoryId }
+                        Log.d("Tiago", "Name: $expenseName | Value: $expenseValue | selectedCategory: $selectedCategory | localDateTime: $localDateTime")
                         if (expenseName.text.isNotEmpty() &&
                             (expenseValue.text.isNotEmpty() && expenseValue.text.toDouble() != 0.0) &&
                             selectedCategory != null
@@ -245,75 +241,6 @@ fun ClosedQuickExpense(onClick: () -> Unit) {
         TeiraFilledTonalButton(
             text = stringResource(id = R.string.wallet_add_new_category_button_text),
             onClick = onClick
-        )
-    }
-}
-
-@SuppressLint("UnrememberedMutableState")
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun QuickExpenseDate(
-    modifier: Modifier = Modifier,
-    onDateChanged: (LocalDate) -> Unit
-) {
-    var openDialog by remember { mutableStateOf(false) }
-    var localDate by remember { mutableStateOf(LocalDate.now()) }
-
-    if (openDialog) {
-        val datePickerState = rememberDatePickerState()
-        val confirmEnabled = derivedStateOf { datePickerState.selectedDateMillis != null }
-
-        DatePickerDialog(
-            onDismissRequest = { openDialog = false },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        openDialog = false
-                        localDate = LocalDateTime.ofInstant(
-                            Instant.ofEpochMilli(datePickerState.selectedDateMillis!!),
-                            ZoneId.systemDefault()
-                        ).toLocalDate()
-                        onDateChanged(localDate)
-                    },
-                    enabled = confirmEnabled.value
-                ) {
-                    Text(text = stringResource(id = R.string.generic_ok))
-                }
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = { openDialog = false }
-                ) {
-                    Text(text = stringResource(id = R.string.generic_cancel))
-                }
-            }
-        ) {
-            DatePicker(
-                state = datePickerState,
-                colors = DatePickerDefaults.colors(
-                    titleContentColor = MaterialTheme.colorScheme.tertiary,
-                    headlineContentColor = MaterialTheme.colorScheme.tertiary,
-                    weekdayContentColor = MaterialTheme.colorScheme.primary,
-                    dayContentColor = MaterialTheme.colorScheme.primary,
-                    disabledDayContentColor = MaterialTheme.colorScheme.secondary,
-                    selectedDayContentColor = MaterialTheme.colorScheme.tertiary,
-                    selectedDayContainerColor = MaterialTheme.colorScheme.onSecondary,
-                )
-            )
-        }
-    }
-
-    Box(
-        modifier = modifier
-    ) {
-        Text(
-            modifier = Modifier
-                .align(Alignment.BottomStart)
-                .clickable { openDialog = true },
-            text = localDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
-            textDecoration = TextDecoration.Underline,
-            style = MaterialTheme.textStyle.h4,
-            color = MaterialTheme.colorScheme.onPrimary
         )
     }
 }

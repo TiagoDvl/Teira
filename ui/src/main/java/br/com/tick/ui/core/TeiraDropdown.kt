@@ -38,7 +38,6 @@ fun TeiraDropdown(
     lastItemLabel: String? = null,
     onLastItemSelected: (() -> Unit)? = null
 ) {
-
     var isDropdownExpanded by remember { mutableStateOf(false) }
     var selectedItemName by remember { mutableStateOf("") }
 
@@ -53,7 +52,7 @@ fun TeiraDropdown(
             text = label,
             modifier = Modifier.align(Alignment.Center),
             color = borderColor,
-            style = MaterialTheme.textStyle.h3
+            style = MaterialTheme.textStyle.h3small
         )
         DropdownMenu(
             modifier = Modifier.background(MaterialTheme.colorScheme.onSecondary),
@@ -78,7 +77,7 @@ fun TeiraDropdown(
                     text = {
                         Text(
                             text = label,
-                            style = MaterialTheme.textStyle.h3extra,
+                            style = MaterialTheme.textStyle.h3small,
                             color = dropdownItemColor
                         )
                     }

@@ -13,4 +13,6 @@ interface CategorizedExpenseRepository {
     fun getCategorizedExpenses(): Flow<List<CategorizedExpense>>
 
     suspend fun getAccountingCycleExpenses(): Flow<List<CategorizedExpense>>
+
+    fun getCategorizedExpense(expenseId: Int): Flow<CategorizedExpense>
 }

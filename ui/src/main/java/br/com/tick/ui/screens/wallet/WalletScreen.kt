@@ -8,10 +8,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import br.com.tick.ui.theme.spacing
 
 @Composable
-fun WalletScreen() {
+fun WalletScreen(navHostController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -20,6 +22,6 @@ fun WalletScreen() {
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small)
     ) {
         QuickExpense()
-        ExpensesGrid()
+        ExpensesGrid(navHostController = navHostController)
     }
 }

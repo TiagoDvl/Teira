@@ -20,4 +20,7 @@ interface ExpenseDao {
 
     @Query("SELECT * FROM expense")
     fun getAllExpenses(): Flow<List<Expense>>
+
+    @Query("SELECT * FROM expense WHERE expense_id = :expenseId")
+    fun getExpense(expenseId: Int): Flow<Expense>
 }

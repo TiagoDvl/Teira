@@ -83,6 +83,10 @@ class CategorizedExpensesRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getCategorizedExpense(expenseId: Int): Flow<CategorizedExpense> {
+        return expenseDao.getExpense(expenseId).map { categorize(it) }
+    }
+
     private suspend fun categorize(expense: Expense): CategorizedExpense {
         val category = categoryDao.getCategoryById(expense.categoryId)
         val categoryColorId = category.categoryColorId

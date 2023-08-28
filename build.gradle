@@ -22,7 +22,7 @@ buildscript {
         hiltNavigationComposeVersion = '1.0.0'
         roomVersion = '2.4.3'
         dataStoreVersion = '1.0.0'
-        navigationVersion = '2.5.3'
+        navigationVersion = '2.7.0'
         vicoVersion = '1.6.4'
         composeColorPicker = '0.7.0'
         firebaseCrashlytics = '18.3.5'
