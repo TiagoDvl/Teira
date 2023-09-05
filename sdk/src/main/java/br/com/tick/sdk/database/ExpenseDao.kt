@@ -3,6 +3,7 @@ package br.com.tick.sdk.database
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import br.com.tick.sdk.database.entities.Expense
 import kotlinx.coroutines.flow.Flow
 
@@ -11,6 +12,9 @@ interface ExpenseDao {
 
     @Insert
     suspend fun addExpense(expense: Expense)
+
+    @Update
+    suspend fun updateExpense(expense: Expense)
 
     @Query("DELETE FROM expense WHERE expense_id = :expenseId")
     suspend fun removeExpenseById(expenseId: Int)

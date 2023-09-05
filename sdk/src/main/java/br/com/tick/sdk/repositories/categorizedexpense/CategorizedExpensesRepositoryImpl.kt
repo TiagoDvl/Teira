@@ -38,6 +38,24 @@ class CategorizedExpensesRepositoryImpl @Inject constructor(
         )
     }
 
+    override suspend fun updateExpense(
+        expenseId: Int,
+        categoryId: Int,
+        name: String,
+        value: Double,
+        expenseDate: LocalDate
+    ) {
+        expenseDao.updateExpense(
+            Expense(
+                expenseId = expenseId,
+                categoryId = categoryId,
+                name = name,
+                value = value,
+                date = expenseDate
+            )
+        )
+    }
+
     override suspend fun removeExpense(expenseId: Int) {
         expenseDao.removeExpenseById(expenseId)
     }
@@ -106,7 +124,9 @@ class CategorizedExpensesRepositoryImpl @Inject constructor(
                 name,
                 value,
                 date,
-                expenseCategory
+                expenseCategory,
+                null,
+                null
             )
         }
     }

@@ -48,6 +48,7 @@ dependencies {
     kapt "com.google.dagger:hilt-compiler:$hiltVersion"
 
     implementation "androidx.datastore:datastore-preferences:$dataStoreVersion"
+    implementation "com.google.android.gms:play-services-maps:$playServicesMap"
 
     // Unit Tests dependencies
     testImplementation "junit:junit:$jUnitVersion"

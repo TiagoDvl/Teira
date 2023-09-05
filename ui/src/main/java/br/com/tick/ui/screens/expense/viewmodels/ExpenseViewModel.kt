@@ -13,12 +13,14 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
 class ExpenseViewModel @Inject constructor(
     categoryRepository: ExpenseCategoryRepository,
     private val categorizedExpenseRepository: CategorizedExpenseRepository,
+    private val expenseRepository: CategorizedExpenseRepository,
     private val dispatcherProvider: DispatcherProvider
 ) : ViewModel() {
 
@@ -41,5 +43,29 @@ class ExpenseViewModel @Inject constructor(
                     _categorizedExpense.emit(it)
                 }
         }
+    }
+
+    fun handleExpense(expenseId: Int? = null, categoryId: Int, name: String, value: Double, expenseDate: LocalDate) {
+        viewModelScope.launch(dispatcherProvider.io()) {
+            if (expenseId != null) {
+                saveExpense(expenseId, categoryId, name, value, expenseDate)
+            } else {
+                addExpense(categoryId, name, value, expenseDate)
+            }
+        }
+    }
+
+    private suspend fun addExpense(categoryId: Int, name: String, value: Double, expenseDate: LocalDate) {
+        expenseRepository.addExpense(categoryId, name, value, expenseDate)
+    }
+
+    private suspend fun saveExpense(
+        expenseId: Int,
+        categoryId: Int,
+        name: String,
+        value: Double,
+        expenseDate: LocalDate
+    ) {
+        expenseRepository.updateExpense(expenseId, categoryId, name, value, expenseDate)
     }
 }

@@ -63,6 +63,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime-compose:$lifecycleRuntimeCompose"
 
     implementation "androidx.compose.ui:ui:$composeUi"
+    implementation "androidx.compose.ui:ui-util:$composeUiUtil"
     implementation "androidx.compose.foundation:foundation:$composeFoundation"
     implementation "androidx.compose.material3:material3:$composeMaterial3Version"
 
@@ -72,6 +73,9 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:$composeVersion"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$composeVersion"
     implementation "com.google.accompanist:accompanist-permissions:$acompanistPermissionVersion"
+    implementation "com.google.maps.android:maps-compose:$googleMaps"
+    implementation "com.google.android.gms:play-services-maps:$playServicesMap"
+    implementation "com.google.android.gms:play-services-location:$playServicesLocation"
 
     implementation "com.google.dagger:hilt-android:$hiltVersion"
     implementation "androidx.hilt:hilt-navigation-compose:$hiltNavigationComposeVersion"
@@ -83,6 +87,7 @@ dependencies {
 
     implementation "com.patrykandpatrick.vico:compose-m3:$vicoVersion"
     implementation "com.godaddy.android.colorpicker:compose-color-picker:$composeColorPicker"
+    implementation "io.coil-kt:coil-compose:$coilVersion"
 
     // Unit Tests dependencies
     testImplementation "junit:junit:$jUnitVersion"

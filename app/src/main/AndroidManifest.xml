@@ -13,6 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Teira"
         tools:targetApi="31">
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -31,6 +32,21 @@
             android:authorities="${applicationId}.androidx-startup"
             tools:node="remove">
         </provider>
-    </application>
 
+        <!-- Holds information to google maps api -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
+
+        <!-- Setup for holding reference and creating files for photos -->
+        <provider
+            android:name="br.com.tick.utils.ComposeFileProvider"
+            android:authorities="br.com.tick.teira.fileprovider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
+    </application>
 </manifest>

@@ -8,6 +8,8 @@ interface CategorizedExpenseRepository {
 
     suspend fun addExpense(categoryId: Int, name: String, value: Double, expenseDate: LocalDate)
 
+    suspend fun updateExpense(expenseId: Int, categoryId: Int, name: String, value: Double, expenseDate: LocalDate)
+
     suspend fun removeExpense(expenseId: Int)
 
     fun getCategorizedExpenses(): Flow<List<CategorizedExpense>>
