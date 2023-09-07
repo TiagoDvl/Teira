@@ -29,15 +29,21 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,6 +57,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import br.com.tick.sdk.domain.CategorizedExpense
 import br.com.tick.sdk.domain.ExpenseCategory
 import br.com.tick.ui.R
 import br.com.tick.ui.core.TeiraDatePicker
@@ -75,6 +82,7 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -89,115 +97,120 @@ fun ExpenseScreen(
     val expense by expenseViewModel.categorizedExpense.collectAsStateWithLifecycle()
     val categoriesList by expenseViewModel.categories.collectAsStateWithLifecycle()
 
-    var expenseName by remember { mutableStateOf(TextFieldValue()) }
-    var expenseValue by remember { mutableStateOf(TextFieldValue()) }
-    var expenseCategoryLabel by remember { mutableStateOf("") }
+    var expenseName by remember { mutableStateOf("") }
+    var expenseValue by remember { mutableDoubleStateOf(0.0) }
+    var isInvalidValue by remember { mutableStateOf(false) }
     var expenseCategoryId by remember { mutableIntStateOf(-1) }
     var expenseDate by remember { mutableStateOf(LocalDate.now()) }
     var location by remember { mutableStateOf<LatLng?>(null) }
     var photoUri by remember { mutableStateOf<Uri?>(null) }
 
-    expense?.let {
-        expenseName = TextFieldValue(it.name)
-        expenseValue = TextFieldValue(it.expenseValue.toString())
-        expenseCategoryLabel = it.category.name
-        expenseCategoryId = it.category.expenseCategoryId
-        expenseDate = it.date
-        location = it.location
-        photoUri = it.picture
-    }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(key1 = Unit) {
         expenseId?.let { expenseViewModel.getExpense(it) }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-    ) {
-        TopAppBar(
-            navigationIcon = {
-                IconButton(onClick = { navHostController.navigateUp() }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_close),
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        containerColor = MaterialTheme.colorScheme.background,
+        topBar = {
+            TopAppBar(
+                navigationIcon = {
+                    IconButton(onClick = { navHostController.navigateUp() }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_close),
+                            contentDescription = null
+                        )
+                    }
+                },
+                title = {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceAround
+                    ) {
+                        if (expense != null) {
+                            Text(
+                                text = stringResource(id = R.string.expense_title),
+                                style = MaterialTheme.textStyle.h2
+                            )
+                            Text(
+                                modifier = Modifier.clickable {
+                                    if (isInvalidValue) {
+                                        scope.launch {
+                                            snackbarHostState
+                                                .showSnackbar(
+                                                    message = "Algo de errado aconteceu. Mudanças não foram salvas.",
+                                                    duration = SnackbarDuration.Short
+                                                )
+                                        }
+                                    } else {
+                                        expenseViewModel.handleExpense(
+                                            expenseId = expenseId,
+                                            categoryId = expenseCategoryId,
+                                            name = expenseName,
+                                            value = expenseValue,
+                                            expenseDate = expenseDate
+                                        )
+                                    }
+                                },
+                                text = stringResource(id = R.string.expense_save),
+                                style = MaterialTheme.textStyle.h2bold
+                            )
+                        } else {
+                            Text(
+                                text = stringResource(id = R.string.expense_add_title),
+                                style = MaterialTheme.textStyle.h2
+                            )
+                            Text(
+                                modifier = Modifier.clickable {
+                                    expenseViewModel.handleExpense(
+                                        expenseId = expenseId,
+                                        categoryId = expenseCategoryId,
+                                        name = expenseName,
+                                        value = expenseValue,
+                                        expenseDate = expenseDate
+                                    )
+                                },
+                                text = stringResource(id = R.string.expense_add),
+                                style = MaterialTheme.textStyle.h2bold
+                            )
+                        }
+
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.secondary,
+                    titleContentColor = MaterialTheme.colorScheme.onSecondary,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onSecondary
+                )
+            )
+        },
+        floatingActionButton = {
+            if (expenseId != null) {
+                FloatingActionButton(
+                    containerColor = MaterialTheme.colorScheme.tertiary,
+                    onClick = { showDeletionConfirmationDialog = true }
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_delete),
                         contentDescription = null
                     )
                 }
-            },
-            title = {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceAround
-                ) {
-                    if (expense != null) {
-                        Text(
-                            text = stringResource(id = R.string.expense_title),
-                            style = MaterialTheme.textStyle.h2
-                        )
-                        Text(
-                            modifier = Modifier.clickable {
-                                expenseViewModel.handleExpense(
-                                    expenseId = expenseId,
-                                    categoryId = expenseCategoryId,
-                                    name = expenseName.text,
-                                    value = expenseValue.text.toDouble(),
-                                    expenseDate = expenseDate
-                                )
-                            },
-                            text = stringResource(id = R.string.expense_save),
-                            style = MaterialTheme.textStyle.h2bold
-                        )
-                    } else {
-                        Text(
-                            text = stringResource(id = R.string.expense_add_title),
-                            style = MaterialTheme.textStyle.h2
-                        )
-                        Text(
-                            modifier = Modifier.clickable {
-                                expenseViewModel.handleExpense(
-                                    expenseId = expenseId,
-                                    categoryId = expenseCategoryId,
-                                    name = expenseName.text,
-                                    value = expenseValue.text.toDouble(),
-                                    expenseDate = expenseDate
-                                )
-                            },
-                            text = stringResource(id = R.string.expense_add),
-                            style = MaterialTheme.textStyle.h2bold
-                        )
-                    }
-
-                }
-            },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.secondary,
-                titleContentColor = MaterialTheme.colorScheme.onSecondary,
-                navigationIconContentColor = MaterialTheme.colorScheme.onSecondary
-            )
-        )
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(MaterialTheme.spacing.small)
-        ) {
+            }
+        },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+    ) { paddingValues ->
+        Column(modifier = Modifier.fillMaxWidth().padding(paddingValues)) {
             BaseExpense(
+                expense = expense,
                 categoriesList = categoriesList,
-                expenseName = expenseName.text,
-                onExpenseNameChanged = { expenseName = TextFieldValue(it) },
-                expenseValue = expenseValue.text,
-                onExpenseValueChanged = { expenseValue = TextFieldValue(it.toString()) },
-                expenseCategoryLabel = expenseCategoryLabel,
-                expenseCategoryId = expenseCategoryId,
-                onExpenseCategoryChanged = {
-                    expenseCategoryId = it.first
-                    expenseCategoryLabel = it.second
-                },
-                expenseDate = expenseDate,
-                onExpenseDateChanged = {
-                    expenseDate = it
-                }
+                onExpenseNameChanged = { expenseName = it },
+                onExpenseValueChanged = { expenseValue = it },
+                onExpenseCategoryChanged = { expenseCategoryId = it },
+                onExpenseDateChanged = { expenseDate = it },
+                onInvalidValue = { isInvalidValue = it }
             )
             Divider(
                 modifier = Modifier
@@ -249,48 +262,39 @@ fun ExpenseScreen(
                 iconContentColor = MaterialTheme.colorScheme.onTertiary
             )
         }
-
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(MaterialTheme.spacing.extraLarge)
-        ) {
-            if (expenseId != null) {
-                FloatingActionButton(
-                    modifier = Modifier.align(Alignment.BottomEnd),
-                    containerColor = MaterialTheme.colorScheme.tertiary,
-                    onClick = { showDeletionConfirmationDialog = true }
-                ) {
-                    Image(painter = painterResource(id = R.drawable.ic_delete), contentDescription = null)
-                }
-            }
-        }
     }
 }
 
 @Composable
 fun BaseExpense(
+    expense: CategorizedExpense?,
     categoriesList: List<ExpenseCategory>,
-    expenseName: String?,
-    expenseValue: String?,
-    expenseCategoryLabel: String?,
-    expenseCategoryId: Int?,
-    expenseDate: LocalDate?,
     onExpenseNameChanged: (String) -> Unit,
     onExpenseValueChanged: (Double) -> Unit,
-    onExpenseCategoryChanged: (Pair<Int, String>) -> Unit,
-    onExpenseDateChanged: (LocalDate) -> Unit
+    onExpenseCategoryChanged: (Int) -> Unit,
+    onExpenseDateChanged: (LocalDate) -> Unit,
+    onInvalidValue: (Boolean) -> Unit
 ) {
-    var name by remember { mutableStateOf(TextFieldValue(expenseName.orEmpty())) }
-    var value by remember { mutableStateOf(TextFieldValue(expenseValue.orEmpty())) }
+    var name by remember { mutableStateOf(TextFieldValue()) }
+    var value by remember { mutableStateOf(TextFieldValue()) }
     var isInvalidValue by remember { mutableStateOf(false) }
 
-    var selectedCategoryId by remember { mutableIntStateOf(expenseCategoryId ?: -1) }
+    var selectedCategoryId by remember { mutableIntStateOf(-1) }
     val initialCategoryLabel = stringResource(id = R.string.expense_empty_category_title)
-    var categoryLabel by remember { mutableStateOf(expenseCategoryLabel ?: initialCategoryLabel) }
+    var categoryLabel by remember { mutableStateOf(initialCategoryLabel) }
     var showAddNewCategoryDialog by remember { mutableStateOf(false) }
 
-    var date by remember { mutableStateOf(expenseDate ?: LocalDate.now()) }
+    var date by remember { mutableStateOf(LocalDate.now()) }
+
+    LaunchedEffect(key1 = expense) {
+        expense?.let {
+            name = TextFieldValue(it.name)
+            value = TextFieldValue(it.expenseValue.toString())
+            categoryLabel = it.category.name
+            selectedCategoryId = it.category.expenseCategoryId
+            date = it.date
+        }
+    }
 
     val expenseTextFieldColors = OutlinedTextFieldDefaults.colors(
         unfocusedContainerColor = Color.Transparent,
@@ -340,14 +344,20 @@ fun BaseExpense(
                     style = MaterialTheme.textStyle.h2small
                 )
             },
+            isError = isInvalidValue,
+            prefix = {
+                Text(text = "€")
+            },
             onValueChange = {
                 value = it
                 isInvalidValue = false
                 try {
                     val parsedValue = value.text.toDouble()
+                    onInvalidValue(false)
                     onExpenseValueChanged(parsedValue)
                 } catch (exception: NumberFormatException) {
                     isInvalidValue = true
+                    onInvalidValue(true)
                 }
             },
             colors = expenseTextFieldColors
@@ -360,9 +370,8 @@ fun BaseExpense(
                 dropdownItemLabels = categoriesList.map { it.name },
                 dropdownItemColors = categoriesList.map { it.color },
                 onItemSelected = {
-                    selectedCategoryId = categoriesList[it].expenseCategoryId
                     categoryLabel = categoriesList[it].name
-                    onExpenseCategoryChanged(Pair(selectedCategoryId, categoryLabel))
+                    onExpenseCategoryChanged(categoriesList[it].expenseCategoryId)
                 },
                 lastItemLabel = stringResource(id = R.string.expense_add_category),
                 onLastItemSelected = {
@@ -414,10 +423,16 @@ fun ExpenseLocation(
 
     val context = LocalContext.current
     if (expenseLocation != null) {
-        ExpenseLocationMap(location = expenseLocation, onExpenseLocationChanged = onExpenseLocationChanged)
+        ExpenseLocationMap(
+            location = expenseLocation,
+            onExpenseLocationChanged = onExpenseLocationChanged
+        )
     } else {
         val locationPermissionState = rememberMultiplePermissionsState(
-            listOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
+            listOf(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
         )
         val hasPermissions = locationPermissionState.permissions.all { it.status.isGranted }
         val emptyStateText = if (hasPermissions) {
@@ -429,7 +444,10 @@ fun ExpenseLocation(
 
         if (capturedLocation != null) {
             capturedLocation?.let {
-                ExpenseLocationMap(location = it, onExpenseLocationChanged = onExpenseLocationChanged)
+                ExpenseLocationMap(
+                    location = it,
+                    onExpenseLocationChanged = onExpenseLocationChanged
+                )
             }
         } else {
             TeiraEmptyState(
@@ -443,7 +461,8 @@ fun ExpenseLocation(
                                 LocationServices.getFusedLocationProviderClient(context)
                             locationProvider.lastLocation.addOnCompleteListener {
                                 val lastKnownLocation = it.result
-                                capturedLocation = LatLng(lastKnownLocation.latitude, lastKnownLocation.longitude)
+                                capturedLocation =
+                                    LatLng(lastKnownLocation.latitude, lastKnownLocation.longitude)
                             }
                         } else {
                             locationPermissionState.launchMultiplePermissionRequest()
