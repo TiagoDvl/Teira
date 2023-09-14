@@ -5,7 +5,9 @@
     <string name="expense_add_title">Expense</string>
 
     <string name="expense_save">Save</string>
+    <string name="expense_save_invalid_message">Can\'t save expense with invalid data</string>
     <string name="expense_add">Add</string>
+    <string name="expense_add_invalid_message">Can\'t add expense with invalid data</string>
 
     <string name="expense_expense_expense">Expense</string>
     <string name="expense_expense_cost">Cost</string>

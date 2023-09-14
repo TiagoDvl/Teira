@@ -1,11 +1,13 @@
 package br.com.tick.ui.screens.expense.viewmodels
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.tick.sdk.dispatchers.DispatcherProvider
 import br.com.tick.sdk.domain.CategorizedExpense
 import br.com.tick.sdk.repositories.categorizedexpense.CategorizedExpenseRepository
 import br.com.tick.sdk.repositories.expensecategory.ExpenseCategoryRepository
+import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -20,7 +22,6 @@ import javax.inject.Inject
 class ExpenseViewModel @Inject constructor(
     categoryRepository: ExpenseCategoryRepository,
     private val categorizedExpenseRepository: CategorizedExpenseRepository,
-    private val expenseRepository: CategorizedExpenseRepository,
     private val dispatcherProvider: DispatcherProvider
 ) : ViewModel() {
 
@@ -45,18 +46,22 @@ class ExpenseViewModel @Inject constructor(
         }
     }
 
-    fun handleExpense(expenseId: Int? = null, categoryId: Int, name: String, value: Double, expenseDate: LocalDate) {
+    fun handleExpense(
+        expenseId: Int? = null,
+        categoryId: Int,
+        name: String,
+        value: Double,
+        expenseDate: LocalDate,
+        location: LatLng?,
+        photoUri: Uri?
+    ) {
         viewModelScope.launch(dispatcherProvider.io()) {
             if (expenseId != null) {
-                saveExpense(expenseId, categoryId, name, value, expenseDate)
+                saveExpense(expenseId, categoryId, name, value, expenseDate, location, photoUri)
             } else {
-                addExpense(categoryId, name, value, expenseDate)
+                addExpense(categoryId, name, value, expenseDate, location, photoUri)
             }
         }
-    }
-
-    private suspend fun addExpense(categoryId: Int, name: String, value: Double, expenseDate: LocalDate) {
-        expenseRepository.addExpense(categoryId, name, value, expenseDate)
     }
 
     private suspend fun saveExpense(
@@ -64,8 +69,27 @@ class ExpenseViewModel @Inject constructor(
         categoryId: Int,
         name: String,
         value: Double,
-        expenseDate: LocalDate
+        expenseDate: LocalDate,
+        location: LatLng?,
+        photoUri: Uri?
     ) {
-        expenseRepository.updateExpense(expenseId, categoryId, name, value, expenseDate)
+        categorizedExpenseRepository.updateExpense(expenseId, categoryId, name, value, expenseDate, location, photoUri)
+    }
+
+    private suspend fun addExpense(
+        categoryId: Int,
+        name: String,
+        value: Double,
+        expenseDate: LocalDate,
+        location: LatLng?,
+        photoUri: Uri?
+    ) {
+        categorizedExpenseRepository.addExpense(categoryId, name, value, expenseDate, location, photoUri)
+    }
+
+    fun removeExpense(expenseId: Int) {
+        viewModelScope.launch(dispatcherProvider.io()) {
+            categorizedExpenseRepository.removeExpense(expenseId)
+        }
     }
 }

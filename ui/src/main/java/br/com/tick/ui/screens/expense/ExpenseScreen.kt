@@ -5,10 +5,10 @@ package br.com.tick.ui.screens.expense
 import android.Manifest
 import android.annotation.SuppressLint
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -63,6 +63,7 @@ import br.com.tick.ui.R
 import br.com.tick.ui.core.TeiraDatePicker
 import br.com.tick.ui.core.TeiraDropdown
 import br.com.tick.ui.core.TeiraEmptyState
+import br.com.tick.ui.extensions.getLabelResource
 import br.com.tick.ui.screens.expense.viewmodels.ExpenseViewModel
 import br.com.tick.ui.screens.shared.AddCategoryDialog
 import br.com.tick.ui.theme.spacing
@@ -106,7 +107,9 @@ fun ExpenseScreen(
     var photoUri by remember { mutableStateOf<Uri?>(null) }
 
     val snackbarHostState = remember { SnackbarHostState() }
+
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     LaunchedEffect(key1 = Unit) {
         expenseId?.let { expenseViewModel.getExpense(it) }
@@ -141,7 +144,7 @@ fun ExpenseScreen(
                                         scope.launch {
                                             snackbarHostState
                                                 .showSnackbar(
-                                                    message = "Algo de errado aconteceu. Mudanças não foram salvas.",
+                                                    message = context.getString(R.string.expense_save_invalid_message),
                                                     duration = SnackbarDuration.Short
                                                 )
                                         }
@@ -151,8 +154,11 @@ fun ExpenseScreen(
                                             categoryId = expenseCategoryId,
                                             name = expenseName,
                                             value = expenseValue,
-                                            expenseDate = expenseDate
+                                            expenseDate = expenseDate,
+                                            location = location,
+                                            photoUri = photoUri
                                         )
+                                        navHostController.navigateUp()
                                     }
                                 },
                                 text = stringResource(id = R.string.expense_save),
@@ -165,13 +171,26 @@ fun ExpenseScreen(
                             )
                             Text(
                                 modifier = Modifier.clickable {
-                                    expenseViewModel.handleExpense(
-                                        expenseId = expenseId,
-                                        categoryId = expenseCategoryId,
-                                        name = expenseName,
-                                        value = expenseValue,
-                                        expenseDate = expenseDate
-                                    )
+                                    if (isInvalidValue) {
+                                        scope.launch {
+                                            snackbarHostState
+                                                .showSnackbar(
+                                                    message = context.getString(R.string.expense_add_invalid_message),
+                                                    duration = SnackbarDuration.Short
+                                                )
+                                        }
+                                    } else {
+                                        expenseViewModel.handleExpense(
+                                            expenseId = expenseId,
+                                            categoryId = expenseCategoryId,
+                                            name = expenseName,
+                                            value = expenseValue,
+                                            expenseDate = expenseDate,
+                                            location = location,
+                                            photoUri = photoUri
+                                        )
+                                        navHostController.navigateUp()
+                                    }
                                 },
                                 text = stringResource(id = R.string.expense_add),
                                 style = MaterialTheme.textStyle.h2bold
@@ -202,25 +221,32 @@ fun ExpenseScreen(
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { paddingValues ->
-        Column(modifier = Modifier.fillMaxWidth().padding(paddingValues)) {
-            BaseExpense(
-                expense = expense,
-                categoriesList = categoriesList,
-                onExpenseNameChanged = { expenseName = it },
-                onExpenseValueChanged = { expenseValue = it },
-                onExpenseCategoryChanged = { expenseCategoryId = it },
-                onExpenseDateChanged = { expenseDate = it },
-                onInvalidValue = { isInvalidValue = it }
-            )
-            Divider(
+        expense?.let {
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = MaterialTheme.spacing.medium),
-                thickness = 1.dp,
-                color = MaterialTheme.colorScheme.secondary
-            )
-            ExpenseLocation(expense?.location) { location = it }
-            ExpensePhoto(expense?.name, expense?.picture) { photoUri = it }
+                    .padding(paddingValues)
+                    .padding(MaterialTheme.spacing.extraSmall)
+            ) {
+                BaseExpense(
+                    expense = expense,
+                    categoriesList = categoriesList,
+                    onExpenseNameChanged = { expenseName = it },
+                    onExpenseValueChanged = { expenseValue = it },
+                    onExpenseCategoryChanged = { expenseCategoryId = it },
+                    onExpenseDateChanged = { expenseDate = it },
+                    onInvalidValue = { isInvalidValue = it }
+                )
+                Divider(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = MaterialTheme.spacing.medium),
+                    thickness = 1.dp,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+                ExpenseLocation(it.location) { location = it }
+                ExpensePhoto(it.name, it.picture) { photoUri = it }
+            }
         }
 
 
@@ -236,8 +262,9 @@ fun ExpenseScreen(
                 confirmButton = {
                     Text(
                         modifier = Modifier.clickable {
-                            // Remove the expense
                             showDeletionConfirmationDialog = false
+                            navHostController.navigateUp()
+                            expenseId?.let { expenseViewModel.removeExpense(it) }
                         },
                         text = stringResource(id = R.string.generic_ok).uppercase()
                     )
@@ -289,10 +316,17 @@ fun BaseExpense(
     LaunchedEffect(key1 = expense) {
         expense?.let {
             name = TextFieldValue(it.name)
+            onExpenseNameChanged(it.name)
+
             value = TextFieldValue(it.expenseValue.toString())
+            onExpenseValueChanged(it.expenseValue)
+
             categoryLabel = it.category.name
             selectedCategoryId = it.category.expenseCategoryId
+            onExpenseCategoryChanged(it.category.expenseCategoryId)
+
             date = it.date
+            onExpenseDateChanged(it.date)
         }
     }
 
@@ -346,7 +380,9 @@ fun BaseExpense(
             },
             isError = isInvalidValue,
             prefix = {
-                Text(text = "€")
+                if (expense != null) {
+                    Text(text = stringResource(id = expense.currencyFormat.getLabelResource()))
+                }
             },
             onValueChange = {
                 value = it
@@ -399,8 +435,14 @@ fun BaseExpense(
 @Composable
 fun ExpenseLocation(
     expenseLocation: LatLng?,
-    onExpenseLocationChanged: (LatLng) -> Unit
+    onExpenseLocationChanged: (LatLng?) -> Unit
 ) {
+    var expenseLocationState by remember { mutableStateOf(expenseLocation) }
+
+    expenseLocation?.let {
+        onExpenseLocationChanged(expenseLocationState)
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -422,61 +464,79 @@ fun ExpenseLocation(
     }
 
     val context = LocalContext.current
-    if (expenseLocation != null) {
-        ExpenseLocationMap(
-            location = expenseLocation,
-            onExpenseLocationChanged = onExpenseLocationChanged
-        )
-    } else {
-        val locationPermissionState = rememberMultiplePermissionsState(
-            listOf(
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION
+    when (val location = expenseLocationState) {
+        null -> {
+            val locationPermissionState = rememberMultiplePermissionsState(
+                listOf(
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
             )
-        )
-        val hasPermissions = locationPermissionState.permissions.all { it.status.isGranted }
-        val emptyStateText = if (hasPermissions) {
-            R.string.expense_location_empty_state_label
-        } else {
-            R.string.expense_location_empty_no_permission_state_label
-        }
-        var capturedLocation by remember { mutableStateOf<LatLng?>(null) }
+            val hasPermissions = locationPermissionState.permissions.all { it.status.isGranted }
+            val emptyStateText = if (hasPermissions) {
+                R.string.expense_location_empty_state_label
+            } else {
+                R.string.expense_location_empty_no_permission_state_label
+            }
 
-        if (capturedLocation != null) {
-            capturedLocation?.let {
-                ExpenseLocationMap(
-                    location = it,
-                    onExpenseLocationChanged = onExpenseLocationChanged
+            var capturedLocation by remember { mutableStateOf<LatLng?>(null) }
+
+            if (capturedLocation != null) {
+                capturedLocation?.let {
+                    ExpenseLocationMap(
+                        location = it,
+                        onDelete = {
+                            expenseLocationState = null
+                            capturedLocation = null
+                            onExpenseLocationChanged(null)
+                        },
+                        onExpenseLocationChanged = onExpenseLocationChanged
+                    )
+                }
+            } else {
+                TeiraEmptyState(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(160.dp)
+                        .padding(top = MaterialTheme.spacing.small)
+                        .clickable {
+                            if (hasPermissions) {
+                                val locationProvider: FusedLocationProviderClient =
+                                    LocationServices.getFusedLocationProviderClient(context)
+                                locationProvider.lastLocation.addOnCompleteListener {
+                                    val lastKnownLocation = it.result
+                                    val location = LatLng(lastKnownLocation.latitude, lastKnownLocation.longitude)
+                                    capturedLocation = location
+                                    onExpenseLocationChanged(location)
+                                }
+                            } else {
+                                locationPermissionState.launchMultiplePermissionRequest()
+                            }
+                        },
+                    emptyStateLabel = emptyStateText
                 )
             }
-        } else {
-            TeiraEmptyState(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(160.dp)
-                    .padding(top = MaterialTheme.spacing.small)
-                    .clickable {
-                        if (hasPermissions) {
-                            val locationProvider: FusedLocationProviderClient =
-                                LocationServices.getFusedLocationProviderClient(context)
-                            locationProvider.lastLocation.addOnCompleteListener {
-                                val lastKnownLocation = it.result
-                                capturedLocation =
-                                    LatLng(lastKnownLocation.latitude, lastKnownLocation.longitude)
-                            }
-                        } else {
-                            locationPermissionState.launchMultiplePermissionRequest()
-                        }
-                    },
-                emptyStateLabel = emptyStateText
+        }
+
+        else -> {
+            ExpenseLocationMap(
+                location = location,
+                onDelete = {
+                    Log.d("Tiago", "OnDelete Clicked")
+                    expenseLocationState = null
+                    onExpenseLocationChanged(null)
+                },
+                onExpenseLocationChanged = onExpenseLocationChanged
             )
         }
+
     }
 }
 
 @Composable
 fun ExpenseLocationMap(
     location: LatLng,
+    onDelete: () -> Unit,
     onExpenseLocationChanged: (LatLng) -> Unit
 ) {
     val minZoomPossible = 12f
@@ -501,41 +561,59 @@ fun ExpenseLocationMap(
             .height(160.dp)
             .padding(top = MaterialTheme.spacing.small)
     ) {
-        GoogleMap(
-            modifier = Modifier.fillMaxSize(),
-            properties = mapProperties,
-            uiSettings = mapUiSettings,
-            cameraPositionState = cameraPositionState,
-            onMapClick = {
-                markerState.position = it
-                onExpenseLocationChanged(it)
+        Box {
+            GoogleMap(
+                modifier = Modifier.fillMaxSize(),
+                properties = mapProperties,
+                uiSettings = mapUiSettings,
+                cameraPositionState = cameraPositionState,
+                onMapClick = {
+                    markerState.position = it
+                    onExpenseLocationChanged(it)
+                }
+            ) {
+                Marker(
+                    state = markerState,
+                    title = stringResource(id = R.string.expense_expense_expense)
+                )
             }
-        ) {
-            Marker(
-                state = markerState,
-                title = stringResource(id = R.string.expense_expense_expense)
-            )
+            IconButton(
+                modifier = Modifier.align(Alignment.TopEnd),
+                onClick = { onDelete() }
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_delete),
+                    contentDescription = "",
+                    tint = Color.White
+                )
+            }
         }
     }
 }
 
 @Composable
 fun ExpensePhoto(
-    expenseName: String?,
+    expenseName: String,
     expensePhotoUri: Uri?,
-    onPictureSelected: (Uri) -> Unit
+    onPictureSelected: (Uri?) -> Unit
 ) {
-    var hasImage by remember { mutableStateOf(expensePhotoUri != null) }
-    var imageUri by remember { mutableStateOf(expensePhotoUri) }
 
     val context = LocalContext.current
+
+    var imageUri by remember { mutableStateOf(expensePhotoUri) }
+    var hasImage by remember { mutableStateOf(expensePhotoUri != null) }
+
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture(),
         onResult = { success ->
             hasImage = success
-            imageUri?.let(onPictureSelected)
+            onPictureSelected(imageUri)
         }
     )
+
+    expensePhotoUri?.let {
+        onPictureSelected(imageUri)
+    }
 
     Row(
         modifier = Modifier
@@ -557,20 +635,35 @@ fun ExpensePhoto(
         )
     }
 
-    if (imageUri != null) {
+    if (hasImage) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(160.dp)
                 .padding(top = MaterialTheme.spacing.small)
         ) {
-            if (hasImage && imageUri != null) {
-                AsyncImage(
-                    model = imageUri,
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop,
-                    contentDescription = "Selected image",
-                )
+            if (imageUri != null) {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    AsyncImage(
+                        model = imageUri,
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop,
+                        contentDescription = "Selected image",
+                    )
+                    IconButton(
+                        modifier = Modifier.align(Alignment.TopEnd),
+                        onClick = {
+                            hasImage = false
+                            imageUri = null
+                        }
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_delete),
+                            contentDescription = "",
+                            tint = Color.White
+                        )
+                    }
+                }
             }
         }
     } else {
@@ -580,10 +673,7 @@ fun ExpensePhoto(
                 .height(160.dp)
                 .padding(top = MaterialTheme.spacing.small)
                 .clickable {
-                    val fileName = expenseName ?: LocalDate
-                        .now()
-                        .toString()
-                    val uri = ComposeFileProvider.getImageUri(fileName, context)
+                    val uri = ComposeFileProvider.getImageUri(expenseName, context)
                     imageUri = uri
                     cameraLauncher.launch(uri)
                 },

@@ -93,14 +93,16 @@ fun TeiraScaffold(
 
     NavHost(
         navController = navHostController,
-        startDestination = "home"
+        startDestination = NavigationItem.Home.route
     ) {
-        composable("home") {
+        composable(NavigationItem.Home.route) {
             HomeScreen(navHostController)
         }
         composable(
-            route = NavigationItem.EditExpense.route + "{expenseId}",
-            arguments = listOf(navArgument("expenseId") { type = NavType.IntType }),
+            route = NavigationItem.EditExpense.route,
+            arguments = listOf(
+                navArgument(NavigationItem.EditExpense.NAVIGATION_EXPENSE_ID_TAG) { type = NavType.IntType }
+            ),
             enterTransition = {
                 slideIntoContainer(
                     animationSpec = tween(400, easing = EaseInOut),
@@ -114,7 +116,7 @@ fun TeiraScaffold(
                 )
             }
         ) { navBackStackEntry ->
-            navBackStackEntry.arguments?.getInt("expenseId")?.let {
+            navBackStackEntry.arguments?.getInt(NavigationItem.EditExpense.NAVIGATION_EXPENSE_ID_TAG)?.let {
                 ExpenseScreen(navHostController = navHostController, expenseId = it)
             }
         }
