@@ -1,5 +1,6 @@
 package br.com.tick.sdk.repositories.categorizedexpense
 
+import android.net.Uri
 import br.com.tick.sdk.database.CategoryColorDao
 import br.com.tick.sdk.database.CategoryDao
 import br.com.tick.sdk.database.ExpenseDao
@@ -8,6 +9,7 @@ import br.com.tick.sdk.database.entities.Expense
 import br.com.tick.sdk.domain.CategorizedExpense
 import br.com.tick.sdk.domain.ExpenseCategory
 import br.com.tick.sdk.domain.getAccountingDateDayOfMonth
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
@@ -26,14 +28,40 @@ class CategorizedExpensesRepositoryImpl @Inject constructor(
         categoryId: Int,
         name: String,
         value: Double,
-        expenseDate: LocalDate
+        expenseDate: LocalDate,
+        location: LatLng?,
+        photoUri: Uri?
     ) {
         expenseDao.addExpense(
             Expense(
                 categoryId = categoryId,
                 name = name,
                 value = value,
-                date = expenseDate
+                date = expenseDate,
+                location = location,
+                photoUri = photoUri?.toString()
+            )
+        )
+    }
+
+    override suspend fun updateExpense(
+        expenseId: Int,
+        categoryId: Int,
+        name: String,
+        value: Double,
+        expenseDate: LocalDate,
+        location: LatLng?,
+        photoUri: Uri?
+    ) {
+        expenseDao.updateExpense(
+            Expense(
+                expenseId = expenseId,
+                categoryId = categoryId,
+                name = name,
+                value = value,
+                date = expenseDate,
+                location = location,
+                photoUri = photoUri?.toString()
             )
         )
     }
@@ -43,7 +71,7 @@ class CategorizedExpensesRepositoryImpl @Inject constructor(
     }
 
     override fun getCategorizedExpenses(): Flow<List<CategorizedExpense>> {
-        return expenseDao.getExpenses().map { expenses ->
+        return expenseDao.getExpenses().filterNotNull().map { expenses ->
             expenses.map { categorize(it) }
         }
     }
@@ -63,7 +91,7 @@ class CategorizedExpensesRepositoryImpl @Inject constructor(
             pivot.withDayOfMonth(userAccountingDayOfMonth)
         }
 
-        return expenseDao.getAllExpenses().map { expenses ->
+        return expenseDao.getAllExpenses().filterNotNull().map { expenses ->
             expenses.filter { expense ->
                 val yearDiff = nextAccountingDate.year - expense.date.year
                 val monthDiff = nextAccountingDate.month.value - expense.date.month.value
@@ -81,6 +109,10 @@ class CategorizedExpensesRepositoryImpl @Inject constructor(
                 it.date
             }
         }
+    }
+
+    override fun getCategorizedExpense(expenseId: Int): Flow<CategorizedExpense> {
+        return expenseDao.getExpense(expenseId).filterNotNull().map { categorize(it) }
     }
 
     private suspend fun categorize(expense: Expense): CategorizedExpense {
@@ -102,7 +134,9 @@ class CategorizedExpensesRepositoryImpl @Inject constructor(
                 name,
                 value,
                 date,
-                expenseCategory
+                expenseCategory,
+                location,
+                photoUri?.let { Uri.parse(it) }
             )
         }
     }

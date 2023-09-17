@@ -27,7 +27,8 @@ import kotlinx.coroutines.launch
 fun TeiraNavigationDrawer(
     drawerState: DrawerState,
     navBackStackEntry: NavBackStackEntry?,
-    navigateToRoute: (String) -> Unit,
+    navigateToParentRoute: (NavigationItem) -> Unit,
+    navigateToRoute: (NavigationItem) -> Unit,
     content: @Composable () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -49,7 +50,7 @@ fun TeiraNavigationDrawer(
                     coroutineScope = coroutineScope,
                     isCurrentRoute = currentRoute == NavigationItem.Settings.route
                 ) {
-                    navigateToRoute(NavigationItem.Settings.route)
+                    navigateToRoute(NavigationItem.Settings)
                 }
                 TeiraNavigationDrawerItem(
                     drawerState = drawerState,
@@ -58,7 +59,7 @@ fun TeiraNavigationDrawer(
                     coroutineScope = coroutineScope,
                     isCurrentRoute = currentRoute == NavigationItem.Wallet.route
                 ) {
-                    navigateToRoute(NavigationItem.Wallet.route)
+                    navigateToRoute(NavigationItem.Wallet)
                 }
                 TeiraNavigationDrawerItem(
                     drawerState = drawerState,
@@ -67,7 +68,7 @@ fun TeiraNavigationDrawer(
                     coroutineScope = coroutineScope,
                     isCurrentRoute = currentRoute == NavigationItem.Analysis.route
                 ) {
-                    navigateToRoute(NavigationItem.Analysis.route)
+                    navigateToRoute(NavigationItem.Analysis)
                 }
                 TeiraNavigationDrawerItem(
                     drawerState = drawerState,
@@ -76,7 +77,16 @@ fun TeiraNavigationDrawer(
                     coroutineScope = coroutineScope,
                     isCurrentRoute = currentRoute == NavigationItem.History.route
                 ) {
-                    navigateToRoute(NavigationItem.History.route)
+                    navigateToRoute(NavigationItem.History)
+                }
+                TeiraNavigationDrawerItem(
+                    drawerState = drawerState,
+                    painter = painterResource(id = NavigationItem.Expense.iconResource),
+                    text = stringResource(id = NavigationItem.Expense.titleResource),
+                    coroutineScope = coroutineScope,
+                    isCurrentRoute = currentRoute == NavigationItem.Expense.route
+                ) {
+                    navigateToParentRoute(NavigationItem.Expense)
                 }
                 Spacer(modifier = Modifier.height(MaterialTheme.spacing.extraLarge))
                 TeiraNavigationDrawerItem(
