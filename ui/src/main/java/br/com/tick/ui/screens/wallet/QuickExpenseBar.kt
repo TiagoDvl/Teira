@@ -204,7 +204,7 @@ fun ExpandedQuickExpense(
                     if (!isInvalidValue) {
                         closeExpandedDialog()
                         val selectedCategory = categoriesList.find { it.expenseCategoryId == selectedCategoryId }
-                        Log.d("Tiago", "Name: $expenseName | Value: $expenseValue | selectedCategory: $selectedCategory | localDateTime: $localDateTime")
+
                         if (expenseName.text.isNotEmpty() &&
                             (expenseValue.text.isNotEmpty() && expenseValue.text.toDouble() != 0.0) &&
                             selectedCategory != null

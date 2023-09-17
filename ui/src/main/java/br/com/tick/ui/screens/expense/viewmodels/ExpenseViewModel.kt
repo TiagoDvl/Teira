@@ -51,7 +51,6 @@ class ExpenseViewModel @Inject constructor(
         )
 
     fun getExpense(expenseId: Int) {
-        Log.d("Tiago", "ExpenseID $expenseId")
         viewModelScope.launch(dispatcherProvider.io()) {
             categorizedExpenseRepository
                 .getCategorizedExpense(expenseId = expenseId)

@@ -133,7 +133,7 @@ fun ExpenseScreen(
                 title = {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceAround
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         if (expense != null) {
                             Text(
@@ -532,7 +532,6 @@ fun ExpenseLocation(
             ExpenseLocationMap(
                 location = location,
                 onDelete = {
-                    Log.d("Tiago", "OnDelete Clicked")
                     expenseLocationState = null
                     onExpenseLocationChanged(null)
                 },
