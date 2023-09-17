@@ -75,7 +75,7 @@ private fun MostExpensiveCategoryBody(
             mostExpensiveCategoriesState.mostExpensiveCategories.forEach { mostExpensiveCategory ->
                 val categoryCardColor = mostExpensiveCategory.color?.let {
                     Color(it)
-                } ?: MaterialTheme.colorScheme.secondary
+                } ?: MaterialTheme.colorScheme.surface
 
                 val currencyLabel = stringResource(id = currencyFormat.getLabelResource())
 
