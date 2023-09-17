@@ -99,9 +99,12 @@ fun TeiraScaffold(
             HomeScreen(navHostController)
         }
         composable(
-            route = NavigationItem.EditExpense.route,
+            route = NavigationItem.Expense.route,
             arguments = listOf(
-                navArgument(NavigationItem.EditExpense.NAVIGATION_EXPENSE_ID_TAG) { type = NavType.IntType }
+                navArgument(NavigationItem.Expense.NAVIGATION_EXPENSE_ID_TAG) {
+                    type = NavType.IntType
+                    defaultValue = -1
+                }
             ),
             enterTransition = {
                 slideIntoContainer(
@@ -116,8 +119,9 @@ fun TeiraScaffold(
                 )
             }
         ) { navBackStackEntry ->
-            navBackStackEntry.arguments?.getInt(NavigationItem.EditExpense.NAVIGATION_EXPENSE_ID_TAG)?.let {
-                ExpenseScreen(navHostController = navHostController, expenseId = it)
+            navBackStackEntry.arguments?.getInt(NavigationItem.Expense.NAVIGATION_EXPENSE_ID_TAG)?.let {
+                val expenseId = if (it == -1) null else it
+                ExpenseScreen(navHostController = navHostController, expenseId = expenseId)
             }
         }
     }
@@ -137,6 +141,7 @@ private fun HomeScreen(parentNavController: NavHostController) {
     TeiraNavigationDrawer(
         drawerState = drawerState,
         navBackStackEntry = navBackStackEntry,
+        navigateToParentRoute = { navigateTo(parentNavController, it) },
         navigateToRoute = { navigateTo(navHostController, it) }
     ) {
         Scaffold(

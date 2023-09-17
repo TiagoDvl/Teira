@@ -1,18 +1,22 @@
 package br.com.tick.ui.screens.expense.viewmodels
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.tick.sdk.dispatchers.DispatcherProvider
 import br.com.tick.sdk.domain.CategorizedExpense
+import br.com.tick.sdk.domain.CurrencyFormat
 import br.com.tick.sdk.repositories.categorizedexpense.CategorizedExpenseRepository
 import br.com.tick.sdk.repositories.expensecategory.ExpenseCategoryRepository
+import br.com.tick.sdk.repositories.user.UserRepository
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -21,6 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ExpenseViewModel @Inject constructor(
     categoryRepository: ExpenseCategoryRepository,
+    userRepository: UserRepository,
     private val categorizedExpenseRepository: CategorizedExpenseRepository,
     private val dispatcherProvider: DispatcherProvider
 ) : ViewModel() {
@@ -36,7 +41,17 @@ class ExpenseViewModel @Inject constructor(
             initialValue = listOf()
         )
 
+    val currency = userRepository.getUser()
+        .flowOn(dispatcherProvider.io())
+        .map { it.currency }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = CurrencyFormat.EURO
+        )
+
     fun getExpense(expenseId: Int) {
+        Log.d("Tiago", "ExpenseID $expenseId")
         viewModelScope.launch(dispatcherProvider.io()) {
             categorizedExpenseRepository
                 .getCategorizedExpense(expenseId = expenseId)

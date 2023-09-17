@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.core.content.FileProvider
 import br.com.tick.ui.R
 import java.io.File
+import java.time.LocalDate
 
 class ComposeFileProvider : FileProvider(R.xml.filepaths) {
     companion object {
@@ -12,19 +13,15 @@ class ComposeFileProvider : FileProvider(R.xml.filepaths) {
             val directory = File(context.filesDir, "images")
             directory.mkdirs()
 
-            val file = File.createTempFile(
-                "${fileName}_",
-                ".jpg",
-                directory
-            )
+            val file = try {
+                File.createTempFile("${fileName}_", ".jpg", directory)
+            } catch (exception: IllegalArgumentException) {
+                File.createTempFile(LocalDate.now().toString(), ".jpg", directory)
+            }
 
             val authority = context.packageName + ".fileprovider"
 
-            return getUriForFile(
-                context,
-                authority,
-                file,
-            )
+            return getUriForFile(context, authority, file)
         }
     }
 }

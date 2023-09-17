@@ -66,7 +66,7 @@ fun Body(
         is ExpensesGridStates.Success -> BodyGrid(
             modifier = modifier,
             expensesList = expensesListState.expensesList,
-            editExpense = { navHostController.navigate(NavigationItem.EditExpense.with(it)) },
+            editExpense = { navHostController.navigate(NavigationItem.Expense.show(it)) },
             removeExpense = { expensesGridViewModel.removeCard(it) }
         )
     }

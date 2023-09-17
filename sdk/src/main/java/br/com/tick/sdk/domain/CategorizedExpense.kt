@@ -8,7 +8,6 @@ data class CategorizedExpense(
     val expenseId: Int,
     val name: String,
     val expenseValue: Double,
-    val currencyFormat: CurrencyFormat,
     val date: LocalDate,
     val category: ExpenseCategory,
     val location: LatLng?,

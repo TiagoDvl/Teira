@@ -58,6 +58,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import br.com.tick.sdk.domain.CategorizedExpense
+import br.com.tick.sdk.domain.CurrencyFormat
 import br.com.tick.sdk.domain.ExpenseCategory
 import br.com.tick.ui.R
 import br.com.tick.ui.core.TeiraDatePicker
@@ -96,6 +97,7 @@ fun ExpenseScreen(
     var showDeletionConfirmationDialog by remember { mutableStateOf(false) }
 
     val expense by expenseViewModel.categorizedExpense.collectAsStateWithLifecycle()
+    val currency by expenseViewModel.currency.collectAsStateWithLifecycle()
     val categoriesList by expenseViewModel.categories.collectAsStateWithLifecycle()
 
     var expenseName by remember { mutableStateOf("") }
@@ -221,32 +223,31 @@ fun ExpenseScreen(
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { paddingValues ->
-        expense?.let {
-            Column(
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(paddingValues)
+                .padding(MaterialTheme.spacing.extraSmall)
+        ) {
+            BaseExpense(
+                expense = expense,
+                currencyFormat = currency,
+                categoriesList = categoriesList,
+                onExpenseNameChanged = { expenseName = it },
+                onExpenseValueChanged = { expenseValue = it },
+                onExpenseCategoryChanged = { expenseCategoryId = it },
+                onExpenseDateChanged = { expenseDate = it },
+                onInvalidValue = { isInvalidValue = it }
+            )
+            Divider(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(paddingValues)
-                    .padding(MaterialTheme.spacing.extraSmall)
-            ) {
-                BaseExpense(
-                    expense = expense,
-                    categoriesList = categoriesList,
-                    onExpenseNameChanged = { expenseName = it },
-                    onExpenseValueChanged = { expenseValue = it },
-                    onExpenseCategoryChanged = { expenseCategoryId = it },
-                    onExpenseDateChanged = { expenseDate = it },
-                    onInvalidValue = { isInvalidValue = it }
-                )
-                Divider(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = MaterialTheme.spacing.medium),
-                    thickness = 1.dp,
-                    color = MaterialTheme.colorScheme.secondary
-                )
-                ExpenseLocation(it.location) { location = it }
-                ExpensePhoto(it.name, it.picture) { photoUri = it }
-            }
+                    .padding(top = MaterialTheme.spacing.medium),
+                thickness = 1.dp,
+                color = MaterialTheme.colorScheme.secondary
+            )
+            ExpenseLocation(expense?.location) { location = it }
+            ExpensePhoto(expense?.name, expense?.picture) { photoUri = it }
         }
 
 
@@ -295,6 +296,7 @@ fun ExpenseScreen(
 @Composable
 fun BaseExpense(
     expense: CategorizedExpense?,
+    currencyFormat: CurrencyFormat,
     categoriesList: List<ExpenseCategory>,
     onExpenseNameChanged: (String) -> Unit,
     onExpenseValueChanged: (Double) -> Unit,
@@ -328,6 +330,13 @@ fun BaseExpense(
             date = it.date
             onExpenseDateChanged(it.date)
         }
+    }
+
+    LaunchedEffect(key1 = categoriesList) {
+        selectedCategoryId = categoriesList.find { categories ->
+            categories.name == categoryLabel
+        }?.expenseCategoryId ?: -1
+        onExpenseCategoryChanged(selectedCategoryId)
     }
 
     val expenseTextFieldColors = OutlinedTextFieldDefaults.colors(
@@ -380,9 +389,7 @@ fun BaseExpense(
             },
             isError = isInvalidValue,
             prefix = {
-                if (expense != null) {
-                    Text(text = stringResource(id = expense.currencyFormat.getLabelResource()))
-                }
+                Text(text = stringResource(id = currencyFormat.getLabelResource()))
             },
             onValueChange = {
                 value = it
@@ -439,8 +446,11 @@ fun ExpenseLocation(
 ) {
     var expenseLocationState by remember { mutableStateOf(expenseLocation) }
 
-    expenseLocation?.let {
-        onExpenseLocationChanged(expenseLocationState)
+    LaunchedEffect(key1 = expenseLocation) {
+        expenseLocation?.let {
+            expenseLocationState = it
+            onExpenseLocationChanged(expenseLocationState)
+        }
     }
 
     Row(
@@ -593,7 +603,7 @@ fun ExpenseLocationMap(
 
 @Composable
 fun ExpensePhoto(
-    expenseName: String,
+    expenseName: String?,
     expensePhotoUri: Uri?,
     onPictureSelected: (Uri?) -> Unit
 ) {
@@ -611,8 +621,12 @@ fun ExpensePhoto(
         }
     )
 
-    expensePhotoUri?.let {
-        onPictureSelected(imageUri)
+    LaunchedEffect(key1 = expensePhotoUri) {
+        expensePhotoUri?.let {
+            imageUri = it
+            hasImage = true
+            onPictureSelected(imageUri)
+        }
     }
 
     Row(
@@ -655,6 +669,7 @@ fun ExpensePhoto(
                         onClick = {
                             hasImage = false
                             imageUri = null
+                            onPictureSelected(null)
                         }
                     ) {
                         Icon(
@@ -673,7 +688,11 @@ fun ExpensePhoto(
                 .height(160.dp)
                 .padding(top = MaterialTheme.spacing.small)
                 .clickable {
-                    val uri = ComposeFileProvider.getImageUri(expenseName, context)
+                    val uri = ComposeFileProvider.getImageUri(
+                        expenseName ?: LocalDate
+                            .now()
+                            .toString(), context
+                    )
                     imageUri = uri
                     cameraLauncher.launch(uri)
                 },

@@ -117,7 +117,6 @@ class CategorizedExpensesRepositoryImpl @Inject constructor(
 
     private suspend fun categorize(expense: Expense): CategorizedExpense {
         val category = categoryDao.getCategoryById(expense.categoryId)
-        val user = userDao.getUniqueUser().first()
         val categoryColorId = category.categoryColorId
 
         val color = if (categoryColorId != null) {
@@ -134,7 +133,6 @@ class CategorizedExpensesRepositoryImpl @Inject constructor(
                 expenseId,
                 name,
                 value,
-                user.currency,
                 date,
                 expenseCategory,
                 location,
