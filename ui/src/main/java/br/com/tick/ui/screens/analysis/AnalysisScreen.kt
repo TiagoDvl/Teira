@@ -26,12 +26,12 @@ fun AnalysisScreen() {
             MostExpensiveCategory(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = MaterialTheme.spacing.large)
+                    .padding(top = MaterialTheme.spacing.small)
             )
             FinancialHealthComposable(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = MaterialTheme.spacing.large)
+                    .padding(top = MaterialTheme.spacing.small)
             )
         }
     }
