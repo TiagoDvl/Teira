@@ -17,5 +17,9 @@ jobs:
           java-version: '17'
           cache: 'gradle'
 
+      - name: Update Secrets
+        env:
+          MAPS_API_KEY: ${{ secrets.MAPS_API_KEY }}
+          run: echo 'MAPS_API_KEY=${{ secrets.MAPS_API_KEY }}' > ./local.properties
       - name: Unit tests
         run: ./gradlew testQa
