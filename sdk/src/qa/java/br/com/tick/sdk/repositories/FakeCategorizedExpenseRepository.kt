@@ -2,7 +2,6 @@ package br.com.tick.sdk.repositories
 
 import android.net.Uri
 import br.com.tick.sdk.domain.CategorizedExpense
-import br.com.tick.sdk.domain.CurrencyFormat
 import br.com.tick.sdk.domain.ExpenseCategory
 import br.com.tick.sdk.repositories.categorizedexpense.CategorizedExpenseRepository
 import com.google.android.gms.maps.model.LatLng
@@ -27,7 +26,6 @@ class FakeCategorizedExpenseRepository : CategorizedExpenseRepository {
                 expenses.size,
                 name,
                 value,
-                CurrencyFormat.EURO,
                 expenseDate,
                 ExpenseCategory(categoryId, "", 0),
                 LatLng(0.0, 0.0),
