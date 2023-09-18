@@ -6,6 +6,8 @@ import br.com.tick.sdk.domain.AccountingDate
 import br.com.tick.sdk.domain.CurrencyFormat
 import br.com.tick.sdk.domain.NotificationPeriodicity
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
@@ -13,11 +15,14 @@ class UserRepositoryImpl @Inject constructor(
 ) : UserRepository {
 
     override fun getUser(): Flow<User> {
-        return userDao.getUniqueUser()
+        return userDao.getUniqueUser().filterNotNull()
     }
 
     override suspend fun setInitialUser() {
-        userDao.setInitialUser(User.initial())
+        val user = userDao.getUniqueUser().first()
+        if (user == null) {
+            userDao.setInitialUser(User.initial())
+        }
     }
 
     override suspend fun setMonthlyIncome(newValue: Double) {
