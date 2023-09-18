@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import br.com.tick.sdk.domain.CurrencyFormat
 import br.com.tick.ui.R
 import br.com.tick.ui.core.TeiraNoAvailableDataState
 import br.com.tick.ui.screens.analysis.states.FinancialHealth
