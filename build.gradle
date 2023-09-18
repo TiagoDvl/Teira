@@ -5,6 +5,7 @@ buildscript {
         composeMaterialVersion = '1.2.0-beta03'
         composeFoundation = '1.4.0-alpha03'
         composeUi = '1.4.0-alpha03'
+        composeUiUtil = '1.5.0'
         composeMaterial3Version = '1.1.0-rc01'
         coroutinesVersion = '1.6.4'
         coreKtxVersion = '1.9.0'
@@ -22,7 +23,7 @@ buildscript {
         hiltNavigationComposeVersion = '1.0.0'
         roomVersion = '2.4.3'
         dataStoreVersion = '1.0.0'
-        navigationVersion = '2.5.3'
+        navigationVersion = '2.7.0'
         vicoVersion = '1.6.4'
         composeColorPicker = '0.7.0'
         firebaseCrashlytics = '18.3.5'
@@ -31,6 +32,10 @@ buildscript {
         hiltWorkVersion = '1.0.0'
         hiltCompilerVersion = '1.0.0'
         acompanistPermissionVersion = '0.30.0'
+        googleMaps = '2.14.0'
+        playServicesMap = '18.1.0'
+        playServicesLocation = '21.0.1'
+        coilVersion = '2.4.0'
 
         dependencies {
             classpath("com.google.dagger:hilt-android-gradle-plugin:$hiltVersion")
@@ -47,6 +52,7 @@ plugins {
     id 'com.android.application' version '7.4.2' apply false
     id 'com.android.library' version '7.4.2' apply false
     id 'org.jetbrains.kotlin.android' version '1.8.0' apply false
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin' version '2.0.1' apply false
 }
 
 task clean(type: Delete) {

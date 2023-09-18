@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.Flow
 interface UserDao {
 
     @Query("SELECT * FROM user WHERE user_id = 1")
-    fun getUniqueUser(): Flow<User>
+    fun getUniqueUser(): Flow<User?>
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
     fun setInitialUser(user: User)

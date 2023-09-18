@@ -24,12 +24,12 @@ import br.com.tick.ui.screens.wallet.models.ExpenseCard
 import br.com.tick.ui.theme.spacing
 import br.com.tick.ui.theme.textStyle
 
-@OptIn(ExperimentalAnimationApi::class)
 @ExperimentalFoundationApi
 @Composable
 fun QuickExpenseCard(
     expenseCard: ExpenseCard,
     modifier: Modifier = Modifier,
+    onQuickActionEdit: (expenseId: Int) -> Unit,
     onQuickActionDelete: (expenseId: Int) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -69,10 +69,12 @@ fun QuickExpenseCard(
 
             AnimatedContent(
                 modifier = Modifier.align(Alignment.BottomEnd),
-                targetState = expanded
+                targetState = expanded,
+                label = ""
             ) { targetExpanded ->
                 if (targetExpanded) {
                     ExpandedCardIcons(
+                        onQuickActionEdit = { onQuickActionEdit(expenseCard.id) },
                         onQuickActionDelete = { onQuickActionDelete(expenseCard.id) }
                     ) {
                         expanded = !expanded
@@ -106,7 +108,7 @@ fun CollapsedCardIcons(modifier: Modifier = Modifier, onExpandIcons: () -> Unit)
     ) {
         Icon(
             modifier = Modifier
-                .size(24.dp)
+                .size(26.dp)
                 .clickable { onExpandIcons() },
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
             painter = painterResource(id = R.drawable.ic_slide_left),
@@ -119,6 +121,7 @@ fun CollapsedCardIcons(modifier: Modifier = Modifier, onExpandIcons: () -> Unit)
 fun ExpandedCardIcons(
     modifier: Modifier = Modifier,
     onQuickActionDelete: () -> Unit,
+    onQuickActionEdit: () -> Unit,
     collapse: () -> Unit
 ) {
     Row(
@@ -127,7 +130,7 @@ fun ExpandedCardIcons(
     ) {
         Icon(
             modifier = Modifier
-                .size(24.dp)
+                .size(26.dp)
                 .clickable { collapse() },
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
             painter = painterResource(id = R.drawable.ic_slide_right),
@@ -135,7 +138,9 @@ fun ExpandedCardIcons(
         )
 
         Icon(
-            modifier = Modifier.size(24.dp),
+            modifier = Modifier
+                .size(26.dp)
+                .clickable { onQuickActionEdit() },
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
             painter = painterResource(id = R.drawable.ic_edit),
             contentDescription = "Edit expense"
@@ -143,7 +148,7 @@ fun ExpandedCardIcons(
 
         Icon(
             modifier = Modifier
-                .size(24.dp)
+                .size(26.dp)
                 .clickable { onQuickActionDelete() },
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
             painter = painterResource(id = R.drawable.ic_delete),
@@ -163,8 +168,8 @@ fun QuickExpenseCardPreview() {
             value = 50.0,
             category = ExpenseCategory(0, "Category 1", Color.Red.value.toInt()),
             risk = ExpenseRisk.HIGH
-        )
-    ) {
-
-    }
+        ),
+        onQuickActionDelete = {},
+        onQuickActionEdit = {}
+    )
 }

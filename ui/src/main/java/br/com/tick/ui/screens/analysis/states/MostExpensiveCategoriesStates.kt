@@ -13,7 +13,7 @@ sealed class MostExpensiveCategoriesStates {
                 Full(
                     mostExpensiveCategories
                         .sortedByDescending { it.amount }
-                        .take(5)
+                        .take(4)
                 )
             }
         }

@@ -37,6 +37,13 @@ data class TeiraTextStyle(
         lineHeight = 24.sp,
         letterSpacing = 3.sp
     ),
+    val h1extra: TextStyle = TextStyle(
+        fontFamily = Mulish,
+        fontWeight = FontWeight.Bold,
+        fontSize = 26.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 3.sp
+    ),
     val h2: TextStyle = TextStyle(
         fontFamily = Mulish,
         fontWeight = FontWeight.Medium,

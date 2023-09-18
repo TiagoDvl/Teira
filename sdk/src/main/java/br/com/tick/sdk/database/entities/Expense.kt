@@ -4,11 +4,13 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
+import br.com.tick.sdk.database.converters.LatLngConverter
 import br.com.tick.sdk.database.converters.LocalDateConverter
+import com.google.android.gms.maps.model.LatLng
 import java.time.LocalDate
 
 @Entity
-@TypeConverters(LocalDateConverter::class)
+@TypeConverters(LocalDateConverter::class, LatLngConverter::class)
 data class Expense(
 
     @PrimaryKey(autoGenerate = true)
@@ -25,5 +27,12 @@ data class Expense(
     val value: Double,
 
     @ColumnInfo(name = "date")
-    val date: LocalDate
+    val date: LocalDate,
+
+    @ColumnInfo(name = "location")
+    val location: LatLng?,
+
+    @ColumnInfo(name = "photoUri")
+    val photoUri: String?
+
 )

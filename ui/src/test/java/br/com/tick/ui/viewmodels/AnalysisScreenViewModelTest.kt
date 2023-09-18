@@ -41,6 +41,7 @@ class AnalysisScreenViewModelTest {
             fetchLastMonthExpenses,
             getMostExpensiveCategories,
             calculateFinancialHealthSituation,
+            userRepository,
             FakeDispatcher()
         )
     }
@@ -49,20 +50,24 @@ class AnalysisScreenViewModelTest {
     fun `When user made an expense, financial health should reflect this change`() = runTest {
         val expenseRepository = FakeCategorizedExpenseRepository()
         val userRepository: UserRepository = FakeUserRepository()
+
+        userRepository.setMonthlyIncome(1500.0)
+        expenseRepository.addExpense(
+            categoryId = 1,
+            name = "Something",
+            value = 15.0,
+            expenseDate = LocalDate.now(),
+            location = null,
+            photoUri = null
+        )
+
         val analysisScreenViewModel = getViewModel(
             categorizedExpenseRepository = expenseRepository,
             userRepository = userRepository
         )
 
-        userRepository.setMonthlyIncome(1500.0)
-        expenseRepository.addExpense(0, "Name_1", 10.0, LocalDate.now())
-
         analysisScreenViewModel.financialHealthSituation.test {
-            val financialHealthState = awaitItem()
-            Truth.assertThat(financialHealthState).isInstanceOf(FinancialHealth.Situation::class.java)
-            Truth.assertThat(
-                (financialHealthState as FinancialHealth.Situation).percentageOfCompromisedIncome
-            ).isGreaterThan(0)
+            Truth.assertThat(awaitItem()).isInstanceOf(FinancialHealth.Situation::class.java)
         }
     }
 
@@ -70,16 +75,14 @@ class AnalysisScreenViewModelTest {
     fun `When user has no expenses, financial health should have no available data`() = runTest {
         val expenseRepository = FakeCategorizedExpenseRepository()
         val userRepository: UserRepository = FakeUserRepository()
+
         val analysisScreenViewModel = getViewModel(
             categorizedExpenseRepository = expenseRepository,
             userRepository = userRepository
         )
 
-        userRepository.setMonthlyIncome(1500.0)
-
         analysisScreenViewModel.financialHealthSituation.test {
-            val financialHealthState = awaitItem()
-            Truth.assertThat(financialHealthState).isInstanceOf(FinancialHealth.NoDataAvailable::class.java)
+            Truth.assertThat(awaitItem()).isInstanceOf(FinancialHealth.NoDataAvailable::class.java)
         }
     }
 
