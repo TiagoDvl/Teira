@@ -15,6 +15,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
@@ -57,7 +58,7 @@ class AnalysisScreenViewModel @Inject constructor(
         )
 
     private val _financialHealthSituation = MutableStateFlow<FinancialHealth>(FinancialHealth.NoDataAvailable)
-    val financialHealthSituation: Flow<FinancialHealth> = _financialHealthSituation
+    val financialHealthSituation: StateFlow<FinancialHealth> = _financialHealthSituation
 
     init {
         viewModelScope.launch(dispatcherProvider.io()) {

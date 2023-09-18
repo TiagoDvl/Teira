@@ -17,6 +17,7 @@ class FakeUserRepository: UserRepository {
     }
 
     override fun getUser() = user
+
     override suspend fun setInitialUser() {
         user.tryEmit(User.initial())
     }

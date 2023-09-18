@@ -10,5 +10,5 @@ val TeiraOnPrimaryColor = Color(0xFFEFF1E9)
 val TeiraOnSecondaryColor = Color(0xFFEFF1E9)
 val TeiraOnTertiaryColor = Color(0xFF474444)
 
-val TeiraSurfaceColor = Color(0xFFF2F8EE)
+val TeiraSurfaceColor = Color(0xFFeeeeee)
 val TeiraSurfaceVariantColor = Color(0xFFA0AF7B)
